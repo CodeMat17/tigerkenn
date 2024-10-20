@@ -67,7 +67,7 @@ export default function BlogListPage() {
 
   if (loading) {
     return (
-      <div className='px-4 w-full flex justify-center text-center py-32'>
+      <div className='px-4 w-full min-h-screen flex justify-center text-center py-32'>
         <MinusIcon className='animate-spin mr-3' /> loading data...
       </div>
     );

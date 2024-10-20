@@ -99,7 +99,7 @@ const ListingsPage: React.FC = () => {
   };
 
   return (
-    <div className='max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8'>
+    <div className='max-w-6xl min-h-screen mx-auto py-12 px-4 sm:px-6 lg:px-8'>
       <h1 className='text-4xl font-bold text-center mb-8'>Listings</h1>
 
       <div className='relative w-full max-w-md mx-auto mb-8'>
