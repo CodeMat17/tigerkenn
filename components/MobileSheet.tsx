@@ -39,7 +39,7 @@ const MobileSheet = () => {
           </Button>
         </SheetTrigger>
         <SheetContent>
-          <div className='py-8 flex flex-col gap-2 justify-start items-start text-start'>
+          <div className='py-8 h-screen flex flex-col gap-4 justify-center items-center text-start'>
             {navs.map((nav, i) => (
               <Button
                 key={i}

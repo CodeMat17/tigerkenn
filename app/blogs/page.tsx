@@ -74,7 +74,7 @@ export default function BlogListPage() {
   }
 
   return (
-    <div className='min-h-screen py-10 px-2 sm:px-4 bg-gray-50 dark:bg-gray-950'>
+    <div className='min-h-screen py-10 px-4 sm:px-4 bg-gray-50 dark:bg-gray-950'>
       <div className='max-w-5xl mx-auto'>
         <motion.h1
           className='text-3xl sm:text-4xl text-center font-semibold mb-8'
@@ -88,7 +88,7 @@ export default function BlogListPage() {
           {blogs?.map((blog) => (
             <motion.div
               key={blog.slug}
-              className='bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden'
+              className=' rounded-xl shadow-lg overflow-hidden'
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}>
@@ -103,11 +103,11 @@ export default function BlogListPage() {
                     className='object-cover'
                   />
                 </div>
-                <div className='px-6 pb-6 pt-3'>
-                  <h2 className='text-xl font-semibold text-sky-600 mb-2 leading-6 line-clamp-3'>
+                <div className='px-6 pb-6 pt-4 bg-white dark:bg-gray-800'>
+                  <h2 className='text-xl font-semibold text-blue-500 mb-2 leading-6 line-clamp-3'>
                     {blog.title}
                   </h2>
-                  <p className='text-gray-500 text-sm'>
+                  <p className='text-gray-400 text-sm'>
                     Published on{" "}
                     {dayjs(blog.published_at).format("MMM DD, YYYY hh:mm a")}
                   </p>
