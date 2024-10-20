@@ -1,9 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import {
-  BathIcon,
-  BedIcon,
-  RatioIcon,
-} from "lucide-react";
+import { BathIcon, BedIcon, RatioIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ShimmerButton from "./ui/shimmer-button";
@@ -32,7 +28,7 @@ const RecentListing = async () => {
                 listings.map((list, i) => (
                   <div
                     key={i}
-                    className='rounded-xl overflow-hidden bg-white dark:bg-gray-900 shadow-lg hover:shadow-xl group w-full max-w-[320px] sm:max-w-[290px] '>
+                    className='rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl group w-full max-w-[320px] sm:max-w-[290px] '>
                     {list.available ? (
                       <Link href={`/listings/${list.id}`}>
                         <div className='transition transform duration-300 ease-in-out hover:scale-105'>
@@ -69,11 +65,11 @@ const RecentListing = async () => {
                           </div>
 
                           <div className='px-4 pb-4 pt-3 '>
-                            <h2 className='font-medium leading-tight line-clamp-2'>
+                            <h2 className='text-lg font-medium leading-tight line-clamp-2'>
                               {list.title}
                             </h2>
-                            <div className='flex justify-start  mt-1.5'>
-                              <p className='text-sm font-light px-2 py-0 w-auto text-amber-500 border rounded-full border-amber-500'>
+                            <div className='flex justify-start  mt-2'>
+                              <p className='font-light px-2 py-0 w-auto text-amber-500 border rounded-full border-amber-500'>
                                 {list.location}
                               </p>
                             </div>
@@ -82,21 +78,21 @@ const RecentListing = async () => {
                               {list.beds && (
                                 <div className='flex items-center gap-1'>
                                   <BedIcon className='w-4 h-4 text-amber-500' />
-                                  <p className='text-xs'>{list.beds} Beds</p>
+                                  <p className='text-sm'>{list.beds} Beds</p>
                                 </div>
                               )}
 
                               {list.baths && (
                                 <div className='flex items-center gap-1'>
                                   <BathIcon className='w-4 h-4 text-amber-500' />
-                                  <p className='text-xs'>{list.baths} Baths</p>
+                                  <p className='text-sm'>{list.baths} Baths</p>
                                 </div>
                               )}
 
                               {list.sqm && (
                                 <div className='flex items-center gap-1'>
                                   <RatioIcon className='w-4 h-4 text-amber-500' />
-                                  <p className='text-xs'>{list.sqm} Sqm</p>
+                                  <p className='text-sm'>{list.sqm} Sqm</p>
                                 </div>
                               )}
                             </div>
@@ -131,10 +127,10 @@ const RecentListing = async () => {
                         </div>
 
                         <div className='px-4 pb-4 pt-3 bg-red-200 dark:bg-red-950/70'>
-                          <h2 className='font-medium leading-tight line-clamp-2'>
+                          <h2 className='text-lg font-medium leading-tight line-clamp-2'>
                             {list.title}
                           </h2>
-                          <div className='flex justify-start  mt-1.5'>
+                          <div className='flex justify-start  mt-2'>
                             <p className='text-sm font-light px-2 py-0 w-auto text-amber-500 border rounded-full border-amber-500'>
                               {list.location}
                             </p>
@@ -144,21 +140,21 @@ const RecentListing = async () => {
                             {list.beds && (
                               <div className='flex items-center gap-1'>
                                 <BedIcon className='w-4 h-4 text-amber-500' />
-                                <p className='text-xs'>{list.beds} Beds</p>
+                                <p className='text-sm'>{list.beds} Beds</p>
                               </div>
                             )}
 
                             {list.baths && (
                               <div className='flex items-center gap-1'>
                                 <BathIcon className='w-4 h-4 text-amber-500' />
-                                <p className='text-xs'>{list.baths} Baths</p>
+                                <p className='text-sm'>{list.baths} Baths</p>
                               </div>
                             )}
 
                             {list.sqm && (
                               <div className='flex items-center gap-1'>
                                 <RatioIcon className='w-4 h-4 text-amber-500' />
-                                <p className='text-xs'>{list.sqm} Sqm</p>
+                                <p className='text-sm'>{list.sqm} Sqm</p>
                               </div>
                             )}
                           </div>
