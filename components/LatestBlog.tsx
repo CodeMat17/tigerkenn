@@ -4,41 +4,11 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 
-const blogs = [
-  {
-    img: "/others/1.webp",
-    title: "Lorem ipsum dolor sit amet consectetur adipisicing.",
-    desc: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatum, impedit neque veritatis velit commodi doloribus?",
-    date: "Apr 23, 2024",
-    comments: "5",
-  },
-  {
-    img: "/others/2.webp",
-    title: "Lorem ipsum dolor sit amet consectetur adipisicing.",
-    desc: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatum, impedit neque veritatis velit commodi doloribus?",
-    date: "Sept 23, 2024",
-    comments: "2",
-  },
-  {
-    img: "/others/3.webp",
-    title: "Lorem ipsum dolor sit amet consectetur adipisicing.",
-    desc: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatum, impedit neque veritatis velit commodi doloribus?",
-    date: "Oct 23, 2024",
-    comments: "0",
-  },
-  // {
-  //   img: "/others/4.webp",
-  //   title: "Lorem ipsum dolor sit amet consectetur adipisicing.",
-  //   desc: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatum, impedit neque veritatis velit commodi doloribus?",
-  //   date: "Apr 23, 2024",
-  //   comments: "1",
-  // },
-];
 
 const LatestBlog = async () => {
   const supabase = createClient();
 
-  const { data: blogs, error } = await supabase
+  const { data: blogs } = await supabase
     .from("blogs")
     .select("*")
     .limit(3)
