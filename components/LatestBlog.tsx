@@ -29,7 +29,7 @@ const LatestBlog = async () => {
             {blogs &&
               blogs.map((blog) => (
                 <Link key={blog.id} href={`/blogs/${blog.slug}`} className='w-full max-w-[300px]'>
-                  <div className=' rounded-xl overflow-hidden bg-white dark:bg-gray-900 shadow-lg hover:shadow-xl transition transform hover:scale-105 ease-in-out duration-500'>
+                  <div className=' rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition transform hover:scale-105 ease-in-out duration-500'>
                     <Image
                       alt={blog.img}
                       priority
@@ -52,7 +52,7 @@ const LatestBlog = async () => {
                       </p> */}
                     </div>
 
-                    <div className='px-4 pb-4 pt-2'>
+                    <div className='p-4'>
                       <h2 className='text-lg font-semibold leading-5 mb-2 dark:text-gray-300 line-clamp-2'>
                         {blog.title}
                       </h2>

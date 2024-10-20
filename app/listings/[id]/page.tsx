@@ -41,9 +41,15 @@ const ListingDetails = async ({ params: { id } }: Props) => {
           <p>{listing.location}</p>
         </div>
 
-        <span className='px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full'>
-          {listing.status}
-        </span>
+        {listing.available ? (
+          <span className='px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full'>
+            {listing.status}
+          </span>
+        ) : (
+          <span className='px-3 py-1 text-sm bg-red-100 text-red-800 rounded-full'>
+           Unavailable
+          </span>
+        )}
       </div>
       {/* Image */}
       <Image

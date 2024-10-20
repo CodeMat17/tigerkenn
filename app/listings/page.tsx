@@ -30,6 +30,7 @@ type ListingsProps = {
   status: string;
   location: string;
   sqm: number;
+  available: boolean;
 };
 
 const ListingsPage: React.FC = () => {
@@ -55,20 +56,26 @@ const ListingsPage: React.FC = () => {
 
     let query = supabase
       .from("listings")
-      .select("id, img, price, status, title, beds, baths, sqm, location", {
-        count: "exact",
-      })
+      .select(
+        "id, img, price, status, title, beds, baths, sqm, location, available",
+        {
+          count: "exact",
+        }
+      )
       .order("created_at", { ascending: false })
       .range(from, to);
 
     if (searchQuery) {
       query = supabase
         .from("listings")
-        .select("id, img, price, status, title, beds, baths, sqm, location", {
-          count: "exact",
-        })
+        .select(
+          "id, img, price, status, title, beds, baths, sqm, location, available",
+          {
+            count: "exact",
+          }
+        )
         .or(`location.ilike.%${searchQuery}%,category.ilike.%${searchQuery}%`)
-        .order("created_at", { ascending: true })
+        .order("created_at", { ascending: false })
         .range(from, to);
     }
 
@@ -125,7 +132,7 @@ const ListingsPage: React.FC = () => {
                 listings.map((list) => (
                   <div
                     key={list.id}
-                    className='rounded-xl overflow-hidden bg-white dark:bg-gray-900 shadow-lg hover:shadow-xl group w-full max-w-[320px] sm:max-w-[320px]'>
+                    className='rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl group w-full max-w-[320px] sm:max-w-[320px]'>
                     <Link href={`/listings/${list.id}`} className='group'>
                       <div className=' transition transform duration-300 ease-in-out group-hover:scale-105'>
                         <div className='relative'>
@@ -143,17 +150,29 @@ const ListingsPage: React.FC = () => {
                             </p>
                           )}
 
-                          <p className='absolute bottom-2 right-2 px-3 py-1 rounded-xl overflow-hidden bg-black/20 font-bold text-white'>
-                            {list.status}
+                          {list.available && (
+                            <p className='absolute bottom-2 right-2 px-3 py-1 rounded-xl overflow-hidden bg-black/20 font-bold text-white'>
+                              {list.status}
+                            </p>
+                          )}
+
+                          <p
+                            className={`absolute top-2 right-2 ${
+                              list.available
+                                ? "bg-green-500/60 border-green-500 text-green-100"
+                                : "bg-red-500/60 border-red-500 text-red-100"
+                            }  px-2 py-0.5
+              rounded-full font-medium border `}>
+                            {list.available ? "Available" : "Unavailable"}
                           </p>
                         </div>
 
-                        <div className='px-4 pb-4 pt-2'>
-                          <h2 className='font-medium leading-tight line-clamp-2 mb-1'>
+                        <div className='p-4'>
+                          <h2 className='text-lg font-medium leading-tight line-clamp-2 mb-1'>
                             {list.title}
                           </h2>
 
-                          <div className='mt-2 flex items-center justify-between gap-2.5 text-xs text-gray-400'>
+                          <div className='mt-2 flex items-center justify-between gap-2.5 text-sm text-gray-400'>
                             {list.beds && (
                               <div className='flex items-center gap-1'>
                                 <p>{list.beds} Beds</p>
