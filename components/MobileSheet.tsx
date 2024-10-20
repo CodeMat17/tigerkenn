@@ -12,6 +12,7 @@ const navs = [
   { title: "ABOUT US", href: "/about-us" },
   { title: "LISTINGS", href: "/listings" },
   { title: "BLOG", href: "/blogs" },
+  { title: "CONTACT US", href: "/contact-us" },
 ];
 
 const MobileSheet = () => {
