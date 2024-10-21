@@ -1,5 +1,6 @@
 import HeroPage from "@/components/HeroPage";
 import LastestBlog from "@/components/LatestBlog";
+import NewsletterSignup from "@/components/NewsletterSignup";
 import RecentListing from "@/components/RecentListing";
 import ReviewCarousel from "@/components/ReviewCarousel";
 import { createClient } from "@/utils/supabase/server";
@@ -15,6 +16,7 @@ const Home = async () => {
       <RecentListing />
       <ReviewCarousel />
       <LastestBlog />
+      <NewsletterSignup />
     </div>
   );
 };

@@ -47,6 +47,18 @@ const Footer = () => {
               className='hover:bg-gray-800 hover:text-white'>
               <Link href='/listings'>Listings</Link>
             </Button>
+            <Button
+              asChild
+              variant='ghost'
+              className='hover:bg-gray-800 hover:text-white'>
+              <Link href='/blogs'>Blog Posts</Link>
+            </Button>
+            <Button
+              asChild
+              variant='ghost'
+              className='hover:bg-gray-800 hover:text-white'>
+              <Link href='/contact-us'>Contact Us</Link>
+            </Button>
           </div>
         </div>
       </div>

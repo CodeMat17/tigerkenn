@@ -10,6 +10,7 @@ import { Input } from "../ui/input";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
+
 type DataProps = {
   id: string;
   dataTitle: string;
@@ -21,6 +22,7 @@ const EditAboutUsServices = ({ id, dataTitle, dataDesc }: DataProps) => {
   const [desc, setDesc] = useState(dataDesc || "");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean | null>(false);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,6 +55,7 @@ const EditAboutUsServices = ({ id, dataTitle, dataDesc }: DataProps) => {
     }
   };
 
+
   return (
     <div className='min-h-screen max-w-3xl mx-auto mb-16'>
       <h2 className='text-3xl text-center font-medium mb-6'>Our Services</h2>
@@ -73,8 +76,9 @@ const EditAboutUsServices = ({ id, dataTitle, dataDesc }: DataProps) => {
           <label className='block text-sm font-medium text-gray-700 dark:text-gray-400'>
             Content
           </label>
+        
+
           <ReactQuill
-          
             value={desc}
             onChange={setDesc}
             className='border border-gray-300 rounded-md '

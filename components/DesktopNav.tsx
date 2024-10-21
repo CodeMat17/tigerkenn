@@ -15,12 +15,11 @@ const links = [
 
 const DesktopNav = () => {
   const pathname = usePathname();
-  console.log("Pathname: ", pathname);
 
   return (
     <div className='hidden md:flex gap-1.5'>
       {links.map((link, index) => (
-        <Button key={index} asChild variant='ghost' className={`text-white hover:bg-blue-900 hover:text-white ${link.href === pathname ? 'bg-blue-800' : ''} `}>
+        <Button key={index} asChild variant='ghost' className={`transition-all transform duration-500 ease-out text-white hover:bg-gray-800/30 hover:text-white ${link.href === pathname ? 'bg-gray-800/20' : ''} `}>
           <Link href={link.href}>{link.label}</Link>
         </Button>
       ))}
