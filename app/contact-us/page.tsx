@@ -38,7 +38,7 @@ const ContactUs = () => {
               </h3>
               <div className='mt-2 flex gap-4'>
                 <div>
-                  <Link href='tel:+2348081882173'>
+                  <Link href='tel:+2348033350750'>
                     <Image
                       alt=''
                       priority
