@@ -34,31 +34,35 @@ const ContactUs = () => {
           <div className='space-y-6 dark:text-gray-400 w-full md:w-[40%]'>
             <div>
               <h3 className='font-semibold dark:text-gray-300 text-xl'>
-               Instant Contact
+                Instant Contact
               </h3>
               <div className='mt-2 flex gap-4'>
                 <div>
-                  <Link href='tel:+2348033350750'>
+                  <Link
+                    href='tel:+2348033350750'
+                    className='flex flex-col items-center'>
                     <Image
                       alt=''
                       priority
-                      width={40}
-                      height={40}
+                      width={50}
+                      height={50}
                       src='/gifs/phone.gif'
-                      className='dark:invert rounded-full mb-1'
+                      className='dark:invert rounded-xl mb-1 transition transform duration-500 ease-in hover:scale-110'
                     />
                     <label className='text-sm'>Call Us</label>
                   </Link>
                 </div>
                 <div>
-                  <Link href='https://wa.me/2348033350750'>
+                  <Link
+                    href='https://wa.me/2348033350750'
+                    className='flex flex-col items-center'>
                     <Image
                       alt=''
                       priority
-                      width={40}
-                      height={40}
+                      width={50}
+                      height={50}
                       src='/gifs/chat.gif'
-                      className='dark:invert rounded-xl mb-1'
+                      className='dark:invert rounded-xl mb-1 transition transform duration-500 ease-in hover:scale-x-110 hover:bg-blue-100'
                     />
                     <label className='text-sm'>Chat With Us</label>
                   </Link>
