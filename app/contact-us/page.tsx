@@ -1,18 +1,28 @@
 import ContactForm from "@/components/ContactForm";
 import Image from "next/image";
 import Link from "next/link";
+import { createClient } from "@/utils/supabase/server";
 
-const ContactUs = () => {
+export const revalidate = 0
+
+const ContactUs = async () => {
+
+  const supabase = createClient();
+
+  const { data: contact } = await supabase
+    .from("contact")
+    .select("*")
+    .single();
+
   return (
     <div className='min-h-screen bg-gray-50 dark:bg-gray-950 py-12'>
       <div className='max-w-5xl mx-auto px-6 sm:px-8'>
         <div className='text-center mb-2 flex flex-col justify-center items-center'>
           <h2 className='text-3xl font-semibold sm:text-4xl'>
-            Get in Touch with Us
+            {contact.title}
           </h2>
           <p className='mt-4 text-gray-500 dark:text-gray-400'>
-            We&apos;d love to hear from you! Send us a message, and we&apos;ll
-            respond as soon as possible.
+            {contact.subtitle}
           </p>
           <Image
             alt=''
@@ -39,7 +49,7 @@ const ContactUs = () => {
               <div className='mt-2 flex gap-4'>
                 <div>
                   <Link
-                    href='tel:+2348033350750'
+                    href={`tel:+${contact.phone}`}
                     className='flex flex-col items-center'>
                     <Image
                       alt=''
@@ -54,7 +64,7 @@ const ContactUs = () => {
                 </div>
                 <div>
                   <Link
-                    href='https://wa.me/2348033350750'
+                    href={`https://wa.me/${contact.whatsapp}`}
                     className='flex flex-col items-center'>
                     <Image
                       alt=''
@@ -73,19 +83,20 @@ const ContactUs = () => {
               <h3 className='text-xl font-semibold dark:text-gray-300'>
                 Office Address
               </h3>
-              <p className='mt-2'>
-                1234 Example Street, Suite 100 <br />
-                City, State.
-              </p>
+              <p className='mt-2'>{contact.address}</p>
             </div>
             <div>
               <h3 className='text-xl font-semibold dark:text-gray-300'>
                 Working Hours
               </h3>
-              <p className='mt-2'>
+              {/* <p className='mt-2'>
                 Monday - Saturday: 9:00 AM - 5:00 PM <br />
                 Sunday: Closed
-              </p>
+              </p> */}
+              <div
+                className='animate-fadeIn max-w-none dark:text-gray-300 mt-2'
+                dangerouslySetInnerHTML={{ __html: contact.hours }}
+              />
             </div>
           </div>
         </div>

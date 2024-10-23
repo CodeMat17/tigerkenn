@@ -104,7 +104,7 @@ export default function BlogListPage() {
                   />
                 </div>
                 <div className='px-6 pb-6 pt-4 bg-white dark:bg-gray-800'>
-                  <h2 className='text-xl font-semibold text-blue-500 mb-2 leading-6 line-clamp-3'>
+                  <h2 className='text-xl font-semibold text-blue-500 mb-2 leading-6 line-clamp-2'>
                     {blog.title}
                   </h2>
                   <p className='text-gray-400 text-sm'>

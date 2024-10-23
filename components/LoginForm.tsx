@@ -70,7 +70,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className='max-w-lg mx-auto space-y-4'>
+    <div className=' space-y-4'>
       <div className='flex justify-center'>
         {isLogin ? (
           <Image
@@ -125,7 +125,7 @@ const LoginForm = () => {
         <Button
           type='submit'
           disabled={isLoading}
-          className={`w-full text-white bg-blue-500`}>
+          className={`w-full text-white bg-blue-500 hover:bg-blue-700`}>
           {isLoading ? (
             <MinusIcon className='animate-spin text-white' />
           ) : isLogin ? (
