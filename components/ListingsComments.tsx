@@ -19,13 +19,16 @@ type Comment = {
   parent_id: string | null; // Add parent_id to represent replies
 };
 
-const Comments = ({
-  id,
-  username,
-}: {
+type Props = {
   id: string;
   username: string | null;
-}) => {
+  user: any; // Supabase user object
+}
+
+const Comments = ({
+  id,
+  username, user
+}: Props) => {
   const supabase = createClient();
   const router = useRouter();
   const pathname = usePathname()
@@ -70,7 +73,7 @@ const Comments = ({
     e.preventDefault();
 
     // Check if a user is logged in
-    if (!username) {
+    if (!user) {
       toast.error("WAIT ooo!", {
         description: "You need to be logged in to add a comment",
       });
@@ -123,7 +126,7 @@ const Comments = ({
     e.preventDefault();
 
     // Check if a user is logged in
-    if (!username) {
+    if (!user) {
       toast.error("WAIT ooo!", {
         description: "You need to be logged in to reply a comment",
       });

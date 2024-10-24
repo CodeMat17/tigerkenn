@@ -120,7 +120,7 @@ const ListingDetails = async ({ params: { id } }: Props) => {
         </div>
       )}
       {/* Comments Section */}
-      <ListingsComments id={listing.id} username={username} />
+      <ListingsComments id={listing.id} user={user} username={username} />
     </div>
   );
 };
