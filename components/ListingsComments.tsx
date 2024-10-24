@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
+import { User } from "@supabase/supabase-js";
 
 // Define the structure of a comment
 type Comment = {
@@ -22,7 +23,7 @@ type Comment = {
 type Props = {
   id: string;
   username: string | null;
-  user: any; // Supabase user object
+  user: User | null; // Supabase user object
 }
 
 const Comments = ({
