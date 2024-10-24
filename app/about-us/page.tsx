@@ -3,7 +3,14 @@ import AboutUsIntro from "@/components/about-us/AboutUsIntro";
 import OurMission from "@/components/about-us/OurMission";
 import OurServices from "@/components/about-us/OurServices";
 import WhyChooseUs from "@/components/about-us/WhyChooseUs";
+import { Metadata } from "next";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description:
+    "At Tigerkenn Homes, we believe that every home tells a story. Founded on the principles of quality, integrity, and innovation, we are dedicated to providing comprehensive solutions for all your housing and construction needs. Whether you're looking to build your dream home, buy or sell land, or undertake a large-scale construction project, we are here to guide you every step of the way.",
+};
 
 const AboutPage = () => {
   return (

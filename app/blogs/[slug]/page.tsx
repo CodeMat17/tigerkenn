@@ -2,9 +2,17 @@ import BlogComments from "@/components/BlogComments";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/server"; // Adjust this path to your Supabase client
 import dayjs from "dayjs";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+
+export const metadata: Metadata = {
+  title: "Blog Post",
+  description:
+    "Stay updated with the latest articles, trends, and insights on real estate and home services. Explore our blog at Tigerkenn Homes to learn more about our mission, services, and how we’re fostering innovation and building lasting relationships with our clients.",
+};
 
 // Server Component to fetch blog post based on slug
 export default async function BlogPost({

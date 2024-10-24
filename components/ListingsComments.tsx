@@ -3,6 +3,7 @@
 import { createClient } from "@/utils/supabase/clients";
 import dayjs from "dayjs";
 import { MinusIcon } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
@@ -18,8 +19,16 @@ type Comment = {
   parent_id: string | null; // Add parent_id to represent replies
 };
 
-const Comments = ({ id }: { id: string }) => {
+const Comments = ({
+  id,
+  username,
+}: {
+  id: string;
+  username: string | null;
+}) => {
   const supabase = createClient();
+  const router = useRouter();
+  const pathname = usePathname()
 
   const [comments, setComments] = useState<Comment[]>([]); // Use the defined Comment[] type
   const [newComment, setNewComment] = useState<string>("");
@@ -60,6 +69,16 @@ const Comments = ({ id }: { id: string }) => {
   const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Check if a user is logged in
+    if (!username) {
+      toast.error("WAIT ooo!", {
+        description: "You need to be logged in to add a comment",
+      });
+      const returnUrl = encodeURIComponent(pathname)
+      router.push(`/login?returnUrl=${returnUrl}`); // Redirect to login if no user
+      return;
+    }
+
     if (!newComment.trim()) {
       toast.error("Please enter a comment");
       return;
@@ -70,7 +89,7 @@ const Comments = ({ id }: { id: string }) => {
     const formData = new FormData();
     formData.append("id", id);
     formData.append("comment", newComment);
-    formData.append("author", "Matthew Chukwu");
+    formData.append("author", `@${username}`);
     formData.append("date", new Date().toISOString());
     formData.append("parent_id", "null"); // Main comment should have no parent_id
 
@@ -103,6 +122,16 @@ const Comments = ({ id }: { id: string }) => {
   const handleAddReply = async (e: React.FormEvent, parentId: string) => {
     e.preventDefault();
 
+    // Check if a user is logged in
+    if (!username) {
+      toast.error("WAIT ooo!", {
+        description: "You need to be logged in to reply a comment",
+      });
+      const returnUrl = encodeURIComponent(pathname);
+      router.push(`/login?returnUrl=${returnUrl}`); // Redirect to login if no user
+      return;
+    }
+
     const replyText = replies[parentId];
     if (!replyText || !replyText.trim()) {
       toast.error("Please enter a valid reply");
@@ -114,7 +143,7 @@ const Comments = ({ id }: { id: string }) => {
     const formData = new FormData();
     formData.append("id", id);
     formData.append("comment", replyText);
-    formData.append("author", "Matthew Chukwu");
+    formData.append("author", `@${username}`);
     formData.append("date", new Date().toISOString());
     formData.append("parent_id", parentId); // Add reply to the correct parent comment
 

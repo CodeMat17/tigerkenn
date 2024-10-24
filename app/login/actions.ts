@@ -22,7 +22,14 @@ export async function login(formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/account");
+
+  const returnUrl = new URL(window.location.href).searchParams.get("returnUrl");
+
+  if (returnUrl) {
+    redirect(returnUrl);
+  } else {
+    redirect("/");
+  }
 }
 
 export async function signup(formData: FormData) {
@@ -38,11 +45,11 @@ export async function signup(formData: FormData) {
   const { error } = await supabase.auth.signUp(data);
 
   if (error) {
-     redirect(`/login?message=Error: ${error.message}`);
+    redirect(`/login?message=Error: ${error.message}`);
   }
 
   revalidatePath("/confirm", "layout");
-    redirect(
-      `/confirm?message=Check your email address: ${data.email} to confirm your account`
-    );
+  redirect(
+    `/confirm?message=Check your email address: ${data.email} to confirm your sign up.`
+  );
 }

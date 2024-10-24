@@ -48,9 +48,7 @@ const MobileSheet = () => {
                 variant='ghost'
                 onClick={handleClose}
                 className='w-full'>
-                <Link
-                  href={nav.href}
-                  className='text-xl tracking-wide'>
+                <Link href={nav.href} className='text-xl tracking-wide'>
                   {nav.title}
                 </Link>
               </Button>

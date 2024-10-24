@@ -2,6 +2,14 @@ import ContactForm from "@/components/ContactForm";
 import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact Us",
+  description:
+    "Get in touch with Tigerkenn Homes for inquiries, support, or more information about our real estate services. We're here to assist you with all your property needs and provide you with the best solutions.",
+};
+
 
 export const revalidate = 0
 

@@ -1,12 +1,28 @@
 // /app/listing/[id]/page.tsx
+import ListingsComments from "@/components/ListingsComments";
+import ScrollableProperties from "@/components/ScrollableProperties";
 import { createClient } from "@/utils/supabase/server";
 import { MapPin } from "lucide-react";
+import { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import ListingsComments from '@/components/ListingsComments'
-import ScrollableProperties from "@/components/ScrollableProperties";
+
+export const metadata: Metadata = {
+  title: "Property Listing",
+  description:
+    "View detailed information about this property listing, including images, pricing, and key features. Find your perfect home or investment opportunity with Tigerkenn Homes.",
+};
 
 export const revalidate = 0;
+
+function getUserNameFromEmail(email: string | undefined): string | null {
+  if (!email) {
+    return null;
+  }
+
+  const [username] = email.split("@");
+  return username;
+}
 
 type Props = {
   params: {
@@ -17,6 +33,17 @@ type Props = {
 const ListingDetails = async ({ params: { id } }: Props) => {
   const supabase = createClient();
 
+  // Check if a user's logged in
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+ 
+  const username = getUserNameFromEmail(user?.email);
+
+ 
+
+  
   const { data: listing, error } = await supabase
     .from("listings")
     .select("*")
@@ -47,7 +74,7 @@ const ListingDetails = async ({ params: { id } }: Props) => {
           </span>
         ) : (
           <span className='px-3 py-1 text-sm bg-red-100 text-red-800 rounded-full'>
-           Unavailable
+            Unavailable
           </span>
         )}
       </div>
@@ -93,7 +120,7 @@ const ListingDetails = async ({ params: { id } }: Props) => {
         </div>
       )}
       {/* Comments Section */}
-      <ListingsComments id={listing.id} />
+      <ListingsComments id={listing.id} username={username} />
     </div>
   );
 };

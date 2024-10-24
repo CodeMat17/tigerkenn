@@ -1,7 +1,7 @@
 "use client";
 
 import { login, signup } from "@/app/login/actions";
-import { MinusIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, MinusIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -15,66 +15,72 @@ const isValidEmail = (email: string) => {
 };
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLogin, setIsLogin] = useState(true); // true for login, false for signup
+  const [isLogin, setIsLogin] = useState(true); // State to toggle between login and signup
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // prevent form default submission
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
-    // Validate input fields
-    if (!email || !password) {
-      toast.error("ERROR!", { description: "Please fill in all fields." });
-      return;
-    }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    if (!isValidEmail(email)) {
-      toast.error("ERROR!", {
-        description: "Please enter a valid email address.",
+    const formData = new FormData(e.currentTarget);
+
+    const data = {
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+    };
+
+    // Use isValidEmail to validate email format
+    if (!isValidEmail(data.email)) {
+      toast("FAILED!", {
+        description: "Invalid email format.",
       });
-      return;
+      return; // Exit if email is invalid
     }
 
-    if (password.length < 6) {
-      toast.error("ERROR!", {
-        description: "Password must be at least 6 characters long.",
+    // Validate password field
+    if (!data.password) {
+      toast("FAILED!", {
+        description: "Password is required.",
       });
-      return;
+      return; // Exit if password is missing
     }
-
-    setIsLoading(true);
 
     try {
+      setIsLoading(true);
+
       const formActionData = new FormData();
-      formActionData.append("email", email);
-      formActionData.append("password", password);
+      formActionData.append("email", data.email);
+      formActionData.append("password", data.password);
 
       if (isLogin) {
-        await login(formActionData); // login action
+        // Login action
+        await login(formActionData);
       } else {
-        await signup(formActionData); // signup action
+        // Signup action
+        await signup(formActionData);
       }
-
-      //   toast.success(
-      //     isLogin ? "Logged in successfully!" : "Signed up successfully!"
-      //   );
     } catch (error) {
-      toast.error("ERROR!", {
-        description: `Authentication failed: ${error}`,
+      console.log("ErrorMsg: ", error);
+      toast("ERROR!", {
+        description: isLogin
+          ? "Failed to log in. Please try again."
+          : "Failed to sign up. Please try again.",
       });
-      console.error("Error during authentication:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className=' space-y-4'>
+    <div className='space-y-4'>
       <div className='flex justify-center'>
         {isLogin ? (
           <Image
-            alt=''
+            alt='Login'
             priority
             width={120}
             height={120}
@@ -83,7 +89,7 @@ const LoginForm = () => {
           />
         ) : (
           <Image
-            alt=''
+            alt='Signup'
             priority
             width={120}
             height={120}
@@ -101,8 +107,6 @@ const LoginForm = () => {
             name='email'
             type='email'
             placeholder='Enter your email here'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             required
             className='bg-white dark:bg-slate-800 mt-1'
           />
@@ -110,22 +114,32 @@ const LoginForm = () => {
 
         <div>
           <label htmlFor='password'>Password:</label>
-          <Input
-            id='password'
-            name='password'
-            type='password'
-            placeholder='Enter your password here'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className='bg-white dark:bg-slate-800 mt-1'
-          />
+          <div className="flex items-center">
+            <Input
+              id='password'
+              name='password'
+              type={showPassword ? "text" : "password"}
+              placeholder='Enter your password here'
+              required
+              className='bg-white dark:bg-slate-800 mt-1'
+            />
+            <button
+              type='button'
+              onClick={togglePasswordVisibility}
+              className='ml-2 border-blue-500 text-white rounded p-2'>
+              {showPassword ? (
+                <EyeOffIcon className='w-5 h-5 text-red-500' />
+              ) : (
+                <EyeIcon className='w-5 h-5 text-blue-500' />
+              )}
+            </button>
+          </div>
         </div>
 
         <Button
           type='submit'
           disabled={isLoading}
-          className={`w-full text-white bg-blue-500 hover:bg-blue-700`}>
+          className='w-full text-white bg-blue-500 hover:bg-blue-700'>
           {isLoading ? (
             <MinusIcon className='animate-spin text-white' />
           ) : isLogin ? (
