@@ -33,6 +33,7 @@ const Comments = ({
   const supabase = createClient();
   const router = useRouter();
   const pathname = usePathname()
+ 
 
   const [comments, setComments] = useState<Comment[]>([]); // Use the defined Comment[] type
   const [newComment, setNewComment] = useState<string>("");
@@ -78,8 +79,8 @@ const Comments = ({
       toast.error("WAIT ooo!", {
         description: "You need to be logged in to add a comment",
       });
-      const returnUrl = encodeURIComponent(pathname)
-      router.push(`/login?returnUrl=${returnUrl}`); // Redirect to login if no user
+      const returnUrl = pathname
+      router.push(`/login?returnUrl=${encodeURIComponent(returnUrl)}`); // Redirect to login if no user
       return;
     }
 

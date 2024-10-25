@@ -53,7 +53,6 @@ export const metadata: Metadata = {
   },
   description:
     "Founded on the principles of quality, integrity, and innovation, we are dedicated to providing comprehensive solutions for all your housing and construction needs.",
-
   openGraph: {
     title: "Tigerkenn Homes",
     description:

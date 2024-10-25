@@ -41,14 +41,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     blogPosts?.map((post) => ({
       url: `${process.env.NEXT_PUBLIC_BLOGS}/${post.slug}`,
       lastModified: new Date(post.published_at),
-    })) || [];
+    })) ?? [];
 
   // Dynamic listing pages
   const listingRoutes =
     listings?.map((listing) => ({
       url: `${process.env.NEXT_PUBLIC_LISTINGS}/${listing.id}`,
       lastModified: new Date(listing.created_at),
-    })) || [];
+    })) ?? [];
 
   // Combine static and dynamic routes
   return [...staticRoutes, ...blogRoutes, ...listingRoutes];

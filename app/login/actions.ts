@@ -21,15 +21,10 @@ export async function login(formData: FormData) {
     redirect(`/login?message=Error: ${error.message}`);
   }
 
+  const returnUrl = (formData.get("returnUrl") as string) || "/";
+
   revalidatePath("/", "layout");
-
-  const returnUrl = new URL(window.location.href).searchParams.get("returnUrl");
-
-  if (returnUrl) {
-    redirect(returnUrl);
-  } else {
-    redirect("/");
-  }
+  redirect(returnUrl);
 }
 
 export async function signup(formData: FormData) {
