@@ -4,7 +4,6 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 
-
 const LatestBlog = async () => {
   const supabase = createClient();
 
@@ -43,17 +42,13 @@ const LatestBlog = async () => {
                       className='w-full h-[120px] aspect-video object-cover'
                     />
 
-                    <div className=' flex justify-between items-center text-xs font-medium bg-amber-100/60 dark:bg-amber-100 text-amber-600 px-4 py-1'>
+                    <div className='flex justify-between items-center text-xs font-medium bg-blue-100/80 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-4 py-1'>
                       <p>
                         Published on{" "}
                         {dayjs(blog.published_at).format(
                           "MMM DD, YYYY hh:mm a"
                         )}
                       </p>
-                      {/* <p>
-                        Comments{" "}
-                        <span className='text-red-500'>({blog.comments})</span>
-                      </p> */}
                     </div>
 
                     <div className='p-4'>
