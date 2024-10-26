@@ -14,6 +14,17 @@ export const metadata: Metadata = {
     "Stay updated with the latest articles, trends, and insights on real estate and home services. Explore our blog at Tigerkenn Homes to learn more about our mission, services, and how we’re fostering innovation and building lasting relationships with our clients.",
 };
 
+export const revalidate = 0;
+
+function getUserNameFromEmail(email: string | undefined): string | null {
+  if (!email) {
+    return null;
+  }
+
+  const [username] = email.split("@");
+  return username;
+}
+
 // Server Component to fetch blog post based on slug
 export default async function BlogPost({
   params,
@@ -22,6 +33,13 @@ export default async function BlogPost({
 }) {
   const { slug } = params;
   const supabase = createClient();
+
+  // Check if a user's logged in
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const username = getUserNameFromEmail(user?.email);
 
   // Fetch blog from Supabase
   const { data: blog, error } = await supabase
@@ -69,7 +87,7 @@ export default async function BlogPost({
           <Link href='/blog'>Return to Blog List</Link>
         </Button>
       </div>
-      <BlogComments id={blog.id} />
+      <BlogComments id={blog.id} user={user} username={username} />
     </div>
   );
 }

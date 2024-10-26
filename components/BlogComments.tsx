@@ -7,6 +7,16 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
+import { usePathname, useRouter } from "next/navigation";
+import { User } from "@supabase/supabase-js";
+
+type Props = {
+  id: string;
+  username: string | null;
+  user: User | null; // Supabase user object
+};
+
+
 
 // Define the structure of a comment
 type Comment = {
@@ -19,9 +29,10 @@ type Comment = {
   parent_id: string | null; // Add parent_id to represent replies
 };
 
-const BlogComments = ({ id }: { id: string }) => {
-
+const BlogComments = ({ id, username, user }: Props) => {
   const supabase = createClient();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const [comments, setComments] = useState<Comment[]>([]); // Use the defined Comment[] type
   const [newComment, setNewComment] = useState<string>("");
@@ -31,174 +42,189 @@ const BlogComments = ({ id }: { id: string }) => {
   const [replies, setReplies] = useState<{ [key: string]: string }>({}); // Store reply content for each comment
   const [sendingReply, setSendingReply] = useState<string | null>(null); // Track which reply is being sent
 
-    useEffect(() => {
-      fetchComments();
-    }, []);
+  useEffect(() => {
+    fetchComments();
+  }, []);
 
-   const fetchComments = async () => {
-     setLoading(true);
+  const fetchComments = async () => {
+    setLoading(true);
 
-     try {
-       const { data, error } = await supabase
-         .from("blog_comments")
-         .select("*")
-         .eq("blog_id", id)
-         .order("created_at", { ascending: true });
+    try {
+      const { data, error } = await supabase
+        .from("blog_comments")
+        .select("*")
+        .eq("blog_id", id)
+        .order("created_at", { ascending: true });
 
-       if (error) {
-         console.error("Error fetching comments:", error);
-       }
+      if (error) {
+        console.error("Error fetching comments:", error);
+      }
 
-       if (data) {
-         setComments(data as Comment[]); // Ensure the data matches the Comment[] type
-       }
-     } catch (error) {
-       console.log("ErrorMsg: ", error);
-     } finally {
-       setLoading(false);
-     }
-   };
+      if (data) {
+        setComments(data as Comment[]); // Ensure the data matches the Comment[] type
+      }
+    } catch (error) {
+      console.log("ErrorMsg: ", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-   const handleAddComment = async (e: React.FormEvent) => {
-     e.preventDefault();
+  const handleAddComment = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-     if (!newComment.trim()) {
-       toast.error("Please enter a comment");
-       return;
-     }
+    // Check if a user is logged in
+    if (!user) {
+      alert("WAIT OOO! - You must be logged in to add a comment");
+      const returnUrl = pathname;
+      router.push(`/login?returnUrl=${encodeURIComponent(returnUrl)}`); // Redirect to login if no user
+      return;
+    }
 
-     setSendingComment(true);
+    if (!newComment.trim()) {
+      toast.error("Please enter a comment");
+      return;
+    }
 
-     const formData = new FormData();
-     formData.append("id", id);
-     formData.append("comment", newComment);
-     formData.append("author", "Matthew Chukwu");
-     formData.append("parent_id", "null"); // Main comment should have no parent_id
+    setSendingComment(true);
 
-     console.log('ID: ', id);
-     console.log("COMMENT: ", newComment);
-     console.log("AUTHOR: ", 'Matthew Chukwu');
-      
+    const formData = new FormData();
+    formData.append("id", id);
+    formData.append("comment", newComment);
+    formData.append("author", `@${username}`);
+    formData.append("parent_id", "null"); // Main comment should have no parent_id
 
-     try {
-       const res = await fetch("/api/add-blog-comment", {
-         method: "POST",
-         body: formData,
-       });
+    console.log("ID: ", id);
+    console.log("COMMENT: ", newComment);
+    console.log("AUTHOR: ", "Matthew Chukwu");
 
-       const result = await res.json();
+    try {
+      const res = await fetch("/api/add-blog-comment", {
+        method: "POST",
+        body: formData,
+      });
 
-       if (!res.ok) {
-         console.error("Error adding comment:", result);
-       } else {
-         toast("COMMENT ADDED!", {
-           description: "Your comment has been successfully added",
-         });
-       }
+      const result = await res.json();
 
-       fetchComments(); // Refresh comments after adding
-     } catch (error) {
-       console.log("Error adding comment: ", error);
-       toast.error("ERROR!", { description: `Error adding comment: ${error}` });
-     } finally {
-       setNewComment("");
-       setSendingComment(false);
-     }
-   };
+      if (!res.ok) {
+        console.error("Error adding comment:", result);
+      } else {
+        toast("COMMENT ADDED!", {
+          description: "Your comment has been successfully added",
+        });
+      }
 
-   const handleAddReply = async (e: React.FormEvent, parentId: string) => {
-     e.preventDefault();
+      fetchComments(); // Refresh comments after adding
+    } catch (error) {
+      console.log("Error adding comment: ", error);
+      toast.error("ERROR!", { description: `Error adding comment: ${error}` });
+    } finally {
+      setNewComment("");
+      setSendingComment(false);
+    }
+  };
 
-     const replyText = replies[parentId];
-     if (!replyText || !replyText.trim()) {
-       toast.error("Please enter a valid reply");
-       return;
-     }
+  const handleAddReply = async (e: React.FormEvent, parentId: string) => {
+    e.preventDefault();
 
-     setSendingReply(parentId);
+    // Check if a user is logged in
+    if (!user) {
+      alert("WAIT OOO! - You must be logged in to add a comment");
+      const returnUrl = pathname;
+      router.push(`/login?returnUrl=${encodeURIComponent(returnUrl)}`); // Redirect to login if no user
+      return;
+    }
 
-     const formData = new FormData();
-     formData.append("id", id);
-     formData.append("comment", replyText);
-     formData.append("author", "Matthew Chukwu");
-     formData.append("parent_id", parentId); // Add reply to the correct parent comment
+    const replyText = replies[parentId];
+    if (!replyText || !replyText.trim()) {
+      toast.error("Please enter a valid reply");
+      return;
+    }
 
-     try {
-       const res = await fetch("/api/add-blog-comment", {
-         method: "POST",
-         body: formData,
-       });
+    setSendingReply(parentId);
 
-       const result = await res.json();
+    const formData = new FormData();
+    formData.append("id", id);
+    formData.append("comment", replyText);
+    formData.append("author", `@${username}`);
+    formData.append("parent_id", parentId); // Add reply to the correct parent comment
 
-       if (!res.ok) {
-         console.error("Error adding reply:", result);
-       } else {
-         toast("REPLY ADDED!", {
-           description: "Your reply has been successfully added",
-         });
-       }
+    try {
+      const res = await fetch("/api/add-blog-comment", {
+        method: "POST",
+        body: formData,
+      });
 
-       fetchComments(); // Refresh comments after adding a reply
-     } catch (error) {
-       console.log("Error adding reply: ", error);
-       toast.error("ERROR!", { description: `Error adding reply: ${error}` });
-     } finally {
-       setReplies((prevReplies) => ({ ...prevReplies, [parentId]: "" })); // Clear reply textarea after submission
-       setActiveReplyBox(null); // Close reply box after reply is submitted
-       setSendingReply(null); // Reset sending state
-     }
-   };
+      const result = await res.json();
 
-   const handleReplyInputChange = (
-     e: React.ChangeEvent<HTMLTextAreaElement>,
-     parentId: string
-   ) => {
-     setReplies((prevReplies) => ({
-       ...prevReplies,
-       [parentId]: e.target.value,
-     }));
-   };
+      if (!res.ok) {
+        console.error("Error adding reply:", result);
+      } else {
+        toast("REPLY ADDED!", {
+          description: "Your reply has been successfully added",
+        });
+      }
 
-   // Render replies recursively
-   const renderReplies = (parentId: string) => {
-     return comments
-       .filter((comment) => comment.parent_id === parentId)
-       .map((reply) => (
-         <div key={reply.id} className='ml-6 border-l-2 pl-4 reply'>
-           <p className=''>{reply.comment}</p>
-           <p className='text-xs font-medium'>
-             {reply.author || "Anonymous"} |{" "}
-             {dayjs(reply.created_at).format("MMM DD, YYYY h:mm:ss a")}
-           </p>
-           <button
-             onClick={() => setActiveReplyBox(reply.id)}
-             className='text-xs text-blue-500'>
-             Reply
-           </button>
-           {/* If this reply's reply box is active, show textarea */}
-           {activeReplyBox === reply.id && (
-             <form
-               onSubmit={(e) => handleAddReply(e, reply.id)}
-               className='mt-2'>
-               <Textarea
-                 placeholder='Add your reply'
-                 value={replies[reply.id] || ""}
-                 onChange={(e) => handleReplyInputChange(e, reply.id)}
-                 className='w-full border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500'
-               />
-               <Button
-                 type='submit'
-                 className='mt-2 bg-blue-500 text-white font-semibold hover:bg-blue-600'
-                 disabled={sendingReply === reply.id}>
-                 {sendingReply === reply.id ? "Submitting..." : "Submit Reply"}
-               </Button>
-             </form>
-           )}
-           {renderReplies(reply.id)} {/* Recursively render replies */}
-         </div>
-       ));
-   };
+      fetchComments(); // Refresh comments after adding a reply
+    } catch (error) {
+      console.log("Error adding reply: ", error);
+      toast.error("ERROR!", { description: `Error adding reply: ${error}` });
+    } finally {
+      setReplies((prevReplies) => ({ ...prevReplies, [parentId]: "" })); // Clear reply textarea after submission
+      setActiveReplyBox(null); // Close reply box after reply is submitted
+      setSendingReply(null); // Reset sending state
+    }
+  };
+
+  const handleReplyInputChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+    parentId: string
+  ) => {
+    setReplies((prevReplies) => ({
+      ...prevReplies,
+      [parentId]: e.target.value,
+    }));
+  };
+
+  // Render replies recursively
+  const renderReplies = (parentId: string) => {
+    return comments
+      .filter((comment) => comment.parent_id === parentId)
+      .map((reply) => (
+        <div key={reply.id} className='ml-6 border-l-2 pl-4 reply'>
+          <p className=''>{reply.comment}</p>
+          <p className='text-xs font-medium'>
+            {reply.author || "Anonymous"} |{" "}
+            {dayjs(reply.created_at).format("MMM DD, YYYY h:mm:ss a")}
+          </p>
+          <button
+            onClick={() => setActiveReplyBox(reply.id)}
+            className='text-xs text-blue-500'>
+            Reply
+          </button>
+          {/* If this reply's reply box is active, show textarea */}
+          {activeReplyBox === reply.id && (
+            <form
+              onSubmit={(e) => handleAddReply(e, reply.id)}
+              className='mt-2'>
+              <Textarea
+                placeholder='Add your reply'
+                value={replies[reply.id] || ""}
+                onChange={(e) => handleReplyInputChange(e, reply.id)}
+                className='w-full border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500'
+              />
+              <Button
+                type='submit'
+                className='mt-2 bg-blue-500 text-white font-semibold hover:bg-blue-600'
+                disabled={sendingReply === reply.id}>
+                {sendingReply === reply.id ? "Submitting..." : "Submit Reply"}
+              </Button>
+            </form>
+          )}
+          {renderReplies(reply.id)} {/* Recursively render replies */}
+        </div>
+      ));
+  };
 
   return (
     <div className='bg-gray-100 dark:bg-gray-900 p-6 rounded-lg mt-8 mb-12'>
@@ -225,7 +251,9 @@ const BlogComments = ({ id }: { id: string }) => {
                       <p className=' '>{comment.comment}</p>
                       <p className='text-xs font-medium'>
                         {comment.author || "Anonymous"} |{" "}
-                        {dayjs(comment.created_at).format("MMM DD, YYYY h:mm:ss a")}
+                        {dayjs(comment.created_at).format(
+                          "MMM DD, YYYY h:mm:ss a"
+                        )}
                       </p>
                     </div>
                     <button
@@ -275,7 +303,11 @@ const BlogComments = ({ id }: { id: string }) => {
             type='submit'
             className='mt-2 bg-blue-500 text-white font-semibold hover:bg-blue-600'
             disabled={sendingComment}>
-            {sendingComment ? <MinusIcon className="animate-spin" /> : "Submit Comment"}
+            {sendingComment ? (
+              <MinusIcon className='animate-spin' />
+            ) : (
+              "Submit Comment"
+            )}
           </Button>
         </form>
       </div>

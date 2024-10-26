@@ -21,10 +21,8 @@ export async function login(formData: FormData) {
     redirect(`/login?message=Error: ${error.message}`);
   }
 
-  const returnUrl = (formData.get("returnUrl") as string) || "/";
-
   revalidatePath("/", "layout");
-  redirect(returnUrl);
+  redirect("/");
 }
 
 export async function signup(formData: FormData) {

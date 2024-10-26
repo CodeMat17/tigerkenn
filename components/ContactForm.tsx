@@ -1,41 +1,60 @@
-'use client'
+"use client";
 
-import React, { useState } from "react";
+import { Minus } from "lucide-react";
+import  { useState } from "react";
+import { toast } from "sonner";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import { Button } from "./ui/button";
 
 const ContactForm = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { name, email, message } = formData;
 
     // Basic form validation
     if (!name || !email || !message) {
       setError("All fields are required");
       return;
     }
-    setError("");
 
-    // Send form data to server (not implemented here)
-    console.log("Form submitted", formData);
+    try {
+      setError("");
+      setIsSubmitting(true);
 
-    // Clear form after submission
-    setFormData({ name: "", email: "", message: "" });
+      const res = await fetch(`/api/send`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+   
+      if (res.ok) {
+        toast("DONE!", { description: "Message sent successfully!" });
+            setName("");
+            setEmail("");
+            setMessage("");
+      } else {
+     toast.error("ERROR!", {
+       description: "An error occurred while sending your message.",
+     });
+    throw new Error("Failed to send message");
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      toast.error("ERROR!", {
+        description: "An error occurred while sending your message.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -50,8 +69,8 @@ const ContactForm = () => {
           type='text'
           name='name'
           id='name'
-          value={formData.name}
-          onChange={handleChange}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           className='mt-1 w-full focus:outline-none border-none  bg-gray-200 dark:bg-gray-900 focus:border-indigo-500'
           required
         />
@@ -66,8 +85,8 @@ const ContactForm = () => {
           type='email'
           name='email'
           id='email'
-          value={formData.email}
-          onChange={handleChange}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className='mt-1 w-full focus:outline-none border-none  bg-gray-200 dark:bg-gray-900 focus:border-indigo-500'
           required
         />
@@ -82,8 +101,8 @@ const ContactForm = () => {
           name='message'
           id='message'
           rows={4}
-          value={formData.message}
-          onChange={handleChange}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
           className='mt-1 w-full focus:outline-none border-none bg-gray-200 dark:bg-gray-900 focus:border-indigo-500'
           required
         />
@@ -92,11 +111,12 @@ const ContactForm = () => {
       {error && <p className='text-red-500 text-sm'>{error}</p>}
 
       <div>
-        <button
+        <Button
           type='submit'
-          className='w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
-          Send Message
-        </button>
+          disabled={isSubmitting}
+          className='w-full  text-white bg-blue-600 hover:bg-blue-700 '>
+          {isSubmitting ? <Minus className='animate-spin' /> : "Send Message"}
+        </Button>
       </div>
     </form>
   );
