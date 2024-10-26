@@ -70,7 +70,7 @@ const RecentListing = async () => {
                               {list.title}
                             </h2>
                             <div className='flex justify-start  mt-2'>
-                              <p className='px-2 py-0 w-auto text-amber-500 border rounded-full border-amber-500'>
+                              <p className='px-2 py-0 w-auto text-blue-500 rounded-full shadow-md bg-blue-100'>
                                 {list.location}
                               </p>
                             </div>
@@ -78,21 +78,21 @@ const RecentListing = async () => {
                             <div className='mt-2 flex items-center justify-between gap-2.5'>
                               {list.beds && (
                                 <div className='flex items-center gap-1'>
-                                  <BedIcon className='w-4 h-4 text-amber-500' />
+                                  <BedIcon className='w-4 h-4 text-blue-500' />
                                   <p className='text-sm'>{list.beds} Beds</p>
                                 </div>
                               )}
 
                               {list.baths && (
                                 <div className='flex items-center gap-1'>
-                                  <BathIcon className='w-4 h-4 text-amber-500' />
+                                  <BathIcon className='w-4 h-4 text-blue-500' />
                                   <p className='text-sm'>{list.baths} Baths</p>
                                 </div>
                               )}
 
                               {list.sqm && (
                                 <div className='flex items-center gap-1'>
-                                  <RatioIcon className='w-4 h-4 text-amber-500' />
+                                  <RatioIcon className='w-4 h-4 text-blue-500' />
                                   <p className='text-sm'>{list.sqm} Sqm</p>
                                 </div>
                               )}
