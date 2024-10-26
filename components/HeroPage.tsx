@@ -4,17 +4,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import {   useEffect, useState } from "react";
 
-const images = [
-  { src: "/hero/hero1.webp", alt: "Image 1" },
-  { src: "/hero/hero2.webp", alt: "Image 2" },
-  { src: "/hero/hero3.webp", alt: "Image 3" },
-  { src: "/hero/hero4.webp", alt: "Image 4" },
-  { src: "/hero/hero5.webp", alt: "Image 5" },
-  { src: "/hero/hero6.webp", alt: "Image 6" },
-  { src: "/hero/hero7.webp", alt: "Image 7" },
-];
+
 
 type HeroProps = {
   title: string;
@@ -25,14 +17,14 @@ type HeroProps = {
 const HeroPage = ({ title, desc, content }: HeroProps) => {
   const [index, setIndex] = useState(0);
 
-  // Auto-rotate the images every 5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000);
+useEffect(() => {
+  const interval = setInterval(() => {
+    setIndex((prevIndex) => (prevIndex + 1) % content.length);
+  }, 3000); // Change images every 3 seconds
 
-    return () => clearInterval(interval); // Clear interval on component unmount
-  }, []);
+  return () => clearInterval(interval);
+}, [content.length]);
+ 
 
   return (
     <div className='relative w-full h-[calc(100vh-10rem)] sm:h-[calc(100vh-7rem)] lg:h-[calc(100vh-4rem)] flex items-center justify-center bg-gray-900 overflow-hidden'>
@@ -47,12 +39,14 @@ const HeroPage = ({ title, desc, content }: HeroProps) => {
                   initial={{ y: "-100%", opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: "100%", opacity: 0 }}
-                  transition={{ duration: 1 }}>
+                  transition={{ duration: 0.6, ease: "easeInOut" }}>
                   <Image
-                    priority
+                    priority={i === 0}
                     src={image}
-                    alt={image}
+                    alt={`Hero Image ${i}`}
                     fill
+                    sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                    loading={i === 0 ? "eager" : "lazy"} // Set eager for the first image
                     className='w-full h-full object-cover'
                   />
                   {/* Dark Overlay */}
@@ -74,7 +68,7 @@ const HeroPage = ({ title, desc, content }: HeroProps) => {
           className='mt-4 text-lg'
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}>
+          transition={{ delay: 0.8 }}>
           {desc}
         </motion.p>
         <motion.div>
