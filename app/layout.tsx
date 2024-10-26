@@ -21,6 +21,10 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://tigerkennhomes.com"),
   keywords: [
     "TigerKenn Homes",
+    "TigerKennhomes",
+    "TigerKenn",
+    "Tiger kenn",
+    "Tiger kenn homes",
     "Luxury homes for sale",
     "Affordable real estate listings",
     "Buy homes in Nigeria",
@@ -52,11 +56,11 @@ export const metadata: Metadata = {
     template: "%s | Tigerkenn Homes",
   },
   description:
-    "Founded on the principles of quality, integrity, and innovation, we are dedicated to providing comprehensive solutions for all your housing and construction needs.",
+    "We are dedicated to providing comprehensive solutions for all your housing and construction needs.",
   openGraph: {
     title: "Tigerkenn Homes",
     description:
-      "Founded on the principles of quality, integrity, and innovation, we are dedicated to providing comprehensive solutions for all your housing and construction needs.",
+      "We are dedicated to providing comprehensive solutions for all your housing and construction needs.",
     type: "website",
     locale: "en_US",
     url: "https://tigerkennhomes.com/",
