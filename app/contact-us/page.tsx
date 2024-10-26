@@ -56,7 +56,7 @@ const ContactUs = async () => {
               </h3>
               <div className='mt-2 flex gap-4'>
                 <div>
-                  <Link
+                  <Link aria-label="phone call"
                     href={`tel:+${contact.phone}`}
                     className='flex flex-col items-center'>
                     <Image
@@ -71,7 +71,7 @@ const ContactUs = async () => {
                   </Link>
                 </div>
                 <div>
-                  <Link
+                  <Link aria-label="whatsApp chat"
                     href={`https://wa.me/${contact.whatsapp}`}
                     className='flex flex-col items-center'>
                     <Image
@@ -112,16 +112,5 @@ const ContactUs = async () => {
     </div>
   );
 };
-
-// import { Resend } from 'resend';
-
-// const resend = new Resend('re_K84iEPM5_PTYpW4xC8VYRqHGFiciSb3QJ');
-
-// resend.emails.send({
-//   from: 'onboarding@resend.dev',
-//   to: 'support@tigerkennhomes.com',
-//   subject: 'Hello World',
-//   html: '<p>Congrats on sending your <strong>first email</strong>!</p>'
-// });
 
 export default ContactUs;

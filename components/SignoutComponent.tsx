@@ -20,7 +20,10 @@ const SignoutComponent = () => {
       onSubmit={handleSignout}
       // action='/auth/signout' method='post'
     >
-      <Button type='submit' className='text-red-500 rounded-full'>
+      <Button
+        aria-label='sign out'
+        type='submit'
+        className='text-red-500 rounded-full'>
         <PowerOffIcon
           className={`w-4 h-4 ${loading ? "animate-bounce" : ""}`}
         />

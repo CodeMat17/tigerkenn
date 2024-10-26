@@ -197,7 +197,7 @@ const BlogComments = ({ id, username, user }: Props) => {
             {reply.author || "Anonymous"} |{" "}
             {dayjs(reply.created_at).format("MMM DD, YYYY h:mm:ss a")}
           </p>
-          <button
+          <button aria-label="reply btn"
             onClick={() => setActiveReplyBox(reply.id)}
             className='text-xs text-blue-500'>
             Reply
@@ -213,7 +213,7 @@ const BlogComments = ({ id, username, user }: Props) => {
                 onChange={(e) => handleReplyInputChange(e, reply.id)}
                 className='w-full border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500'
               />
-              <Button
+              <Button aria-label="submit reply"
                 type='submit'
                 className='mt-2 bg-blue-500 text-white font-semibold hover:bg-blue-600'
                 disabled={sendingReply === reply.id}>
@@ -256,7 +256,7 @@ const BlogComments = ({ id, username, user }: Props) => {
                         )}
                       </p>
                     </div>
-                    <button
+                    <button aria-label="reply"
                       onClick={() => setActiveReplyBox(comment.id)}
                       className='text-xs text-blue-500'>
                       Reply
@@ -274,7 +274,7 @@ const BlogComments = ({ id, username, user }: Props) => {
                           }
                           className='w-full border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500'
                         />
-                        <Button
+                        <Button aria-label="submit"
                           type='submit'
                           className='mt-2 bg-blue-500 text-white font-semibold hover:bg-blue-600'
                           disabled={sendingReply === comment.id}>
@@ -299,7 +299,7 @@ const BlogComments = ({ id, username, user }: Props) => {
             onChange={(e) => setNewComment(e.target.value)}
             className='w-full border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
-          <Button
+          <Button aria-label="submit"
             type='submit'
             className='mt-2 bg-blue-500 text-white font-semibold hover:bg-blue-600'
             disabled={sendingComment}>

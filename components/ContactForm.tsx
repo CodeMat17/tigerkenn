@@ -111,7 +111,7 @@ const ContactForm = () => {
       {error && <p className='text-red-500 text-sm'>{error}</p>}
 
       <div>
-        <Button
+        <Button aria-label="submit btn"
           type='submit'
           disabled={isSubmitting}
           className='w-full  text-white bg-blue-600 hover:bg-blue-700 '>

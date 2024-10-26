@@ -28,10 +28,11 @@ const MobileSheet = () => {
   };
 
   return (
-    <div className="md:hidden">
+    <div className='md:hidden'>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <Button
+            aria-label='menu'
             size='icon'
             variant='ghost'
             onClick={() => setOpen(true)}
@@ -43,6 +44,7 @@ const MobileSheet = () => {
           <div className='pb-8 h-screen flex flex-col gap-4 justify-center items-center text-start'>
             {navs.map((nav, i) => (
               <Button
+                aria-label='nav links'
                 key={i}
                 asChild
                 variant='ghost'

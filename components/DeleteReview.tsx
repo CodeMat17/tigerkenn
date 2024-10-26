@@ -74,7 +74,7 @@ const DeleteReview = ({ id, rName, rPosition, rBody }: Props) => {
             </p>
           </div>
           <DialogFooter>
-            <Button onClick={handleDelete}>
+            <Button aria-label="delete button" onClick={handleDelete}>
               {loading ? (
                 <MinusIcon className='animate-spin w-8 h-8 shrink-0' />
               ) : (

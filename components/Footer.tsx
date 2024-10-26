@@ -29,35 +29,35 @@ const Footer = () => {
         <div className='mt-3 sm:mx-auto'>
           <h3 className='font-medium text-lg text-gray-300'>Quick Links</h3>
           <div className='flex flex-col justify-start items-start'>
-            <Button
+            <Button aria-label="nav link"
               asChild
               variant='ghost'
               className='hover:bg-gray-800 hover:text-white'>
-              <Link href='/'>Home</Link>
+              <Link aria-label="nav link" href='/'>Home</Link>
             </Button>
-            <Button
+            <Button aria-label="nav link"
               asChild
               variant='ghost'
               className='hover:bg-gray-800 hover:text-white'>
-              <Link href='/about-us'>About Us</Link>
+              <Link aria-label="nav link" href='/about-us'>About Us</Link>
             </Button>
-            <Button
+            <Button aria-label="nav link"
               asChild
               variant='ghost'
               className='hover:bg-gray-800 hover:text-white'>
-              <Link href='/listings'>Listings</Link>
+              <Link aria-label="nav link" href='/listings'>Listings</Link>
             </Button>
-            <Button
+            <Button aria-label="nav link"
               asChild
               variant='ghost'
               className='hover:bg-gray-800 hover:text-white'>
-              <Link href='/blogs'>Blog Posts</Link>
+              <Link aria-label="nav link" href='/blogs'>Blog Posts</Link>
             </Button>
-            <Button
+            <Button aria-label="nav link"
               asChild
               variant='ghost'
               className='hover:bg-gray-800 hover:text-white'>
-              <Link href='/contact-us'>Contact Us</Link>
+              <Link aria-label="nav link" href='/contact-us'>Contact Us</Link>
             </Button>
           </div>
         </div>

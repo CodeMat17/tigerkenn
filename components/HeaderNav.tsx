@@ -27,8 +27,15 @@ const HeaderNav = async () => {
             {user ? (
               <SignoutComponent />
             ) : (
-              <Button asChild className="rounded-full">
-                <Link href='/login'>Login | Sign Up</Link>
+              <Button
+                asChild
+                aria-label='Open mobile menu'
+                aria-expanded='false'
+                aria-controls='mobile-menu'
+                className='rounded-full'>
+                <Link aria-label='Open mobile menu' href='/login'>
+                  Login | Sign Up
+                </Link>
               </Button>
             )}
           </div>

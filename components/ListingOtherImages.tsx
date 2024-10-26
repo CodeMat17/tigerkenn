@@ -126,8 +126,11 @@ const ListingOtherImages = ({ id, images }: Props) => {
           onChange={handleFilesChange}
         />
         <div className='flex flex-col justify-center'>
-          <Button onClick={handleButtonClick} className='w-full'>
-           Attach Images
+          <Button
+            aria-label='attach image'
+            onClick={handleButtonClick}
+            className='w-full'>
+            Attach Images
           </Button>
           {selectedFiles && (
             <span className='text-xs text-center'>
@@ -138,14 +141,17 @@ const ListingOtherImages = ({ id, images }: Props) => {
 
         <div className='flex flex-col justify-center'>
           <Button
+            aria-label='update image'
             onClick={handleSubmit}
             disabled={updating || !selectedFiles}
             className={`w-full `}>
-            {updating
-              ? <MinusIcon className="animate-spin"/>
-              : selectedImageIndex !== null
-              ? "Replace Image"
-              : "Update Images"}
+            {updating ? (
+              <MinusIcon className='animate-spin' />
+            ) : selectedImageIndex !== null ? (
+              "Replace Image"
+            ) : (
+              "Update Images"
+            )}
           </Button>
         </div>
       </div>

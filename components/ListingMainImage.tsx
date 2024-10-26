@@ -101,8 +101,10 @@ const ListingMainImage = ({ id, image }: Props) => {
           onChange={handleFileChange}
         />
         <div className='flex flex-col justify-center'>
-          <Button onClick={handleButtonClick} className='w-full'>
-        
+          <Button
+            aria-label='attach image'
+            onClick={handleButtonClick}
+            className='w-full'>
             {image ? "Replace Image" : "Attach Image"}
           </Button>
           {selectedFile && (
@@ -114,14 +116,17 @@ const ListingMainImage = ({ id, image }: Props) => {
 
         <div className='flex flex-col justify-center'>
           <Button
+            aria-label='submit image'
             onClick={handleSubmit}
             disabled={updating || !selectedFile}
             className={`w-full`}>
-            {updating
-              ? <MinusIcon className="animate-spin"/>
-              : image
-              ? "Submit Replacement"
-              : "Upload Image"}
+            {updating ? (
+              <MinusIcon className='animate-spin' />
+            ) : image ? (
+              "Submit Replacement"
+            ) : (
+              "Upload Image"
+            )}
           </Button>
         </div>
       </div>

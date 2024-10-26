@@ -28,7 +28,11 @@ const LatestBlog = async () => {
           <div className='flex flex-wrap justify-center gap-5  dark:text-gray-400'>
             {blogs &&
               blogs.map((blog) => (
-                <Link key={blog.id} href={`/blogs/${blog.slug}`} className='w-full max-w-[300px]'>
+                <Link
+                  aria-label='blog post'
+                  key={blog.id}
+                  href={`/blogs/${blog.slug}`}
+                  className='w-full max-w-[300px]'>
                   <div className=' rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition transform hover:scale-105 ease-in-out duration-500'>
                     <Image
                       alt={blog.img}
@@ -56,7 +60,6 @@ const LatestBlog = async () => {
                       <h2 className='text-lg font-semibold leading-5 mb-2 dark:text-gray-300 line-clamp-2'>
                         {blog.title}
                       </h2>
-                   
                     </div>
                   </div>
                 </Link>
@@ -65,7 +68,7 @@ const LatestBlog = async () => {
         )}
       </div>
       <div className='flex justify-center mt-6'>
-        <Link href='/blogs'>
+        <Link aria-label='blog page' href='/blogs'>
           <ShimmerButton className='shadow-2xl'>
             <span className='whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg'>
               Read More Blog Posts

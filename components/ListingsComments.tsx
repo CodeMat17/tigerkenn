@@ -197,6 +197,7 @@ const Comments = ({
             {dayjs(reply.date).format("MMM DD, YYYY h:mm:ss a")}
           </p>
           <button
+            aria-label='reply'
             onClick={() => setActiveReplyBox(reply.id)}
             className='text-xs text-blue-500'>
             Reply
@@ -213,6 +214,7 @@ const Comments = ({
                 className='w-full border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500'
               />
               <Button
+                aria-label='submit'
                 type='submit'
                 className='mt-2 bg-blue-500 text-white font-semibold hover:bg-blue-600'
                 disabled={sendingReply === reply.id}>
@@ -254,6 +256,7 @@ const Comments = ({
                       </p>
                     </div>
                     <button
+                      aria-label='reply'
                       onClick={() => setActiveReplyBox(comment.id)}
                       className='text-xs text-blue-500'>
                       Reply
@@ -272,6 +275,7 @@ const Comments = ({
                           className='w-full border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500'
                         />
                         <Button
+                          aria-label='submit'
                           type='submit'
                           className='mt-2 bg-blue-500 text-white font-semibold hover:bg-blue-600'
                           disabled={sendingReply === comment.id}>
@@ -297,6 +301,7 @@ const Comments = ({
             className='w-full border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
           <Button
+            aria-label='submit'
             type='submit'
             className='mt-2 bg-blue-500 text-white font-semibold hover:bg-blue-600'
             disabled={sendingComment}>

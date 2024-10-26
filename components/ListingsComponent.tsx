@@ -220,6 +220,7 @@ const ListingsComponent: React.FC = () => {
               <PaginationContent>
                 <PaginationItem>
                   <Button
+                    aria-label='prev'
                     variant='ghost'
                     onClick={() => setPage(page - 1)}
                     disabled={page === 0}>
@@ -234,6 +235,7 @@ const ListingsComponent: React.FC = () => {
 
                 <PaginationItem>
                   <Button
+                    aria-label='next'
                     variant='ghost'
                     onClick={() => setPage(page + 1)}
                     disabled={page >= totalPages - 1}>

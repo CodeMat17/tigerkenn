@@ -114,7 +114,7 @@ const LoginForm = () => {
 
         <div>
           <label htmlFor='password'>Password:</label>
-          <div className="flex items-center">
+          <div className='flex items-center'>
             <Input
               id='password'
               name='password'
@@ -124,6 +124,7 @@ const LoginForm = () => {
               className='bg-white dark:bg-slate-800 mt-1'
             />
             <button
+              aria-label='visibility'
               type='button'
               onClick={togglePasswordVisibility}
               className='ml-2 border-blue-500 text-white rounded p-2'>
@@ -137,6 +138,7 @@ const LoginForm = () => {
         </div>
 
         <Button
+          aria-label='sign up'
           type='submit'
           disabled={isLoading}
           className='w-full text-white bg-blue-500 hover:bg-blue-700'>
@@ -156,6 +158,7 @@ const LoginForm = () => {
           <p>
             Don&apos;t have an account?{" "}
             <button
+              aria-label='switch'
               type='button'
               onClick={() => setIsLogin(false)}
               className='text-blue-500 underline'>
@@ -166,6 +169,7 @@ const LoginForm = () => {
           <p>
             Already have an account?{" "}
             <button
+              aria-label='switch'
               type='button'
               onClick={() => setIsLogin(true)}
               className='text-blue-500 underline'>

@@ -90,7 +90,7 @@ export default function BlogList() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}>
-              <Link
+              <Link aria-label="dynamic link"
                 href={`/blogs/${blog.slug}`}
                 className='block hover:scale-105 transition-transform duration-300'>
                 <div className='relative h-48'>
@@ -118,7 +118,7 @@ export default function BlogList() {
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <Button
+                <Button aria-label="prev button"
                   variant='ghost'
                   onClick={() => setPage(page - 1)}
                   disabled={page === 0}>
@@ -132,7 +132,7 @@ export default function BlogList() {
               </PaginationItem>
 
               <PaginationItem>
-                <Button
+                <Button aria-label="next button"
                   variant='ghost'
                   onClick={() => setPage(page + 1)}
                   disabled={page >= totalPages - 1}>

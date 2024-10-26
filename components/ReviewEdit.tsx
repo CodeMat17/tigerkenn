@@ -98,7 +98,7 @@ const ReviewEdit = ({ id, reviewName, reviewPosition, reviewBody }: Props) => {
         </p>
       </div>
 
-      <Button onClick={handleSubmit} className='w-full'>
+      <Button aria-label='submit' onClick={handleSubmit} className='w-full'>
         {loading ? <MinusIcon className='animate-spin' /> : "Submit"}
       </Button>
     </div>

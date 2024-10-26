@@ -19,8 +19,8 @@ const DesktopNav = () => {
   return (
     <div className='hidden md:flex gap-1.5'>
       {links.map((link, index) => (
-        <Button key={index} asChild variant='ghost' className={`transition-all transform duration-500 ease-out text-white hover:bg-gray-800/30 hover:text-white ${link.href === pathname ? 'bg-gray-800/20' : ''} `}>
-          <Link href={link.href}>{link.label}</Link>
+        <Button aria-label="desktop nav link" key={index} asChild variant='ghost' className={`transition-all transform duration-500 ease-out text-white hover:bg-gray-800/30 hover:text-white ${link.href === pathname ? 'bg-gray-800/20' : ''} `}>
+          <Link aria-label="desktop nav link" href={link.href}>{link.label}</Link>
         </Button>
       ))}
     </div>

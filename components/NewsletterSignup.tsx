@@ -82,6 +82,7 @@ const NewsletterSignup = () => {
                   required
                 />
                 <Button
+                  aria-label='subscribe'
                   type='submit'
                   className='bg-blue-600 text-white hover:bg-blue-700 h-full rounded-none py-4'>
                   {loading ? (

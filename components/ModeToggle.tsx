@@ -21,7 +21,7 @@ const ThemeToggle = () => {
     <button
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
       aria-label='Toggle theme'>
-      {theme === "light" ? <Sun className="text-amber-500" /> : <Moon />}
+      {theme === "light" ? <Sun className='text-amber-500' /> : <Moon />}
     </button>
   );
 };
