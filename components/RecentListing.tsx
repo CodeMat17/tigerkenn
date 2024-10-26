@@ -70,7 +70,7 @@ const RecentListing = async () => {
                               {list.title}
                             </h2>
                             <div className='flex justify-start  mt-2'>
-                              <p className='px-2 py-0 w-auto text-blue-500 rounded-full shadow-md bg-blue-100'>
+                              <p className='px-2 py-0 w-auto text-blue-800 rounded-full shadow-md bg-blue-200'>
                                 {list.location}
                               </p>
                             </div>
