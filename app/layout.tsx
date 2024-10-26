@@ -25,6 +25,9 @@ export const metadata: Metadata = {
     "TigerKenn",
     "Tiger kenn",
     "Tiger kenn homes",
+    "homes",
+    "affordable houses",
+    "Best real estate consultant",
     "Luxury homes for sale",
     "Affordable real estate listings",
     "Buy homes in Nigeria",
@@ -33,6 +36,7 @@ export const metadata: Metadata = {
     "Buy homes in Imo",
     "Buy homes in Ebonyi",
     "Buy homes in Abia",
+    "buy properties",
     "Estate consultant",
     "Residential properties",
     "Modern homes for sale",
@@ -58,7 +62,8 @@ export const metadata: Metadata = {
   description:
     "We are dedicated to providing comprehensive solutions for all your housing and construction needs.",
   openGraph: {
-    title: "Tigerkenn Homes",
+    title:
+      "Tigerkenn Homes, founded on the principles of quality, integrity, and innovation",
     description:
       "We are dedicated to providing comprehensive solutions for all your housing and construction needs.",
     type: "website",
