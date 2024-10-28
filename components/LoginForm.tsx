@@ -3,6 +3,7 @@
 import { login, signup } from "@/app/login/actions";
 import { EyeIcon, EyeOffIcon, MinusIcon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
@@ -177,6 +178,11 @@ const LoginForm = () => {
             </button>
           </p>
         )}
+
+        <Button asChild variant='ghost' className='hover:text-blue-600'>
+          <Link aria-label='reset' href='/reset-password'>Forgot password?
+          </Link>
+        </Button>
       </div>
     </div>
   );
