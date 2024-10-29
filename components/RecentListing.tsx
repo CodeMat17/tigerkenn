@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import { BathIcon, BedIcon, RatioIcon } from "lucide-react";
+import { BathIcon, BedIcon, RulerIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ShimmerButton from "./ui/shimmer-button";
@@ -28,7 +28,7 @@ const RecentListing = async () => {
                 listings.map((list, i) => (
                   <div
                     key={i}
-                    className='rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl group w-full max-w-[320px] sm:max-w-[290px] '>
+                    className='rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl group w-full max-w-[330px] sm:max-w-[300px] '>
                     <Link href={`/listings/${list.id}`}>
                       <div className='transition transform duration-300 ease-in-out hover:scale-105'>
                         <div className='relative'>
@@ -87,7 +87,7 @@ const RecentListing = async () => {
 
                             {list.sqm && (
                               <div className='flex items-center gap-1'>
-                                <RatioIcon className='w-4 h-4 text-blue-500' />
+                                <RulerIcon className='w-4 h-4 text-blue-500' />
                                 <p className='text-sm'>{list.sqm} Sqm</p>
                               </div>
                             )}
