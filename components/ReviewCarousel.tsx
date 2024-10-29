@@ -1,15 +1,16 @@
-import {createClient} from '@/utils/supabase/server'
+"use client";
+
+import React, { useEffect, useState } from "react"; // Import React here
+import { createClient } from "@/utils/supabase/clients";
 import { StarFilledIcon } from "@radix-ui/react-icons";
-import { QuoteIcon } from "lucide-react";
-import { Avatar, AvatarFallback } from './ui/avatar';
+import { ChevronsLeftIcon, ChevronsRightIcon, QuoteIcon } from "lucide-react";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 
 const getInitials = (name: string) => {
   const nameParts = name.split(" ");
   if (nameParts.length === 1) {
-    // If only one name is supplied, take the first letter of the first name
     return nameParts[0][0].toUpperCase();
   } else {
-    // If more than one name is supplied, take the first letter of the first and second names
     return nameParts[0][0].toUpperCase() + nameParts[1][0].toUpperCase();
   }
 };
@@ -21,11 +22,9 @@ interface ReviewCardProps {
   body: string;
 }
 
-const ReviewCard = ({  name, position, body }: ReviewCardProps) => {
+const ReviewCard = ({ name, position, body }: ReviewCardProps) => {
   const stars = Array(5).fill(0);
-
-  const initials = getInitials(name)
-
+  const initials = getInitials(name);
 
   return (
     <div className='flex flex-col min-w-[320px] max-w-xs p-4 mx-2 bg-white rounded-lg shadow-lg dark:shadow-md hover:shadow-xl transition transform duration-500 ease-in-out hover:scale-105 dark:bg-gray-800 border dark:border-none'>
@@ -42,13 +41,6 @@ const ReviewCard = ({  name, position, body }: ReviewCardProps) => {
       <hr className='dark:border-gray-700' />
 
       <div className='flex items-center gap-2 mt-2'>
-        {/* <Image
-          src={img}                  
-          alt={name}
-          width={40}
-          height={40}
-          className='dark:invert rounded-full'
-        /> */}
         <Avatar>
           <AvatarFallback className='bg-sky-500 text-white font-semibold text-lg'>
             {initials}
@@ -66,14 +58,51 @@ const ReviewCard = ({  name, position, body }: ReviewCardProps) => {
   );
 };
 
-export default async function ReviewCarousel() {
+export default function ReviewCarousel() {
+  const supabase = createClient();
+  const [reviews, setReviews] = useState<ReviewCardProps[]>([]);
 
-   const supabase = createClient();
-   const { data: reviews } = await supabase.from("reviews").select("*");
+  useEffect(() => {
+    const getReviews = async () => {
+      try {
+        const { data: reviews, error } = await supabase
+          .from("reviews")
+          .select("*");
+
+        if (error) {
+          console.error("Error fetching reviews:", error);
+          return;
+        }
+
+        setReviews(reviews || []);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+    getReviews();
+  }, [supabase]);
+
+  // State to manage the scroll position
+  const [isScrollable, setIsScrollable] = useState(false);
+  const scrollContainerRef = React.createRef<HTMLDivElement>();
+
+  useEffect(() => {
+    const checkScroll = () => {
+      if (scrollContainerRef.current) {
+        setIsScrollable(
+          scrollContainerRef.current.scrollWidth >
+            scrollContainerRef.current.clientWidth
+        );
+      }
+    };
+    checkScroll();
+    window.addEventListener("resize", checkScroll);
+    return () => window.removeEventListener("resize", checkScroll);
+  }, [scrollContainerRef]);
 
   return (
     <div className='relative w-full max-w-6xl mx-auto py-12'>
-      <div className=' mb-8 px-4'>
+      <div className='mb-8 px-4'>
         <h2 className='text-3xl sm:text-4xl font-semibold'>Client Reviews</h2>
       </div>
 
@@ -84,21 +113,58 @@ export default async function ReviewCarousel() {
       <div className='absolute inset-y-0 right-0 w-32 pointer-events-none bg-gradient-to-l from-background via-transparent to-transparent z-10' />
 
       {/* Review Cards in a horizontally scrollable container */}
-      {reviews && reviews.length < 1 ? <div className='text-center px-4 py-20'>
-        No client review at the moment.
-      </div> :
-        <div className='flex items-center justify-start gap-6 overflow-x-auto scroll-smooth no-scrollbar px-16 py-6'>
-          {reviews && reviews.map((review, index) => (
-            <ReviewCard
-              key={index}
-              img='/logo.webp'
-              name={review.name}
-              position={review.position}
-              body={review.body}
-            />
-          ))}
+      {reviews && reviews.length < 1 ? (
+        <div className='text-center px-4 py-20'>
+          No client review at the moment.
         </div>
-      }
+      ) : (
+        <div className='relative'>
+          <div
+            ref={scrollContainerRef}
+            className='flex items-center justify-start gap-6 overflow-x-auto scroll-smooth no-scrollbar px-16 py-6'>
+            {reviews &&
+              reviews.map((review, index) => (
+                <ReviewCard
+                  key={index}
+                  img='/logo.webp'
+                  name={review.name}
+                  position={review.position}
+                  body={review.body}
+                />
+              ))}
+          </div>
+          {/* Scroll Indicators */}
+          {isScrollable && (
+            <div className='absolute inset-y-0 left-0 flex items-center'>
+              <button
+                className='p-2 bg-gray-300 rounded-full hover:bg-gray-400 transition'
+                onClick={() =>
+                  scrollContainerRef.current?.scrollBy({
+                    left: -200,
+                    behavior: "smooth",
+                  })
+                }>
+             <ChevronsLeftIcon className="text-blue-600"/>
+              </button>
+            </div>
+          )}
+          {isScrollable && (
+            <div className='absolute inset-y-0 right-0 flex items-center'>
+              <button
+                className='p-2 bg-gray-300 rounded-full hover:bg-gray-400 transition'
+                onClick={() =>
+                  scrollContainerRef.current?.scrollBy({
+                    left: 200,
+                    behavior: "smooth",
+                  })
+                }>
+               
+                  <ChevronsRightIcon className="text-blue-600" />
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
