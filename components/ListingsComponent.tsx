@@ -132,7 +132,7 @@ const ListingsComponent: React.FC = () => {
                 listings.map((list) => (
                   <div
                     key={list.id}
-                    className='rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl group w-full max-w-[320px] sm:max-w-[320px]'>
+                    className='rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl group w-full max-w-[330px]'>
                     <Link href={`/listings/${list.id}`} className='group'>
                       <div className=' transition transform duration-300 ease-in-out group-hover:scale-105'>
                         <div className='relative'>
