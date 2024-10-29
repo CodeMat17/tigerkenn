@@ -8,7 +8,8 @@ const Footer = () => {
       <div className='w-full max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-8 '>
         <div className='w-full sm:w-[300px]'>
           <div className='flex items-center gap-3'>
-            <Image
+            <Link href='/'>
+              <Image
               alt=''
               priority
               width={70}
@@ -16,6 +17,8 @@ const Footer = () => {
               src='/logo.webp'
               className='invert'
             />
+            </Link>
+          
             <h2 className='font-semibold text-2xl text-gray-300'>
               Tigerkenn Homes
             </h2>

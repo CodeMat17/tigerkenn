@@ -1,8 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const LogoComponemt = () => {
   return (
-    <Image
+    <Link href='/'>
+     <Image
       alt='logo'
       priority
       width={65}
@@ -10,6 +12,8 @@ const LogoComponemt = () => {
       src='/logo.webp'
       className='invert'
     />
+    </Link>
+   
   );
 };
 

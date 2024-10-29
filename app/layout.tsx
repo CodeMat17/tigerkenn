@@ -66,6 +66,14 @@ export const metadata: Metadata = {
     description:
       "We are dedicated to providing comprehensive solutions for all your housing and construction needs.",
     type: "website",
+    images: [
+      {
+        url: "https://res.cloudinary.com/dusg2xagv/image/upload/v1730245213/og-image/qtu9wrhthbw7iw6gupur.jpg",
+        width: 1200,
+        height: 630,
+        alt: "An alt description for the image",
+      },
+    ],
     locale: "en_US",
     url: "https://tigerkennhomes.com/",
     siteName: "Tigerkenn Homes",
