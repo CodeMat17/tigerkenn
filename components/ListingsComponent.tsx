@@ -145,15 +145,29 @@ const ListingsComponent: React.FC = () => {
                             className='w-full h-[180px] aspect-video object-cover '
                           />
                           {list.price && (
-                            <p className='absolute bottom-2 left-2 px-3 py-1 rounded-xl overflow-hidden bg-black/20 font-bold text-white'>
+                            <p className='absolute bottom-2 left-2 px-1.5 py-0.5 rounded-xl overflow-hidden bg-black/20 font-bold text-white'>
                               ₦{list.price.toLocaleString() ?? "N/A"}
                             </p>
                           )}
 
-                          {list.available && (
-                            <p className='absolute bottom-2 right-2 px-3 py-1 rounded-xl overflow-hidden bg-black/20 font-bold text-white'>
-                              {list.status}
-                            </p>
+                          {list.location && (
+                            <div className='absolute bottom-2 right-2'>
+                              <div
+                                className='relative px-1.5 py-0.5
+                           rounded-full bg-blue-200/70 flex items-center gap-1'>
+                                <div className='relative flex items-center justify-center h-4 w-4'>
+                                  <div className='animate-ping absolute flex items-center justify-center h-full w-full rounded-full bg-blue-800 group-hover:bg-red-500 opacity-75'></div>
+                                  <div className='relative flex items-center justify-center rounded-full h-4 w-4 bg-transparent'>
+                                    <MapPinIcon className='w-4 h-4 text-blue-800 group-hover:text-red-500' />
+                                  </div>
+                                </div>
+                                <p className='truncate text-blue-800'>
+                                  {list.location}
+                                </p>
+
+                                <div className='absolute -top-3 '></div>
+                              </div>
+                            </div>
                           )}
 
                           <p
@@ -168,11 +182,11 @@ const ListingsComponent: React.FC = () => {
                         </div>
 
                         <div className='p-4'>
-                          <h2 className='text-lg font-medium leading-tight line-clamp-2 mb-1'>
+                          <h2 className='text-lg font-medium leading-tight truncate mb-1'>
                             {list.title}
                           </h2>
 
-                          <div className='mt-2 flex items-center justify-between gap-2.5 text-sm text-gray-400'>
+                          <div className='mt-2 flex items-center justify-between gap-2.5 text-sm text-gray-500 dark:text-gray-400'>
                             {list.beds && (
                               <div className='flex items-center gap-1'>
                                 <p>{list.beds} Beds</p>
@@ -191,22 +205,13 @@ const ListingsComponent: React.FC = () => {
                               </div>
                             )}
 
-                            <div
-                              className='relative px-1.5 py-0.5
-                           rounded-lg bg-sky-500/20'>
-                              <p className='truncate text-sky-500 '>
-                                {list.location}
+                            {list.available && (
+                              <p className=' px-3 py-1 rounded-xl overflow-hidden bg-black/60 dark:bg-black/20 font-bold text-white'>
+                                {list.status}
                               </p>
+                            )}
 
-                              <div className='absolute -top-3 '>
-                                <div className='relative flex items-center justify-center h-4 w-4'>
-                                  <div className='animate-ping absolute flex items-center justify-center h-full w-full rounded-full bg-sky-400 group-hover:bg-red-500 opacity-75'></div>
-                                  <div className='relative flex items-center justify-center rounded-full h-4 w-4 bg-transparent'>
-                                    <MapPinIcon className='w-4 h-4 text-sky-500 group-hover:text-red-500' />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                        
                           </div>
                         </div>
                       </div>
