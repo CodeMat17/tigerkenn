@@ -2,6 +2,7 @@ import { type EmailOtpType } from "@supabase/supabase-js";
 import { type NextRequest, NextResponse } from "next/server";
 
 import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
 // Creating a handler to a GET request to route /auth/confirm
 export async function GET(request: NextRequest) {
@@ -27,6 +28,11 @@ export async function GET(request: NextRequest) {
       redirectTo.searchParams.delete("next");
       return NextResponse.redirect(redirectTo);
     }
+
+      if (error) {
+        redirect(`/login?message=Something went wrong: ${error.message}`);
+      }
+
   }
 
   // return the user to an error page with some instructions
