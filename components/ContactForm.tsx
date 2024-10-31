@@ -62,7 +62,7 @@ const ContactForm = () => {
       <div>
         <label
           htmlFor='name'
-          className='block text-sm font-medium text-gray-700'>
+          className='block text-sm font-medium text-gray-700 dark:text-gray-400'>
           Your Name
         </label>
         <Input
@@ -71,14 +71,14 @@ const ContactForm = () => {
           id='name'
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className='mt-1 w-full focus:outline-none border-none  bg-gray-200 dark:bg-gray-900 focus:border-indigo-500'
+          className='mt-1 w-full focus:outline-none border-none  bg-gray-200 dark:bg-gray-800 focus:border-indigo-500'
           required
         />
       </div>
       <div>
         <label
           htmlFor='email'
-          className='block text-sm font-medium text-gray-700'>
+          className='block text-sm font-medium text-gray-700 dark:text-gray-400'>
           Email Address
         </label>
         <Input
@@ -87,14 +87,14 @@ const ContactForm = () => {
           id='email'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className='mt-1 w-full focus:outline-none border-none  bg-gray-200 dark:bg-gray-900 focus:border-indigo-500'
+          className='mt-1 w-full focus:outline-none border-none  bg-gray-200 dark:bg-gray-800 focus:border-indigo-500'
           required
         />
       </div>
       <div>
         <label
           htmlFor='message'
-          className='block text-sm font-medium text-gray-700'>
+          className='block text-sm font-medium text-gray-700 dark:text-gray-400'>
           Your Message
         </label>
         <Textarea
@@ -103,7 +103,7 @@ const ContactForm = () => {
           rows={4}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className='mt-1 w-full focus:outline-none border-none bg-gray-200 dark:bg-gray-900 focus:border-indigo-500'
+          className='mt-1 w-full focus:outline-none border-none bg-gray-200 dark:bg-gray-800 focus:border-indigo-500'
           required
         />
       </div>
@@ -111,7 +111,8 @@ const ContactForm = () => {
       {error && <p className='text-red-500 text-sm'>{error}</p>}
 
       <div>
-        <Button aria-label="submit btn"
+        <Button
+          aria-label='submit btn'
           type='submit'
           disabled={isSubmitting}
           className='w-full  text-white bg-blue-600 hover:bg-blue-700 '>

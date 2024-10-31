@@ -123,7 +123,7 @@ const Footer = () => {
           </div>
           <div className='mt-3'>
             <h3 className='font-medium text-lg text-gray-300'>
-              Join our newsletter list
+              Subscribe to our newsletter
             </h3>
            <FooterNewsletter />
           </div>
