@@ -31,6 +31,7 @@ type ListingsProps = {
   location: string;
   sqm: number;
   available: boolean;
+  slug: string;
 };
 
 const ListingsComponent: React.FC = () => {
@@ -57,7 +58,7 @@ const ListingsComponent: React.FC = () => {
     let query = supabase
       .from("listings")
       .select(
-        "id, img, price, status, title, beds, baths, sqm, location, available",
+        "id, img, price, status, title, beds, baths, sqm, location, available, slug",
         {
           count: "exact",
         }
@@ -69,7 +70,7 @@ const ListingsComponent: React.FC = () => {
       query = supabase
         .from("listings")
         .select(
-          "id, img, price, status, title, beds, baths, sqm, location, available",
+          "id, img, price, status, title, beds, baths, sqm, location, available, slug",
           {
             count: "exact",
           }
@@ -133,7 +134,7 @@ const ListingsComponent: React.FC = () => {
                   <div
                     key={list.id}
                     className='rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl group w-full max-w-[330px]'>
-                    <Link href={`/listings/${list.id}`} className='group'>
+                    <Link href={`/listings/${list.slug}`} className='group'>
                       <div className=' transition transform duration-300 ease-in-out group-hover:scale-105'>
                         <div className='relative'>
                           <Image

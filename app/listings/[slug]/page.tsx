@@ -1,10 +1,9 @@
 // /app/listing/[id]/page.tsx
 import ListingsComments from "@/components/ListingsComments";
-import ScrollableProperties from "@/components/ScrollableProperties";
+import ListingGallery from "@/components/ListingGallery";
 import { createClient } from "@/utils/supabase/server";
-import { MapPin } from "lucide-react";
+import { Bath, Bed, MapPin, Ruler } from "lucide-react";
 import { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
@@ -16,21 +15,18 @@ export const metadata: Metadata = {
 export const revalidate = 0;
 
 function getUserNameFromEmail(email: string | undefined): string | null {
-  if (!email) {
-    return null;
-  }
-
+  if (!email) return null;
   const [username] = email.split("@");
   return username;
 }
 
 type Props = {
   params: {
-    id: string;
+    slug: string;
   };
 };
 
-const ListingDetails = async ({ params: { id } }: Props) => {
+const ListingDetails = async ({ params: { slug } }: Props) => {
   const supabase = createClient();
 
   // Check if a user's logged in
@@ -38,16 +34,12 @@ const ListingDetails = async ({ params: { id } }: Props) => {
     data: { user },
   } = await supabase.auth.getUser();
 
- 
   const username = getUserNameFromEmail(user?.email);
 
- 
-
-  
   const { data: listing, error } = await supabase
     .from("listings")
     .select("*")
-    .eq("id", id)
+    .eq("slug", slug)
     .single();
 
   if (!listing || error) {
@@ -61,13 +53,13 @@ const ListingDetails = async ({ params: { id } }: Props) => {
       <h1 className='text-2xl sm:text-3xl dark:text-gray-400 font-semibold mb-6'>
         {listing.title}
       </h1>
+
       {/* Location and Status */}
       <div className='flex items-center gap-4 text-gray-600 dark:text-gray-400 mb-4'>
         <div className='flex items-center gap-1'>
           <MapPin className='w-5 h-5 text-red-500' />
           <p>{listing.location}</p>
         </div>
-
         {listing.available ? (
           <span className='px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full'>
             {listing.status}
@@ -78,32 +70,56 @@ const ListingDetails = async ({ params: { id } }: Props) => {
           </span>
         )}
       </div>
-      {/* Image */}
-      <Image
-        priority
-        width={700}
-        height={394}
-        src={listing.img}
-        alt={listing.title}
-        className='rounded-lg mb-1 w-full h-96 aspect-video object-cover'
+
+      {/* Image Gallery */}
+      <ListingGallery
+        mainImage={listing.img}
+        thumbnails={listing.other_imgs}
+        title={listing.title}
       />
-      <ScrollableProperties
-        price={listing.price != null ? listing.price.toLocaleString() : "N/A"}
-        beds={listing.beds}
-        baths={listing.baths}
-        sqm={listing.sqm}
-        other_imgs={listing.other_imgs}
-      />
-      {/* Property Details */}
+
+     
+
+      <div
+        className={`flex flex-col sm:flex-row sm:items-center justify-between p-6 shadow-md rounded-xl bg-blue-200 dark:bg-gray-800`}>
+        <div className='text-3xl font-bold text-blue-600'>₦{listing.price.toLocaleString()}</div>
+
+        <div className='flex items-center space-x-6 mt-3 md:mt-0'>
+          {/* Beds */}
+          {listing.beds && (
+            <div className='flex flex-col md:flex-row justify-center items-center md:gap-2'>
+              <Bed className='w-6 h-6 text-blue-500' />
+              <p className='text-sm text-center'>{listing.beds} beds</p>
+            </div>
+          )}
+
+          {/* Baths */}
+          {listing.baths && (
+            <div className='flex flex-col md:flex-row justify-center items-center md:gap-2'>
+              <Bath className='w-6 h-6 text-blue-500' />
+              <p className='text-sm text-center'>{listing.baths} baths</p>
+            </div>
+          )}
+
+          {/* Square Feet */}
+          {listing.sqm && (
+            <div className='flex flex-col md:flex-row justify-center items-center md:gap-2'>
+              <Ruler className='w-6 h-6 text-blue-500' />
+              <p className='text-sm text-center'>{listing.sqm} sqm</p>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Description */}
       <div className='dark:text-gray-400 mt-5 mb-8'>
-        <h2 className='text-2xl font-medium  mb-4'>Description</h2>
+        <h2 className='text-2xl font-medium mb-4'>Description</h2>
         <div
-          className='text-[17px] leading-relaxed  [&_p]:-my-1'
+          className='text-[17px] leading-relaxed [&_p]:-my-1'
           dangerouslySetInnerHTML={{ __html: listing.desc }}
         />
       </div>
+
       {/* Video (Optional) */}
       {listing.video && (
         <div className='mb-8'>
@@ -119,6 +135,7 @@ const ListingDetails = async ({ params: { id } }: Props) => {
           </div>
         </div>
       )}
+
       {/* Comments Section */}
       <ListingsComments id={listing.id} user={user} username={username} />
     </div>

@@ -29,7 +29,7 @@ const RecentListing = async () => {
                   <div
                     key={i}
                     className='rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl group w-full max-w-[330px] '>
-                    <Link href={`/listings/${list.id}`}>
+                    <Link href={`/listings/${list.slug}`}>
                       <div className='transition transform duration-300 ease-in-out hover:scale-105'>
                         <div className='relative'>
                           <Image

@@ -75,7 +75,7 @@ export const metadata: Metadata = {
       },
     ],
     locale: "en_US",
-    url: "https://tigerkennhomes.com/",
+    url: "https://www.tigerkennhomes.com/",
     siteName: "Tigerkenn Homes",
   },
 };
