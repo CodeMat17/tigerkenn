@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/account", "/api", "/auth", "/login", "/confirm"],
     },
-    sitemap: "https://tigerkennhomes.com/sitemap.xml",
+    sitemap: "https://www.tigerkennhomes.com/sitemap.xml",
   };
 }

@@ -130,7 +130,7 @@ const Footer = () => {
         </div>
       </div>
       <div className='bg-gray-950 p-4 text-gray-500'>
-        <p>
+        <p className="text-gray-400">
           &copy; <span id='current-year'>2024</span> Tigerkenn Homes. All rights
           reserved.
         </p>

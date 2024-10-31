@@ -65,7 +65,7 @@ const FooterNewsletter = () => {
         required
       />
       <div className='flex justify-end mt-2'>
-        <Button aria-label='handle submit' onClick={handleSubmit}>
+        <Button aria-label='handle submit' onClick={handleSubmit} className="bg-gray-700 dark:bg-gray-300">
           {loading ? <MinusIcon className='animate-spin' /> : "Subscribe"}
         </Button>
       </div>

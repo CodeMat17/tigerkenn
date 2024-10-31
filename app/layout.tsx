@@ -18,7 +18,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://tigerkennhomes.com"),
+  metadataBase: new URL("https://www.tigerkennhomes.com"),
   keywords: [
     "TigerKenn Homes",
     "TigerKennhomes",
