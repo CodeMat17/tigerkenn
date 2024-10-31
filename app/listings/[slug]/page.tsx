@@ -55,7 +55,7 @@ const ListingDetails = async ({ params: { slug } }: Props) => {
       </h1>
 
       {/* Location and Status */}
-      <div className='flex items-center gap-4 text-gray-600 dark:text-gray-400 mb-4'>
+      <div className='flex items-center gap-4 text-gray-600 dark:text-gray-400 mb-1'>
         <div className='flex items-center gap-1'>
           <MapPin className='w-5 h-5 text-red-500' />
           <p>{listing.location}</p>

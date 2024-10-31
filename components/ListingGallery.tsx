@@ -18,7 +18,7 @@ const ListingGallery = ({
   const [selectedImage, setSelectedImage] = useState<string>(mainImage);
 
   return (
-    <div>
+    <div aria-labelledby='gallery-title'>
       {/* Main Image */}
       <Image
         priority
@@ -26,12 +26,13 @@ const ListingGallery = ({
         height={394}
         src={selectedImage}
         alt={title}
-        className='rounded-lg mb-3 w-full h-96 aspect-video object-cover'
+        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 50vw'
+        className='rounded-lg mb-3 w-full h-[400px] aspect-video object-cover'
       />
 
       {/* Thumbnails */}
-      {thumbnails &&
-        <div className="flex justify-center">
+      {thumbnails && (
+        <div className='flex justify-center'>
           <div className='flex gap-2 overflow-x-auto mb-6 px-2 sm:px-0 scroll-snap-x snap-mandatory hide-scrollbar'>
             {thumbnails.map((imgUrl, index) => (
               <button
@@ -43,16 +44,17 @@ const ListingGallery = ({
                   alt={`Thumbnail ${index + 1}`}
                   width={96}
                   height={96}
-                  className={`rounded-lg object-cover border-2 ${selectedImage === imgUrl
+                  className={`rounded-lg object-cover border-2 ${
+                    selectedImage === imgUrl
                       ? "border-blue-500"
                       : "border-transparent"
-                    }`}
+                  }`}
                 />
               </button>
             ))}
           </div>
         </div>
-      }
+      )}
     </div>
   );
 };
