@@ -84,7 +84,7 @@ export default async function BlogPost({
       {/* Return to Blog List */}
       <div className='mt-10 animate-fadeIn '>
         <Button aria-label="return to blog list" asChild className='bg-sky-600 hover:bg-sky-700 text-white'>
-          <Link aria-label="return to blog list" href='/blog'>Return to Blog List</Link>
+          <Link aria-label="return to blog list" href='/blogs'>Return to Blog List</Link>
         </Button>
       </div>
       <BlogComments id={blog.id} user={user} username={username} />
