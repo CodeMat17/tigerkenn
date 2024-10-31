@@ -1,6 +1,6 @@
 // /app/listing/[id]/page.tsx
-import ListingsComments from "@/components/ListingsComments";
 import ListingGallery from "@/components/ListingGallery";
+import ListingsComments from "@/components/ListingsComments";
 import { createClient } from "@/utils/supabase/server";
 import { Bath, Bed, MapPin, Ruler } from "lucide-react";
 import { Metadata } from "next";
@@ -72,17 +72,19 @@ const ListingDetails = async ({ params: { slug } }: Props) => {
       </div>
 
       {/* Image Gallery */}
-      <ListingGallery
-        mainImage={listing.img}
-        thumbnails={listing.other_imgs}
-        title={listing.title}
-      />
-
-     
+    
+        <ListingGallery
+          mainImage={listing.img}
+          thumbnails={listing.other_imgs}
+          title={listing.title}
+        />
+    
 
       <div
         className={`flex flex-col sm:flex-row sm:items-center justify-between p-6 shadow-md rounded-xl bg-blue-200 dark:bg-gray-800`}>
-        <div className='text-3xl font-bold text-blue-600'>₦{listing.price.toLocaleString()}</div>
+        <div className='text-3xl font-bold text-blue-600'>
+          ₦{listing.price.toLocaleString()}
+        </div>
 
         <div className='flex items-center space-x-6 mt-3 md:mt-0'>
           {/* Beds */}
