@@ -1,4 +1,5 @@
 import { supabaseService } from "@/utils/supabase/service";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -32,6 +33,8 @@ export async function POST(req: NextRequest) {
         console.error("View count update failed:", updateError);
       }
     }
+
+      revalidatePath("/", "layout");
 
     // Return a success response regardless of the view count outcome
     return NextResponse.json(
