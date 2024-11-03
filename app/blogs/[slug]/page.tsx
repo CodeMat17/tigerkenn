@@ -7,7 +7,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-
 export const metadata: Metadata = {
   title: "Blog Post",
   description:
@@ -52,6 +51,22 @@ export default async function BlogPost({
     notFound(); // If blog is not found, show 404 page
   }
 
+  if (blog) {
+    const baseUrl =
+      process.env.NEXT_PUBLIC_HOME ||
+      "http://localhost:3000";
+    await fetch(`${baseUrl}/api/blog-views`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug }),
+    }).catch((fetchError) => {
+      // Log error if in development, but do not interrupt the user
+      if (process.env.NODE_ENV === "development") {
+        console.error("View count update failed:", fetchError);
+      }
+    });
+  }
+
   return (
     <div className='w-full max-w-5xl mx-auto px-3 py-8'>
       {/* Blog Image */}
@@ -83,8 +98,13 @@ export default async function BlogPost({
 
       {/* Return to Blog List */}
       <div className='mt-10 animate-fadeIn '>
-        <Button aria-label="return to blog list" asChild className='bg-sky-600 hover:bg-sky-700 text-white'>
-          <Link aria-label="return to blog list" href='/blogs'>Return to Blog List</Link>
+        <Button
+          aria-label='return to blog list'
+          asChild
+          className='bg-sky-600 hover:bg-sky-700 text-white'>
+          <Link aria-label='return to blog list' href='/blogs'>
+            Return to Blog List
+          </Link>
         </Button>
       </div>
       <BlogComments id={blog.id} user={user} username={username} />

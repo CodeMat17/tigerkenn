@@ -12,6 +12,8 @@ import { createClient } from "@/utils/supabase/clients";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
+  Eye,
+  EyeOff,
   MapPinIcon,
   MinusIcon,
   SearchIcon,
@@ -32,6 +34,7 @@ type ListingsProps = {
   sqm: number;
   available: boolean;
   slug: string;
+  views: number;
 };
 
 const ListingsComponent: React.FC = () => {
@@ -58,7 +61,7 @@ const ListingsComponent: React.FC = () => {
     let query = supabase
       .from("listings")
       .select(
-        "id, img, price, status, title, beds, baths, sqm, location, available, slug",
+        "id, img, price, status, title, beds, baths, sqm, location, available, slug, views",
         {
           count: "exact",
         }
@@ -70,7 +73,7 @@ const ListingsComponent: React.FC = () => {
       query = supabase
         .from("listings")
         .select(
-          "id, img, price, status, title, beds, baths, sqm, location, available, slug",
+          "id, img, price, status, title, beds, baths, sqm, location, available, slug, views",
           {
             count: "exact",
           }
@@ -211,8 +214,14 @@ const ListingsComponent: React.FC = () => {
                                 {list.status}
                               </p>
                             )}
-
-                        
+                          </div>
+                          <div className='flex justify-end items-center text-sm mt-2'>
+                            {list.views < 1 ? (
+                              <EyeOff className='w-4 h-4 mr-2' />
+                            ) : (
+                              <Eye className='w-4 h-4 mr-2' />
+                            )}
+                            <p>{list.views}</p>
                           </div>
                         </div>
                       </div>

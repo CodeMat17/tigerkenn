@@ -1,6 +1,7 @@
 import ShimmerButton from "@/components/ui/shimmer-button";
 import { createClient } from "@/utils/supabase/server";
 import dayjs from "dayjs";
+import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -51,10 +52,18 @@ const LatestBlog = async () => {
                       </p>
                     </div>
 
-                    <div className='p-4'>
+                    <div className='px-4 pt-4 pb-2'>
                       <h2 className='text-lg font-semibold leading-5 mb-2 dark:text-gray-300 line-clamp-2'>
                         {blog.title}
                       </h2>
+                      <div className='flex justify-end items-center text-sm mt-2'>
+                        {blog.views < 1 ? (
+                          <EyeOff className='w-4 h-4 mr-2' />
+                        ) : (
+                          <Eye className='w-4 h-4 mr-2' />
+                        )}{" "}
+                        <p>{blog.views}</p>
+                      </div>
                     </div>
                   </div>
                 </Link>

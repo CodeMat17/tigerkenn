@@ -47,6 +47,20 @@ const ListingDetails = async ({ params: { slug } }: Props) => {
     return null;
   }
 
+  if (listing) {
+    const baseUrl = process.env.NEXT_PUBLIC_HOME || "http://localhost:3000";
+    await fetch(`${baseUrl}/api/listing-views`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug }),
+    }).catch((fetchError) => {
+      // Log error if in development, but do not interrupt the user
+      if (process.env.NODE_ENV === "development") {
+        console.error("View count update failed:", fetchError);
+      }
+    });
+  }
+
   return (
     <div className='max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8'>
       {/* Title */}
@@ -72,13 +86,12 @@ const ListingDetails = async ({ params: { slug } }: Props) => {
       </div>
 
       {/* Image Gallery */}
-    
-        <ListingGallery
-          mainImage={listing.img}
-          thumbnails={listing.other_imgs}
-          title={listing.title}
-        />
-    
+
+      <ListingGallery
+        mainImage={listing.img}
+        thumbnails={listing.other_imgs}
+        title={listing.title}
+      />
 
       <div
         className={`flex flex-col sm:flex-row sm:items-center justify-between p-6 shadow-md rounded-xl bg-blue-200 dark:bg-gray-800`}>

@@ -8,7 +8,7 @@ import {
 import { createClient } from "@/utils/supabase/clients";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
-import { MinusIcon } from "lucide-react";
+import { Eye, EyeOff, MinusIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -21,6 +21,7 @@ type BlogPost = {
   published_at: string;
   img: string;
   content: string; // Markdown content
+  views: number; // Number of views
 };
 
 export default function BlogList() {
@@ -45,7 +46,7 @@ export default function BlogList() {
     try {
       const { data, count, error } = await supabase
         .from("blogs")
-        .select("title, slug, published_at, img, content", { count: "exact" })
+        .select("title, slug, published_at, img, content, views", { count: "exact" })
         .order("published_at", { ascending: false })
         .range(from, to);
 
@@ -90,7 +91,8 @@ export default function BlogList() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}>
-              <Link aria-label="dynamic link"
+              <Link
+                aria-label='dynamic link'
                 href={`/blogs/${blog.slug}`}
                 className='block hover:scale-105 transition-transform duration-300'>
                 <div className='relative h-48'>
@@ -101,7 +103,7 @@ export default function BlogList() {
                     className='object-cover'
                   />
                 </div>
-                <div className='px-6 pb-6 pt-4 bg-white dark:bg-gray-800'>
+                <div className='px-6 py-4 bg-white dark:bg-gray-800'>
                   <h2 className='text-xl font-semibold text-blue-500 mb-2 leading-6 line-clamp-2'>
                     {blog.title}
                   </h2>
@@ -109,6 +111,14 @@ export default function BlogList() {
                     Published on{" "}
                     {dayjs(blog.published_at).format("MMM DD, YYYY hh:mm a")}
                   </p>
+                  <div className='flex justify-end items-center text-sm mt-2'>
+                    {blog.views < 1 ? (
+                      <EyeOff className='w-4 h-4 mr-2' />
+                    ) : (
+                      <Eye className='w-4 h-4 mr-2' />
+                    )}{" "}
+                    <p>{blog.views}</p>
+                  </div>
                 </div>
               </Link>
             </motion.div>
@@ -118,7 +128,8 @@ export default function BlogList() {
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <Button aria-label="prev button"
+                <Button
+                  aria-label='prev button'
                   variant='ghost'
                   onClick={() => setPage(page - 1)}
                   disabled={page === 0}>
@@ -132,7 +143,8 @@ export default function BlogList() {
               </PaginationItem>
 
               <PaginationItem>
-                <Button aria-label="next button"
+                <Button
+                  aria-label='next button'
                   variant='ghost'
                   onClick={() => setPage(page + 1)}
                   disabled={page >= totalPages - 1}>
