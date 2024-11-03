@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-      revalidatePath("/", "layout");
+    revalidatePath("/", "layout");
 
     // Return a success response regardless of the view count outcome
     return NextResponse.json(
@@ -42,12 +42,12 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-   if (process.env.NODE_ENV === "development") {
-     console.error("Unexpected error:", error);
-   }
-   return NextResponse.json(
-     { success: true, message: "Blog post accessed with no view update" },
-     { status: 200 }
-   );
+    if (process.env.NODE_ENV === "development") {
+      console.error("Unexpected error:", error);
+    }
+    return NextResponse.json(
+      { success: true, message: "Blog post accessed with no view update" },
+      { status: 200 }
+    );
   }
 }
