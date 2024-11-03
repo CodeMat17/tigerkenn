@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     // Increment the view count, catching errors separately to avoid blocking
     try {
       await supabaseService
-        .from("blogs")
+        .from("listings")
         .update({ views: listing.views + 1 })
         .eq("id", listing.id);
     } catch (updateError) {
