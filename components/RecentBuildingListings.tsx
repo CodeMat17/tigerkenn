@@ -1,14 +1,22 @@
 import { createClient } from "@/utils/supabase/server";
-import { Eye, EyeOff, MapPinCheckIcon } from "lucide-react";
+import {
+  BathIcon,
+  BedDoubleIcon,
+  Eye,
+  EyeOff,
+  MapPinCheckIcon,
+  Ruler,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ShimmerButton from "./ui/shimmer-button";
 
-const RecentListing = async () => {
+const RecentBuildingListing = async () => {
   const supabase = createClient();
   const { data: listings } = await supabase
     .from("listings")
     .select("*")
+    .eq("category", "house")
     .limit(3)
     .order("created_at", { ascending: false });
 
@@ -16,7 +24,7 @@ const RecentListing = async () => {
     <section className='w-full bg-gray-50 dark:bg-gray-950'>
       <div className='w-full max-w-6xl mx-auto px-6 py-16'>
         <h1 className='text-3xl sm:text-4xl font-bold text-center text-gray-800 dark:text-white'>
-          Latest Listings
+          Recent Building Listings
         </h1>
 
         <div className='mt-8'>
@@ -33,7 +41,7 @@ const RecentListing = async () => {
                   key={i}
                   className='rounded-lg overflow-hidden bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition duration-300 ease-in-out w-full sm:max-w-[300px]'>
                   <Link
-                    href={`/listings/${list.slug}`}
+                    href={`/building-listings/${list.slug}`}
                     passHref
                     className='block transition-transform duration-300 transform hover:scale-105'>
                     <div className='relative'>
@@ -46,7 +54,7 @@ const RecentListing = async () => {
                         className='w-full h-[180px] object-cover'
                       />
                       <p className='absolute bottom-3 left-2 px-3 py-1 bg-black/30 rounded-full text-white font-semibold text-lg'>
-                        ₦{list.price.toLocaleString() ?? 'N/A'}
+                        ₦{list.price.toLocaleString() ?? "N/A"}
                       </p>
                       <p
                         className={`absolute top-3 right-3 px-3 py-1 rounded-full font-semibold text-sm ${
@@ -62,22 +70,26 @@ const RecentListing = async () => {
                       <h2 className='text-lg font-medium text-gray-800 dark:text-white truncate mb-1'>
                         {list.title}
                       </h2>
-                 
-                      {list.category === "house" && (
-                        <div className='text-sm flex items-center gap-2 text-gray-600 dark:text-gray-300'>
-                          <p>{list.beds} Beds</p> |{" "}
-                          <p>{list.baths} Baths gate</p>| <p>{list.sqm} sqm</p>
-                        </div>
-                      )}
-                      {list.category === "land" && (
-                        <div className='text-sm flex items-center gap-2 text-gray-600 dark:text-gray-300'>
-                          <p> {list.fenced ? "Fenced" : "Not fenced"}</p> |
-                          <p>{list.gate ? "With gate" : "No gate"}</p> |{" "}
+
+                      <div className='text-sm flex items-center justify-between gap-2 text-gray-600 dark:text-gray-300'>
+                        <div className='flex items-center gap-2'>
+                          <BedDoubleIcon className='w-5 h-5 text-blue-600 dark:text-blue-400' />{" "}
+                          <p> {list.beds} Beds</p>
+                        </div>{" "}
+                        |
+                        <div className='flex items-center gap-2'>
+                          <BathIcon className='w-5 h-5  text-blue-600 dark:text-blue-400' />
+                          <p>{list.baths} Baths</p>
+                        </div>{" "}
+                        |
+                        <div className='flex items-center gap-2'>
+                          <Ruler className='w-5 h-5  text-blue-600 dark:text-blue-400' />{" "}
                           <p>{list.sqm} sqm</p>
                         </div>
-                      )}
+                      </div>
+
                       <div className='flex justify-between items-center text-sm mt-2'>
-                        <div className='flex items-center text-blue-500'>
+                        <div className='flex items-center  text-blue-600 dark:text-blue-400'>
                           <MapPinCheckIcon className='w-4 h-4 mr-1 ' />{" "}
                           {list.location}
                         </div>
@@ -99,10 +111,10 @@ const RecentListing = async () => {
         </div>
 
         <div className='flex justify-center mt-10'>
-          <Link href='/listings' aria-label='See Full Listings'>
+          <Link href='/building-listings' aria-label='See Full Listings'>
             <ShimmerButton className='shadow-lg px-6 py-2'>
               <span className='text-white text-sm font-semibold'>
-                See Full Listings
+                See full building listings
               </span>
             </ShimmerButton>
           </Link>
@@ -112,4 +124,4 @@ const RecentListing = async () => {
   );
 };
 
-export default RecentListing;
+export default RecentBuildingListing;

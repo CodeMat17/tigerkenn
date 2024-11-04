@@ -42,7 +42,7 @@ const MobileSheet = () => {
           </Button>
         </SheetTrigger>
         <SheetContent>
-          <div className='pb-8 h-screen flex flex-col gap-4 justify-center items-center text-start'>
+          <div className='pb-8 h-screen flex flex-col gap-4 justify-center items-cente'>
             {navs.map((nav, i) => (
               <Button
                 aria-label='nav links'
@@ -50,7 +50,7 @@ const MobileSheet = () => {
                 asChild
                 variant='ghost'
                 onClick={handleClose}
-                className='w-full'>
+                className='w-full flex justify-start'>
                 <Link href={nav.href} className='text-xl tracking-wide'>
                   {nav.title}
                 </Link>
