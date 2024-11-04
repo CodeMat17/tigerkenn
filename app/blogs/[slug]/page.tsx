@@ -70,7 +70,7 @@ export default async function BlogPost({
   return (
     <div className='w-full max-w-5xl mx-auto px-3 py-8'>
       {/* Blog Image */}
-      <div className='relative w-full h-56 aspect-video mb-8 animate-fadeIn'>
+      <div className='relative w-full h-96 aspect-video mb-8 animate-fadeIn'>
         <Image
           priority
           fill

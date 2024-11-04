@@ -1,4 +1,4 @@
-import ListingsComponent from "@/components/ListingsComponent";
+import LandListingsComponent from "@/components/LandListingsComponent";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 const ListingsPage: React.FC = () => {
   return (
     <div>
-      <ListingsComponent />
+      <LandListingsComponent />
     </div>
   );
 };

@@ -35,12 +35,9 @@ type ListingsProps = {
   available: boolean;
   slug: string;
   views: number;
-  fenced: boolean
-  gate: boolean
-  category: string;
 };
 
-const ListingsComponent: React.FC = () => {
+const BuildingListingsComponent: React.FC = () => {
   const supabase = createClient();
 
   const [listings, setListings] = useState<ListingsProps[]>([]);
@@ -64,11 +61,12 @@ const ListingsComponent: React.FC = () => {
     let query = supabase
       .from("listings")
       .select(
-        "id, img, price, status, title, beds, baths, sqm, location, available, slug, views, fenced, gate, category",
+        "id, img, price, status, title, beds, baths, sqm, location, available, slug, views",
         {
           count: "exact",
         }
       )
+      .eq("category", "house") // Add this line to filter by category
       .order("created_at", { ascending: false })
       .range(from, to);
 
@@ -76,12 +74,13 @@ const ListingsComponent: React.FC = () => {
       query = supabase
         .from("listings")
         .select(
-          "id, img, price, status, title, beds, baths, sqm, location, available, slug, views, fenced, gate, category",
+          "id, img, price, status, title, beds, baths, sqm, location, available, slug, views",
           {
             count: "exact",
           }
         )
-        .or(`location.ilike.%${searchQuery}%,category.ilike.%${searchQuery}%`)
+        .or(`location.ilike.%${searchQuery}%,title.ilike.%${searchQuery}%`)
+        .eq("category", "house") // Add this line to filter by category
         .order("created_at", { ascending: false })
         .range(from, to);
     }
@@ -107,12 +106,12 @@ const ListingsComponent: React.FC = () => {
 
   return (
     <div className='max-w-6xl min-h-screen mx-auto py-12 px-4 sm:px-6 lg:px-8'>
-      <h1 className='text-4xl font-bold text-center mb-8'>Listings</h1>
+      <h1 className='text-4xl font-bold text-center mb-8'>Building Listings</h1>
 
       <div className='relative w-full max-w-md mx-auto mb-8'>
         <Input
           type='search'
-          placeholder='Search listings by location or by category: land or house...'
+          placeholder='Search listings by location or by title'
           value={searchQuery}
           onChange={handleSearchChange}
           className='mb-4 pl-10 py-2 pb-2 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 '
@@ -140,7 +139,9 @@ const ListingsComponent: React.FC = () => {
                   <div
                     key={list.id}
                     className='rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl group w-full max-w-[330px]'>
-                    <Link href={`/listings/${list.slug}`} className='group'>
+                    <Link
+                      href={`/building-listings/${list.slug}`}
+                      className='group'>
                       <div className=' transition transform duration-300 ease-in-out group-hover:scale-105'>
                         <div className='relative'>
                           <Image
@@ -173,21 +174,11 @@ const ListingsComponent: React.FC = () => {
                             {list.title}
                           </h2>
 
-                          {list.category === "house" && (
-                            <div className='text-sm flex items-center gap-2 text-gray-600 dark:text-gray-300'>
-                              <p>{list.beds} Beds</p> |{" "}
-                              <p>{list.baths} Baths gate</p>|{" "}
-                              <p>{list.sqm} sqm</p>
-                            </div>
-                          )}
-
-                          {list.category === "land" && (
-                            <div className='text-sm flex items-center gap-2 text-gray-600 dark:text-gray-300'>
-                              <p> {list.fenced ? "Fenced" : "Not fenced"}</p> |
-                              <p>{list.gate ? "With gate" : "No gate"}</p> |{" "}
-                              <p>{list.sqm} sqm</p>
-                            </div>
-                          )}
+                          <div className='text-sm flex items-center gap-2 text-gray-600 dark:text-gray-300'>
+                            <p>{list.beds} Beds</p> |{" "}
+                            <p>{list.baths} Baths gate</p>|{" "}
+                            <p>{list.sqm} sqm</p>
+                          </div>
 
                           <div className='flex justify-between items-center text-sm mt-2'>
                             <div className='flex items-center text-blue-500'>
@@ -246,4 +237,4 @@ const ListingsComponent: React.FC = () => {
   );
 };
 
-export default ListingsComponent;
+export default BuildingListingsComponent;

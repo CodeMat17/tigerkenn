@@ -23,7 +23,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
     },
     {
-      url: process.env.NEXT_PUBLIC_LISTINGS!,
+      url: process.env.NEXT_PUBLIC_LAND_LISTINGS!,
+      lastModified: new Date(),
+    },
+       {
+      url: process.env.NEXT_PUBLIC_BUILDING_LISTINGS!,
       lastModified: new Date(),
     },
     {
