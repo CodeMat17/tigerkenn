@@ -14,7 +14,7 @@ import {
   ChevronRightIcon,
   Eye,
   EyeOff,
-  MapPinIcon,
+  MapPinCheckIcon,
   MinusIcon,
   SearchIcon,
 } from "lucide-react";
@@ -35,6 +35,9 @@ type ListingsProps = {
   available: boolean;
   slug: string;
   views: number;
+  fenced: boolean
+  gate: boolean
+  category: string;
 };
 
 const ListingsComponent: React.FC = () => {
@@ -61,7 +64,7 @@ const ListingsComponent: React.FC = () => {
     let query = supabase
       .from("listings")
       .select(
-        "id, img, price, status, title, beds, baths, sqm, location, available, slug, views",
+        "id, img, price, status, title, beds, baths, sqm, location, available, slug, views, fenced, gate, category",
         {
           count: "exact",
         }
@@ -73,7 +76,7 @@ const ListingsComponent: React.FC = () => {
       query = supabase
         .from("listings")
         .select(
-          "id, img, price, status, title, beds, baths, sqm, location, available, slug, views",
+          "id, img, price, status, title, beds, baths, sqm, location, available, slug, views, fenced, gate, category",
           {
             count: "exact",
           }
@@ -149,29 +152,9 @@ const ListingsComponent: React.FC = () => {
                             className='w-full h-[180px] aspect-video object-cover '
                           />
                           {list.price && (
-                            <p className='absolute bottom-2 left-2 px-1.5 py-0.5 rounded-xl overflow-hidden bg-black/20 font-bold text-white'>
+                            <p className='absolute bottom-2 left-2 px-1.5 py-0.5 rounded-xl overflow-hidden bg-black/20 font-semibold text-white text-lg'>
                               ₦{list.price.toLocaleString() ?? "N/A"}
                             </p>
-                          )}
-
-                          {list.location && (
-                            <div className='absolute bottom-2 right-2'>
-                              <div
-                                className='relative px-1.5 py-0.5
-                           rounded-full bg-blue-200/80 flex items-center gap-1'>
-                                <div className='relative flex items-center justify-center h-4 w-4'>
-                                  <div className='animate-ping absolute flex items-center justify-center h-full w-full rounded-full bg-blue-800 group-hover:bg-red-500 opacity-75'></div>
-                                  <div className='relative flex items-center justify-center rounded-full h-4 w-4 bg-transparent'>
-                                    <MapPinIcon className='w-4 h-4 text-blue-800 group-hover:text-red-500' />
-                                  </div>
-                                </div>
-                                <p className='truncate text-blue-800'>
-                                  {list.location}
-                                </p>
-
-                                <div className='absolute -top-3 '></div>
-                              </div>
-                            </div>
                           )}
 
                           <p
@@ -185,43 +168,40 @@ const ListingsComponent: React.FC = () => {
                           </p>
                         </div>
 
-                        <div className='p-4'>
+                        <div className='px-4 py-2'>
                           <h2 className='text-lg font-medium leading-tight truncate mb-1'>
                             {list.title}
                           </h2>
 
-                          <div className='mt-2 flex items-center justify-between gap-2.5 text-sm text-gray-500 dark:text-gray-400'>
-                            {list.beds && (
-                              <div className='flex items-center gap-1'>
-                                <p>{list.beds} Beds</p>
-                              </div>
-                            )}
+                          {list.category === "house" && (
+                            <div className='text-sm flex items-center gap-2 text-gray-600 dark:text-gray-300'>
+                              <p>{list.beds} Beds</p> |{" "}
+                              <p>{list.baths} Baths gate</p>|{" "}
+                              <p>{list.sqm} sqm</p>
+                            </div>
+                          )}
 
-                            {list.baths && (
-                              <div className='flex items-center gap-1'>
-                                <p>{list.baths} Baths</p>
-                              </div>
-                            )}
+                          {list.category === "land" && (
+                            <div className='text-sm flex items-center gap-2 text-gray-600 dark:text-gray-300'>
+                              <p> {list.fenced ? "Fenced" : "Not fenced"}</p> |
+                              <p>{list.gate ? "With gate" : "No gate"}</p> |{" "}
+                              <p>{list.sqm} sqm</p>
+                            </div>
+                          )}
 
-                            {list.sqm && (
-                              <div className='flex items-center gap-1'>
-                                <p>{list.sqm} Sqm</p>
-                              </div>
-                            )}
-
-                            {list.available && (
-                              <p className=' px-3 py-1 rounded-xl overflow-hidden bg-black/60 dark:bg-black/20 font-bold text-white'>
-                                {list.status}
-                              </p>
-                            )}
-                          </div>
-                          <div className='flex justify-end items-center text-sm mt-2'>
-                            {list.views < 1 ? (
-                              <EyeOff className='w-4 h-4 mr-2' />
-                            ) : (
-                              <Eye className='w-4 h-4 mr-2' />
-                            )}
-                            <p>{list.views}</p>
+                          <div className='flex justify-between items-center text-sm mt-2'>
+                            <div className='flex items-center text-blue-500'>
+                              <MapPinCheckIcon className='w-4 h-4 mr-1 ' />{" "}
+                              {list.location}
+                            </div>
+                            <div className='flex items-center'>
+                              {list.views < 1 ? (
+                                <EyeOff className='w-4 h-4 mr-1' />
+                              ) : (
+                                <Eye className='w-4 h-4 mr-1' />
+                              )}
+                              <p>{list.views}</p>
+                            </div>
                           </div>
                         </div>
                       </div>

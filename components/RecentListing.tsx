@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import { BathIcon, BedIcon, Eye, EyeOff, RulerIcon } from "lucide-react";
+import { Eye, EyeOff, MapPinCheckIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ShimmerButton from "./ui/shimmer-button";
@@ -45,11 +45,8 @@ const RecentListing = async () => {
                         src={list.img}
                         className='w-full h-[180px] object-cover'
                       />
-                      <p className='absolute bottom-3 left-3 px-3 py-1 bg-black/30 rounded-full text-white font-semibold'>
-                        ₦{list.price.toLocaleString()}
-                      </p>
-                      <p className='absolute bottom-3 right-3 px-3 py-1 bg-blue-200/80 text-blue-800 rounded-full'>
-                        {list.location}
+                      <p className='absolute bottom-3 left-2 px-3 py-1 bg-black/30 rounded-full text-white font-semibold text-lg'>
+                        ₦{list.price.toLocaleString() ?? 'N/A'}
                       </p>
                       <p
                         className={`absolute top-3 right-3 px-3 py-1 rounded-full font-semibold text-sm ${
@@ -61,31 +58,37 @@ const RecentListing = async () => {
                       </p>
                     </div>
 
-                    <div className='p-4'>
-                      <h2 className='text-lg font-semibold text-gray-800 dark:text-white truncate'>
+                    <div className='px-4 py-2'>
+                      <h2 className='text-lg font-medium text-gray-800 dark:text-white truncate mb-1'>
                         {list.title}
                       </h2>
-                      <div className='mt-3 flex items-center justify-between text-gray-600 dark:text-gray-300'>
-                        <div className='flex items-center space-x-1'>
-                          <BedIcon className='w-4 h-4 text-blue-500' />
-                          <p className='text-sm'>{list.beds} Beds</p>
+                 
+                      {list.category === "house" && (
+                        <div className='text-sm flex items-center gap-2 text-gray-600 dark:text-gray-300'>
+                          <p>{list.beds} Beds</p> |{" "}
+                          <p>{list.baths} Baths gate</p>| <p>{list.sqm} sqm</p>
                         </div>
-                        <div className='flex items-center space-x-1'>
-                          <BathIcon className='w-4 h-4 text-blue-500' />
-                          <p className='text-sm'>{list.baths} Baths</p>
+                      )}
+                      {list.category === "land" && (
+                        <div className='text-sm flex items-center gap-2 text-gray-600 dark:text-gray-300'>
+                          <p> {list.fenced ? "Fenced" : "Not fenced"}</p> |
+                          <p>{list.gate ? "With gate" : "No gate"}</p> |{" "}
+                          <p>{list.sqm} sqm</p>
                         </div>
-                        <div className='flex items-center space-x-1'>
-                          <RulerIcon className='w-4 h-4 text-blue-500' />
-                          <p className='text-sm'>{list.sqm} Sqm</p>
+                      )}
+                      <div className='flex justify-between items-center text-sm mt-2'>
+                        <div className='flex items-center text-blue-500'>
+                          <MapPinCheckIcon className='w-4 h-4 mr-1 ' />{" "}
+                          {list.location}
                         </div>
-                      </div>
-                      <div className='flex justify-end items-center text-sm mt-2'>
-                        {list.views < 1 ? (
-                          <EyeOff className='w-4 h-4 mr-2' />
-                        ) : (
-                          <Eye className='w-4 h-4 mr-2' />
-                        )}
-                        <p>{list.views}</p>
+                        <div className='flex items-center'>
+                          {list.views < 1 ? (
+                            <EyeOff className='w-4 h-4 mr-1' />
+                          ) : (
+                            <Eye className='w-4 h-4 mr-1' />
+                          )}
+                          <p>{list.views}</p>
+                        </div>
                       </div>
                     </div>
                   </Link>
