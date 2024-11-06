@@ -1,7 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "./ui/button";
 import FooterNewsletter from "./FooterNewsletter";
+import { Button } from "./ui/button";
+
+const navs = [
+  { label: "Home", href: "/" },
+  { label: "About Us", href: "/about-us" },
+  { label: "Land Listings", href: "/land-listings" },
+  { label: "House Listings", href: "/house-listings" },
+  { label: "Blog Posts", href: "/blogs" },
+  { label: "Contact Us", href: "/contact-us" },
+];
 
 const Footer = () => {
   return (
@@ -34,51 +43,18 @@ const Footer = () => {
           <div className='mt-3 sm:mx-auto'>
             <h3 className='font-medium text-lg text-gray-300'>Quick Links</h3>
             <div className='flex flex-col justify-start items-start'>
-              <Button
-                aria-label='nav link'
-                asChild
-                variant='ghost'
-                className='hover:bg-gray-800 hover:text-white'>
-                <Link aria-label='nav link' href='/'>
-                  Home
-                </Link>
-              </Button>
-              <Button
-                aria-label='nav link'
-                asChild
-                variant='ghost'
-                className='hover:bg-gray-800 hover:text-white'>
-                <Link aria-label='nav link' href='/about-us'>
-                  About Us
-                </Link>
-              </Button>
-              <Button
-                aria-label='nav link'
-                asChild
-                variant='ghost'
-                className='hover:bg-gray-800 hover:text-white'>
-                <Link aria-label='nav link' href='/listings'>
-                  Listings
-                </Link>
-              </Button>
-              <Button
-                aria-label='nav link'
-                asChild
-                variant='ghost'
-                className='hover:bg-gray-800 hover:text-white'>
-                <Link aria-label='nav link' href='/blogs'>
-                  Blog Posts
-                </Link>
-              </Button>
-              <Button
-                aria-label='nav link'
-                asChild
-                variant='ghost'
-                className='hover:bg-gray-800 hover:text-white'>
-                <Link aria-label='nav link' href='/contact-us'>
-                  Contact Us
-                </Link>
-              </Button>
+              {navs.map((nav, i) => (
+                <Button
+                  key={i}
+                  aria-label='nav link'
+                  asChild
+                  variant='ghost'
+                  className='hover:bg-gray-800 hover:text-white'>
+                  <Link aria-label='nav link' href={nav.href}>
+                    {nav.label}
+                  </Link>
+                </Button>
+              ))}
             </div>
           </div>
           <div className='mt-3'>
@@ -97,7 +73,7 @@ const Footer = () => {
               </div>
 
               <div className='relative w-[40px] h-[40px]'>
-                <Link href='/'>
+                <Link href='https://wa.me/2348033350750'>
                   <Image
                     alt=''
                     priority
@@ -125,12 +101,12 @@ const Footer = () => {
             <h3 className='font-medium text-lg text-gray-300'>
               Subscribe to our newsletter
             </h3>
-           <FooterNewsletter />
+            <FooterNewsletter />
           </div>
         </div>
       </div>
       <div className='bg-gray-950 p-4 text-gray-500'>
-        <p className="text-gray-400">
+        <p className='text-gray-400'>
           &copy; <span id='current-year'>2024</span> Tigerkenn Homes. All rights
           reserved.
         </p>
