@@ -1,11 +1,11 @@
 import { createClient } from "@/utils/supabase/server";
 import {
-  BathIcon,
-  BedDoubleIcon,
+  // BathIcon,
+  // BedDoubleIcon,
   Eye,
   EyeOff,
   MapPinCheckIcon,
-  Ruler,
+  // Ruler,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -73,17 +73,17 @@ const RecentBuildingListing = async () => {
 
                       <div className='text-sm flex items-center justify-between gap-2 text-gray-600 dark:text-gray-300'>
                         <div className='flex items-center gap-2'>
-                          <BedDoubleIcon className='w-5 h-5 text-blue-600 dark:text-blue-400' />{" "}
+                          {/* <BedDoubleIcon className='w-4 h-4 text-blue-600 dark:text-blue-400' />{" "} */}
                           <p> {list.beds} Beds</p>
                         </div>{" "}
                         |
                         <div className='flex items-center gap-2'>
-                          <BathIcon className='w-5 h-5  text-blue-600 dark:text-blue-400' />
+                          {/* <BathIcon className='w-4 h-4  text-blue-600 dark:text-blue-400' /> */}
                           <p>{list.baths} Baths</p>
                         </div>{" "}
                         |
                         <div className='flex items-center gap-2'>
-                          <Ruler className='w-5 h-5  text-blue-600 dark:text-blue-400' />{" "}
+                          {/* <Ruler className='w-4 h-4  text-blue-600 dark:text-blue-400' />{" "} */}
                           <p>{list.sqm} sqm</p>
                         </div>
                       </div>
