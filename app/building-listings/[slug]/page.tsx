@@ -2,7 +2,7 @@
 import ListingGallery from "@/components/ListingGallery";
 import ListingsComments from "@/components/ListingsComments";
 import { createClient } from "@/utils/supabase/server";
-import { Bath, Bed, MapPin, Ruler } from "lucide-react";
+import { Bath, BedDoubleIcon, MapPin, Ruler } from "lucide-react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -103,7 +103,7 @@ const ListingDetails = async ({ params: { slug } }: Props) => {
           {/* Beds */}
           {listing.beds && (
             <div className='flex flex-col md:flex-row justify-center items-center md:gap-2'>
-              <Bed className='w-6 h-6 text-blue-500' />
+              <BedDoubleIcon className='w-6 h-6 text-blue-500' />
               <p className='text-sm text-center'>{listing.beds} beds</p>
             </div>
           )}
@@ -120,7 +120,7 @@ const ListingDetails = async ({ params: { slug } }: Props) => {
           {listing.sqm && (
             <div className='flex flex-col md:flex-row justify-center items-center md:gap-2'>
               <Ruler className='w-6 h-6 text-blue-500' />
-              <p className='text-sm text-center'>{listing.sqm} sqm</p>
+              <p className='text-sm text-center'>{listing.sqm} Sqm</p>
             </div>
           )}
         </div>

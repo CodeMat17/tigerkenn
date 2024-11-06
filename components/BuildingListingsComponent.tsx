@@ -176,8 +176,8 @@ const BuildingListingsComponent: React.FC = () => {
 
                           <div className='text-sm flex items-center gap-2 text-gray-600 dark:text-gray-300'>
                             <p>{list.beds} Beds</p> |{" "}
-                            <p>{list.baths} Baths gate</p>|{" "}
-                            <p>{list.sqm} sqm</p>
+                            <p>{list.baths} Baths</p>|{" "}
+                            <p>{list.sqm} Sqm</p>
                           </div>
 
                           <div className='flex justify-between items-center text-sm mt-2'>

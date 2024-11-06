@@ -2,7 +2,7 @@
 import ListingGallery from "@/components/ListingGallery";
 import ListingsComments from "@/components/ListingsComments";
 import { createClient } from "@/utils/supabase/server";
-import { Bath, Bed, MapPin, Ruler } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -99,30 +99,19 @@ const ListingDetails = async ({ params: { slug } }: Props) => {
           ₦{listing.price.toLocaleString()}
         </div>
 
-        <div className='flex items-center space-x-6 mt-3 md:mt-0'>
-          {/* Beds */}
-          {listing.beds && (
-            <div className='flex flex-col md:flex-row justify-center items-center md:gap-2'>
-              <Bed className='w-6 h-6 text-blue-500' />
-              <p className='text-sm text-center'>{listing.beds} beds</p>
-            </div>
-          )}
-
-          {/* Baths */}
-          {listing.baths && (
-            <div className='flex flex-col md:flex-row justify-center items-center md:gap-2'>
-              <Bath className='w-6 h-6 text-blue-500' />
-              <p className='text-sm text-center'>{listing.baths} baths</p>
-            </div>
-          )}
-
+        <div className='flex items-center space-x-4 mt-3 md:mt-0'>
+          {/* Fenced */}
+          <p className='text-sm text-center'>
+            {listing.fenced ? "Fenced" : "Not fenced"}
+          </p>
+          <p>|</p>
+          {/* Gated */}
+          <p className='text-sm text-center'>
+            {listing.gate ? "Has gate" : "No gate"}
+          </p>
+          <p>|</p>
           {/* Square Feet */}
-          {listing.sqm && (
-            <div className='flex flex-col md:flex-row justify-center items-center md:gap-2'>
-              <Ruler className='w-6 h-6 text-blue-500' />
-              <p className='text-sm text-center'>{listing.sqm} sqm</p>
-            </div>
-          )}
+          <p className='text-sm text-center'>{listing.sqm} Sqm</p>
         </div>
       </div>
 
