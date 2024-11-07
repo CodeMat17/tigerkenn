@@ -4,7 +4,6 @@ import { User } from "@supabase/supabase-js";
 import { HeartIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Button } from "./ui/button";
 
 interface LikeButtonProps {
   postId: string;
@@ -81,19 +80,18 @@ const LikeButton: React.FC<LikeButtonProps> = ({ postId, user }) => {
   };
 
   return (
-    <Button
-      size='icon'
-      variant='ghost'
+    <button
+   
       onClick={handleLikeToggle}
       disabled={loading}
-      className='flex items-center gap-2 hover:bg-gray-100 focus:outline-none'>
+      className='flex items-center gap-2 bg-gray-100 dark:hover:bg-gray-800 focus:outline-none rounded-lg overflow-hidden px-2 py-1'>
       {liked ? (
         <HeartIcon className='text-red-500 fill-current w-4 h-4' />
       ) : (
         <HeartIcon className='text-gray-500 w-4 h-4' />
       )}
       <span className='text-sm font-medium'>{totalLikes}</span>
-    </Button>
+    </button>
   );
 };
 
