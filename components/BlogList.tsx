@@ -16,7 +16,6 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LikeButton from "./LikeButton";
 import { User } from "@supabase/supabase-js";
-import ShareButton from "./ShareButton";
 
 type BlogPost = {
   id: string;
@@ -120,10 +119,9 @@ export default function BlogList({ user }: { user: User | null}) {
                 </Link>
 
                 <div className='flex justify-between items-center text-sm bg-white dark:bg-gray-800 px-6 pb-2'>
-                  <div className="flex items-center gap-5">
+                
                     <LikeButton user={user} postId={blog.id} />
-                    <ShareButton />
-                  </div>
+                
                   <div className='flex items-center'>
                     {blog.views < 1 ? (
                       <EyeOff className='w-4 h-4 mr-2' />
