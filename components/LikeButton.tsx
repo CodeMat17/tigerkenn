@@ -84,7 +84,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ postId, user }) => {
    
       onClick={handleLikeToggle}
       disabled={loading}
-      className='flex items-center gap-2 bg-gray-100 dark:hover:bg-gray-800 focus:outline-none rounded-lg overflow-hidden px-2 py-1'>
+      className='flex items-center gap-2 bg-gray-100 dark:bg-gray-800 focus:outline-none rounded-lg overflow-hidden px-2 py-1'>
       {liked ? (
         <HeartIcon className='text-red-500 fill-current w-4 h-4' />
       ) : (

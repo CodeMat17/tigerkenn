@@ -5,7 +5,6 @@ import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import LikeButton from "./LikeButton";
-import ShareButton from "./ShareButton";
 
 const LatestBlog = async () => {
   const supabase = createClient();
@@ -61,10 +60,9 @@ const LatestBlog = async () => {
                     </div>
                   </Link>
                   <div className='flex justify-between items-center text-sm pt-1 px-4 pb-2 bg-white dark:bg-gray-700'>
-                    <div className="flex items-center gap-5">
+                 
                       <LikeButton postId={blog.id} user={user} />
-                      <ShareButton />
-                    </div>
+                     
 
                     <div className='flex items-center'>
                       {blog.views < 1 ? (

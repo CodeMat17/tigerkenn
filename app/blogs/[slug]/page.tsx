@@ -1,5 +1,6 @@
 import BlogComments from "@/components/BlogComments";
 import LikeButton from "@/components/LikeButton";
+import ShareButton from "@/components/ShareButton";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/server"; // Adjust this path to your Supabase client
 import dayjs from "dayjs";
@@ -8,13 +9,58 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+
+export const revalidate = 0;
+
+type Props = {
+  params: {
+    slug: string;
+  };
+};
+
+
 export const metadata: Metadata = {
   title: "Blog Post",
   description:
     "Stay updated with the latest articles, trends, and insights on real estate and home services. Explore our blog at Tigerkenn Homes to learn more about our mission, services, and how we’re fostering innovation and building lasting relationships with our clients.",
 };
 
-export const revalidate = 0;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const supabase = createClient();
+  const { data } = await supabase
+    .from("blogs")
+    .select("title, slug, img")
+    .eq("slug", params.slug)
+    .single();
+
+  return {
+    title: data?.title || "Blog post details",
+    description:
+      data?.slug ||
+      "Stay updated with the latest articles, trends, and insights on real estate and home services. Explore our blog at Tigerkenn Homes to learn more about our mission, services, and how we’re fostering innovation and building lasting relationships with our clients.",
+    openGraph: {
+      title: data?.title || "Blog post details",
+      description:
+        `Read more about: ${data?.slug}` ||
+        "Stay updated with the latest articles, trends, and insights on real estate and home services. Explore our blog at Tigerkenn Homes to learn more about our mission, services, and how we’re fostering innovation and building lasting relationships with our clients.",
+      images: [
+        {
+          url:
+            data?.img ||
+            "https://res.cloudinary.com/dusg2xagv/image/upload/v1730245213/og-image/qtu9wrhthbw7iw6gupur.jpg",
+          type: "image",
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+  };
+}
+
+
+
+
+
 
 function getUserNameFromEmail(email: string | undefined): string | null {
   if (!email) {
@@ -90,6 +136,7 @@ export default async function BlogPost({
           Published on {dayjs(blog.published_at).format("MMM DD, YYYY hh:mm a")}
         </p>
         <LikeButton postId={blog.id} user={user} />
+        <ShareButton />
       </div>
 
       {/* Blog Content */}

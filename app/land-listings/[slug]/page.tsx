@@ -1,30 +1,57 @@
 // /app/listing/[id]/page.tsx
 import ListingGallery from "@/components/ListingGallery";
 import ListingsComments from "@/components/ListingsComments";
+import ShareButton from "@/components/ShareButton";
 import { createClient } from "@/utils/supabase/server";
 import { MapPin } from "lucide-react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Property Listing",
-  description:
-    "View detailed information about this property listing, including images, pricing, and key features. Find your perfect home or investment opportunity with Tigerkenn Homes.",
-};
-
 export const revalidate = 0;
-
-function getUserNameFromEmail(email: string | undefined): string | null {
-  if (!email) return null;
-  const [username] = email.split("@");
-  return username;
-}
 
 type Props = {
   params: {
     slug: string;
   };
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const supabase = createClient();
+  const { data } = await supabase
+    .from("listings")
+    .select("title, slug, img")
+    .eq("slug", params.slug)
+    .single();
+
+  return {
+    title: data?.title || "Listing details",
+    description:
+      data?.slug ||
+      "View detailed information about this property listing, including images, pricing, and key features. Find your perfect property or investment opportunity with Tigerkenn Homes.",
+    openGraph: {
+      title: data?.title || "Listing details",
+      description:
+        `Read more about: ${data?.slug}` ||
+        "View detailed information about this property listing, including images, pricing, and key features. Find your perfect property or investment opportunity with Tigerkenn Homes.",
+      images: [
+        {
+          url:
+            data?.img ||
+            "https://res.cloudinary.com/dusg2xagv/image/upload/v1730245213/og-image/qtu9wrhthbw7iw6gupur.jpg",
+          type: "image",
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+  };
+}
+
+function getUserNameFromEmail(email: string | undefined): string | null {
+  if (!email) return null;
+  const [username] = email.split("@");
+  return username;
+}
 
 const ListingDetails = async ({ params: { slug } }: Props) => {
   const supabase = createClient();
@@ -83,6 +110,7 @@ const ListingDetails = async ({ params: { slug } }: Props) => {
             Unavailable
           </span>
         )}
+        <ShareButton />
       </div>
 
       {/* Image Gallery */}

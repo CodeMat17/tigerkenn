@@ -12,7 +12,7 @@ const navs = [
   { title: "ABOUT US", href: "/about-us" },
   { title: "LAND LISTINGS", href: "/land-listings" },
   { title: "BUILDING LISTINGS", href: "/building-listings" },
-  { title: "BLOG", href: "/blogs" },
+  { title: "BLOG POSTS", href: "/blogs" },
   { title: "CONTACT US", href: "/contact-us" },
 ];
 
