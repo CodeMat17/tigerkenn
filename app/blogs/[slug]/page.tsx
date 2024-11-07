@@ -9,20 +9,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-
 export const revalidate = 0;
 
 type Props = {
   params: {
     slug: string;
   };
-};
-
-
-export const metadata: Metadata = {
-  title: "Blog Post",
-  description:
-    "Stay updated with the latest articles, trends, and insights on real estate and home services. Explore our blog at Tigerkenn Homes to learn more about our mission, services, and how we’re fostering innovation and building lasting relationships with our clients.",
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -56,11 +48,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
   };
 }
-
-
-
-
-
 
 function getUserNameFromEmail(email: string | undefined): string | null {
   if (!email) {
