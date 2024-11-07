@@ -53,13 +53,13 @@ const LatestBlog = async () => {
                         )}
                       </p>
                     </div>
-                    <div className='px-4 pt-2'>
+                    <div className='px-4 pt-2 bg-white dark:bg-gray-700'>
                       <h2 className='text-lg font-semibold leading-5 dark:text-gray-300 line-clamp-2'>
                         {blog.title}
                       </h2>
                     </div>
                   </Link>
-                  <div className='flex justify-between items-center text-sm mt-1 px-4 pb-2'>
+                  <div className='flex justify-between items-center text-sm pt-1 px-4 pb-2 bg-white dark:bg-gray-700'>
                     <LikeButton postId={blog.id} user={user} />
                     <div className='flex items-center'>
                       {blog.views < 1 ? (
