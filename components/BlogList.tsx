@@ -14,8 +14,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import LikeButton from "./LikeButton";
+import { User } from "@supabase/supabase-js";
 
 type BlogPost = {
+  id: string;
   title: string;
   slug: string;
   published_at: string;
@@ -24,7 +27,7 @@ type BlogPost = {
   views: number; // Number of views
 };
 
-export default function BlogList() {
+export default function BlogList({ user }: { user: User | null}) {
   const supabase = createClient();
 
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
@@ -46,7 +49,7 @@ export default function BlogList() {
     try {
       const { data, count, error } = await supabase
         .from("blogs")
-        .select("title, slug, published_at, img, content, views", { count: "exact" })
+        .select("id, title, slug, published_at, img, content, views", { count: "exact" })
         .order("published_at", { ascending: false })
         .range(from, to);
 
@@ -91,27 +94,35 @@ export default function BlogList() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}>
-              <Link
-                aria-label='dynamic link'
-                href={`/blogs/${blog.slug}`}
-                className='block hover:scale-105 transition-transform duration-300'>
-                <div className='relative h-48'>
-                  <Image
-                    src={blog.img}
-                    alt={blog.title}
-                    layout='fill'
-                    className='object-cover'
-                  />
-                </div>
-                <div className='px-6 py-4 bg-white dark:bg-gray-800'>
-                  <h2 className='text-xl font-semibold text-blue-500 mb-2 leading-6 line-clamp-2'>
-                    {blog.title}
-                  </h2>
-                  <p className='text-gray-400 text-sm'>
-                    Published on{" "}
-                    {dayjs(blog.published_at).format("MMM DD, YYYY hh:mm a")}
-                  </p>
-                  <div className='flex justify-end items-center text-sm mt-2'>
+              <div className='hover:scale-105 transition-transform duration-300'>
+                <Link
+                  aria-label='dynamic link'
+                  href={`/blogs/${blog.slug}`}
+                  className='block '>
+                  <div className='relative h-44'>
+                    <Image
+                      src={blog.img}
+                      alt={blog.title}
+                      layout='fill'
+                      className='object-cover aspect-video'
+                    />
+                  </div>
+                  <div className='px-6 pt-2 bg-white dark:bg-gray-800'>
+                    <h2 className='text-lg font-semibold dark:text-gray-300 mb-1 leading-6 line-clamp-2'>
+                      {blog.title}
+                    </h2>
+                    <p className='text-gray-500 dark:text-gray-400 text-sm'>
+                      Published on{" "}
+                      {dayjs(blog.published_at).format("MMM DD, YYYY hh:mm a")}
+                    </p>
+                  </div>
+                </Link>
+
+                <div className='flex justify-between items-center text-sm bg-white dark:bg-gray-800 px-6 pb-2'>
+                  <div>
+                   <LikeButton user={user} postId={blog.id} />
+                  </div>
+                  <div className='flex items-center'>
                     {blog.views < 1 ? (
                       <EyeOff className='w-4 h-4 mr-2' />
                     ) : (
@@ -120,7 +131,7 @@ export default function BlogList() {
                     <p>{blog.views}</p>
                   </div>
                 </div>
-              </Link>
+              </div>
             </motion.div>
           ))}
         </div>

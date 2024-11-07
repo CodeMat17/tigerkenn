@@ -39,7 +39,7 @@ const RecentBuildingListing = async () => {
               {listings?.map((list, i) => (
                 <div
                   key={i}
-                  className='rounded-lg overflow-hidden bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition duration-300 ease-in-out w-full sm:max-w-[300px]'>
+                  className='rounded-lg overflow-hidden bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition duration-300 ease-in-out w-full sm:max-w-[320px]'>
                   <Link
                     href={`/building-listings/${list.slug}`}
                     passHref

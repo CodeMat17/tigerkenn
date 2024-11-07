@@ -1,4 +1,5 @@
 import BlogComments from "@/components/BlogComments";
+import LikeButton from "@/components/LikeButton";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/server"; // Adjust this path to your Supabase client
 import dayjs from "dayjs";
@@ -52,9 +53,7 @@ export default async function BlogPost({
   }
 
   if (blog) {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_HOME ||
-      "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_HOME || "http://localhost:3000";
     await fetch(`${baseUrl}/api/blog-views`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -85,10 +84,13 @@ export default async function BlogPost({
         {blog.title}
       </h1>
 
-      {/* Blog Metadata */}
-      <p className='text-gray-500 text-sm mb-6 animate-fadeIn'>
-        Published on {dayjs(blog.published_at).format("MMM DD, YYYY hh:mm a")}
-      </p>
+      {/* Blog Metadata and likes */}
+      <div className='mb-6 flex items-center gap-6'>
+        <p className='text-gray-500 text-sm animate-fadeIn'>
+          Published on {dayjs(blog.published_at).format("MMM DD, YYYY hh:mm a")}
+        </p>
+        <LikeButton postId={blog.id} user={user} />
+      </div>
 
       {/* Blog Content */}
       <div
