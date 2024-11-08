@@ -19,25 +19,22 @@ const LikeButton: React.FC<LikeButtonProps> = ({ postId, user }) => {
   // Fetch initial like status and total likes
   useEffect(() => {
     const fetchLikeData = async () => {
-   
+      try {
+        // Fetch total likes count regardless of user session
+        const response = await fetch(
+          `/api/like-status?postId=${postId}&userId=${user?.id || ""}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          // setLiked(data.liked);
+          setTotalLikes(data.totalLikes);
 
-        try {
-          // Fetch total likes count regardless of user session
-            const response = await fetch(
-              `/api/like-status?postId=${postId}&userId=${user?.id || ""
-              }`
-            );
-          if (response.ok) {
-            const data = await response.json();
-            // setLiked(data.liked);
-            setTotalLikes(data.totalLikes);
-
-            // Only set liked status if there is a logged-in user
-            if (user) {
-              setLiked(data.liked);
-            }
+          // Only set liked status if there is a logged-in user
+          if (user) {
+            setLiked(data.liked);
           }
-        } catch (error) {
+        }
+      } catch (error) {
         console.error("Failed to fetch like data:", error);
       }
     };
@@ -48,9 +45,9 @@ const LikeButton: React.FC<LikeButtonProps> = ({ postId, user }) => {
   const handleLikeToggle = async () => {
     if (!user) {
       alert("Please, you have to log in to like posts");
-      // toast.error("HOLD-ON!", {
-      //   description: "Please, you have to log in to like posts",
-      // });
+      toast.error("HOLD-ON!", {
+        description: "Please, you have to log in to like posts",
+      });
       return;
     }
 
@@ -82,7 +79,6 @@ const LikeButton: React.FC<LikeButtonProps> = ({ postId, user }) => {
 
   return (
     <button
-   
       onClick={handleLikeToggle}
       disabled={loading}
       className='flex items-center gap-2 bg-gray-100 dark:bg-gray-800 focus:outline-none rounded-lg overflow-hidden px-2 py-1'>
