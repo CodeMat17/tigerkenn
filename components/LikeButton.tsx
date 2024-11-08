@@ -47,9 +47,10 @@ const LikeButton: React.FC<LikeButtonProps> = ({ postId, user }) => {
 
   const handleLikeToggle = async () => {
     if (!user) {
-      toast.error("HOLD-ON!", {
-        description: "Please, you have to log in to like posts",
-      });
+      alert("Please, you have to log in to like posts");
+      // toast.error("HOLD-ON!", {
+      //   description: "Please, you have to log in to like posts",
+      // });
       return;
     }
 
