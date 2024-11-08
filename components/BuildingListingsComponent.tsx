@@ -14,7 +14,7 @@ import {
   ChevronRightIcon,
   Eye,
   EyeOff,
-  MapPinCheckIcon,
+  MapPinIcon,
   MinusIcon,
   SearchIcon,
 } from "lucide-react";
@@ -175,14 +175,13 @@ const BuildingListingsComponent: React.FC = () => {
                           </h2>
 
                           <div className='text-sm flex items-center gap-2 text-gray-600 dark:text-gray-300'>
-                            <p>{list.beds} Beds</p> |{" "}
-                            <p>{list.baths} Baths</p>|{" "}
+                            <p>{list.beds} Beds</p> | <p>{list.baths} Baths</p>|{" "}
                             <p>{list.sqm} Sqm</p>
                           </div>
 
                           <div className='flex justify-between items-center text-sm mt-2'>
                             <div className='flex items-center text-blue-500'>
-                              <MapPinCheckIcon className='w-4 h-4 mr-1 ' />{" "}
+                              <MapPinIcon className='w-4 h-4 mr-1 ' />{" "}
                               {list.location}
                             </div>
                             <div className='flex items-center'>

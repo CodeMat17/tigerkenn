@@ -4,7 +4,8 @@ import {
   // BedDoubleIcon,
   Eye,
   EyeOff,
-  MapPinCheckIcon,
+  MapPinIcon,
+ 
   // Ruler,
 } from "lucide-react";
 import Image from "next/image";
@@ -90,7 +91,7 @@ const RecentBuildingListing = async () => {
 
                       <div className='flex justify-between items-center text-sm mt-2'>
                         <div className='flex items-center  text-blue-600 dark:text-blue-400'>
-                          <MapPinCheckIcon className='w-4 h-4 mr-1 ' />{" "}
+                          <MapPinIcon className='w-4 h-4 mr-1 ' />{" "}
                           {list.location}
                         </div>
                         <div className='flex items-center'>

@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import { Eye, EyeOff, MapPinCheckIcon } from "lucide-react";
+import { Eye, EyeOff, MapPinIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ShimmerButton from "./ui/shimmer-button";
@@ -72,7 +72,7 @@ const RecentListing = async () => {
 
                       <div className='flex justify-between items-center text-sm mt-2'>
                         <div className='flex items-center text-blue-600 dark:text-blue-400'>
-                          <MapPinCheckIcon className='w-4 h-4 mr-1 ' />{" "}
+                          <MapPinIcon className='w-4 h-4 mr-1 ' />{" "}
                           {list.location}
                         </div>
                         <div className='flex items-center'>
