@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
+import StatsSection from "../StatsSection";
 
 const AboutUsIntro = async () => {
   const supabase = createClient();
@@ -9,6 +10,7 @@ const AboutUsIntro = async () => {
     <div>
       <h2 className='text-2xl font-semibold mb-4'>{data.title}</h2>
       <p className='text-lg'>{data.desc}</p>
+      <StatsSection />
     </div>
   );
 };
