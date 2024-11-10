@@ -1,3 +1,4 @@
+import CompletedProjects from "@/components/CompletedProjects";
 import HeroPage from "@/components/HeroPage";
 import LastestBlog from "@/components/LatestBlog";
 import NewsletterSignup from "@/components/NewsletterSignup";
@@ -11,9 +12,12 @@ const Home = async () => {
 
   const { data: hero } = await supabase.from("hero").select("*").single();
 
+  const { data: completed } = await supabase.from("completed").select("*");
+
   return (
     <div className='w-full min-h-screen '>
       <HeroPage title={hero.title} desc={hero.desc} content={hero.content} />
+      <CompletedProjects projects={completed ?? []} />
       <RecentListing />
       <RecentBuildingListing />
       <ReviewCarousel />
