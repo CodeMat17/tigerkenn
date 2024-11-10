@@ -3,6 +3,7 @@
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
+import { createClient } from "@/utils/supabase/clients"; // Adjust import to your Supabase client configuration
 
 const useCountUp = (
   endValue: number,
@@ -38,15 +39,47 @@ const StatsSection = () => {
   const controls2 = useAnimation();
   const controls3 = useAnimation();
 
-  // Control whether each counter should start counting
   const [startCount1, setStartCount1] = useState(false);
   const [startCount2, setStartCount2] = useState(false);
   const [startCount3, setStartCount3] = useState(false);
 
+  const [counts, setCounts] = useState<number[]>([0, 0, 0]);
+  const [tags, setTags] = useState<string[]>([
+    "Loading...",
+    "Loading...",
+    "Loading...",
+  ]);
+
+  // Fetch data from Supabase
+  useEffect(() => {
+    const fetchData = async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("stats") // Replace with your table name
+        .select("count, tag")
+        .order("created_at", {ascending: true}) // Adjust ordering based on your data structure
+        .limit(3);
+
+      if (error) {
+        console.error("Error fetching data:", error);
+        return;
+      }
+
+      if (data) {
+        const fetchedCounts = data.map((item) => item.count);
+        const fetchedTags = data.map((item) => item.tag);
+        setCounts(fetchedCounts);
+        setTags(fetchedTags);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   // Custom count-up hooks for each number
-  const count1 = useCountUp(13, 3, startCount1);
-  const count2 = useCountUp(50, 3, startCount2);
-  const count3 = useCountUp(5, 3, startCount3);
+  const count1 = useCountUp(counts[0], 3, startCount1);
+  const count2 = useCountUp(counts[1], 3, startCount2);
+  const count3 = useCountUp(counts[2], 3, startCount3);
 
   useEffect(() => {
     if (inView) {
@@ -75,7 +108,7 @@ const StatsSection = () => {
         animate={controls1}
         transition={{ type: "spring", stiffness: 100 }}>
         <p className='text-4xl font-bold text-center'>{count1}+</p>
-        <p className='text-center'>Years of Excellence</p>
+        <p className='text-center'>{tags[0]}</p>
       </motion.div>
 
       {/* Second Statistic */}
@@ -84,7 +117,7 @@ const StatsSection = () => {
         animate={controls2}
         transition={{ type: "spring", stiffness: 100 }}>
         <p className='text-4xl font-bold text-center'>{count2}+</p>
-        <p className='text-center'>Completed Projects</p>
+        <p className='text-center'>{tags[1]}</p>
       </motion.div>
 
       {/* Third Statistic */}
@@ -93,7 +126,7 @@ const StatsSection = () => {
         animate={controls3}
         transition={{ type: "spring", stiffness: 100 }}>
         <p className='text-4xl font-bold text-center'>{count3}+</p>
-        <p className='text-center'>Ongoing Projects</p>
+        <p className='text-center'>{tags[2]}</p>
       </motion.div>
     </div>
   );
