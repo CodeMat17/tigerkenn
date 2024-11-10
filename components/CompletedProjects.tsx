@@ -36,7 +36,7 @@ const CompletedProjects: React.FC<CompletedProjectsProps> = ({ projects }) => {
   };
 
   return (
-    <div className='max-w-6xl mx-auto p-6'>
+    <div className='max-w-6xl mx-auto'>
       {/* Section Title */}
       <div className='text-center mb-8'>
         <h1 className='text-3xl sm:text-4xl font-bold text-center text-gray-800 dark:text-white'>
@@ -48,8 +48,8 @@ const CompletedProjects: React.FC<CompletedProjectsProps> = ({ projects }) => {
       {/* Scrollable Project Cards */}
       <div className='relative'>
         {/* Smoky Edges */}
-        <div className='absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-gray-50 to-transparent dark:from-gray-900 pointer-events-none'></div>
-        <div className='absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-gray-50 to-transparent dark:from-gray-900 pointer-events-none'></div>
+        <div className='absolute inset-y-0 left-0 w-8 sm:w-32 bg-gradient-to-r from-gray-50 to-transparent dark:from-gray-950 pointer-events-none'></div>
+        <div className='absolute inset-y-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-gray-50 to-transparent dark:from-gray-950 pointer-events-none'></div>
 
         <div
           ref={scrollRef}
@@ -61,7 +61,9 @@ const CompletedProjects: React.FC<CompletedProjectsProps> = ({ projects }) => {
               onClick={() => handleCardClick(project.imgUrl)}>
               {/* Text Content */}
               <div className='flex-1 sm:mr-4'>
-                <h3 className='text-lg font-bold mb-2'>{project.title}</h3>
+                <h3 className='text-lg font-bold mb-2 line-clamp-2'>
+                  {project.title}
+                </h3>
                 <p className='text-sm'>{project.desc}</p>
               </div>
 
