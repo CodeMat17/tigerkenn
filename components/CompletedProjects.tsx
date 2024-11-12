@@ -57,10 +57,10 @@ const CompletedProjects: React.FC<CompletedProjectsProps> = ({ projects }) => {
           {projects.map((project) => (
             <div
               key={project.id}
-              className='flex flex-col sm:flex-row items-center bg-gradient-to-r from-blue-300 to-blue-500 dark:from-blue-700 dark:to-blue-900 text-white rounded-lg p-4 shadow-lg min-w-[300px] sm:w-[400px] transition-transform hover:scale-105 cursor-pointer'
+              className='flex flex-col sm:flex-row items-center sm:gap-3 bg-gradient-to-r from-sky-400 to-sky-800 text-white rounded-lg p-4 shadow-lg min-w-[300px] sm:w-[400px] transition-transform hover:scale-105 cursor-pointer'
               onClick={() => handleCardClick(project.imgUrl)}>
               {/* Text Content */}
-              <div className='flex-1 sm:mr-4'>
+              <div className='flex-1'>
                 <h3 className='text-lg font-bold mb-2 line-clamp-3 leading-5'>
                   {project.title}
                 </h3>
@@ -68,7 +68,7 @@ const CompletedProjects: React.FC<CompletedProjectsProps> = ({ projects }) => {
               </div>
 
               {/* Image */}
-              <div className='flex-1 sm:ml-4'>
+              <div className='flex-1'>
                 <Image
                   src={project.imgUrl}
                   alt={project.title}
@@ -86,12 +86,12 @@ const CompletedProjects: React.FC<CompletedProjectsProps> = ({ projects }) => {
       <div className='flex justify-center gap-8 mt-4'>
         <button
           onClick={scrollLeft}
-          className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none transition-transform transform hover:scale-105 active:scale-95'>
+          className='px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-700 focus:outline-none transition-transform transform hover:scale-105 active:scale-95'>
           <ChevronsLeftIcon />
         </button>
         <button
           onClick={scrollRight}
-          className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none transition-transform transform hover:scale-105 active:scale-95'>
+          className='px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-700 focus:outline-none transition-transform transform hover:scale-105 active:scale-95'>
           <ChevronsRightIcon />
         </button>
       </div>
