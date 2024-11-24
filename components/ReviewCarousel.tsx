@@ -103,7 +103,7 @@ export default function ReviewCarousel() {
   return (
     <div className='relative w-full max-w-6xl mx-auto py-12'>
       <div className='mb-8 px-4'>
-        <h2 className='text-3xl sm:text-4xl font-semibold'>Client Reviews</h2>
+        <h2 className='text-3xl sm:text-4xl font-semibold text-center'>Client Reviews</h2>
       </div>
 
       {/* Gradient overlay on the left side */}

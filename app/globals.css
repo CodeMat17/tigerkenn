@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+
+  .animation-delay-200 {
+    animation-delay: 0.3s;
+  }
+  .animation-delay-400 {
+    animation-delay: 0.5s;
+  }
+
+  
 /* Global styles or add to your CSS module */
 .hide-scrollbar {
   scrollbar-width: none; /* Firefox */

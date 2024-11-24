@@ -39,9 +39,9 @@ const CompletedProjects: React.FC<CompletedProjectsProps> = ({ projects }) => {
     <div className='max-w-6xl mx-auto py-8'>
       {/* Section Title */}
       <div className='text-center mb-8'>
-        <h1 className='text-3xl sm:text-4xl font-bold text-center text-gray-800 dark:text-white'>
+        <h2 className='text-3xl sm:text-4xl font-semibold text-center'>
           Completed Projects
-        </h1>
+        </h2>
         <p className='text-gray-600 dark:text-gray-400'>Selected few</p>
       </div>
 

@@ -10,7 +10,7 @@ import { Button } from "./ui/button";
 const navs = [
   { title: "HOME", href: "/" },
   { title: "ABOUT US", href: "/about-us" },
-  { title: "LAND LISTINGS", href: "/land-listings" },
+  { title: "THREADS", href: "/threads/topics" },
   { title: "BUILDING LISTINGS", href: "/building-listings" },
   { title: "BLOG POSTS", href: "/blogs" },
   { title: "CONTACT US", href: "/contact-us" },

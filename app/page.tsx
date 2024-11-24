@@ -1,9 +1,7 @@
 import CompletedProjects from "@/components/CompletedProjects";
 import HeroPage from "@/components/HeroPage";
-import LastestBlog from "@/components/LatestBlog";
+import HeroThreads from "@/components/HeroThreads";
 import NewsletterSignup from "@/components/NewsletterSignup";
-import RecentBuildingListing from "@/components/RecentBuildingListings";
-import RecentListing from "@/components/RecentLandListing";
 import ReviewCarousel from "@/components/ReviewCarousel";
 import { createClient } from "@/utils/supabase/server";
 
@@ -18,10 +16,11 @@ const Home = async () => {
     <div className='w-full min-h-screen '>
       <HeroPage title={hero.title} desc={hero.desc} content={hero.content} />
       <CompletedProjects projects={completed ?? []} />
-      <RecentListing />
-      <RecentBuildingListing />
+      <HeroThreads />
+      {/* <RecentListing /> */}
+      {/* <RecentBuildingListing /> */}
       <ReviewCarousel />
-      <LastestBlog />
+      {/* <LastestBlog /> */}
       <NewsletterSignup />
     </div>
   );
