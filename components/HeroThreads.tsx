@@ -112,6 +112,13 @@ const HeroThreads = async () => {
             </div>
           ))}
         </div>
+        <div className='mt-6 flex justify-center'>
+          <Link
+            href='/threads/topics'
+            className=' rounded-full px-8 py-2 bg-gradient-to-r from-blue-500 to-black text-white'>
+            See all threads
+          </Link>
+        </div>
       </div>
     </section>
   );
