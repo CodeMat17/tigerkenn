@@ -12,7 +12,6 @@ const HeroThreads = async () => {
   } = await supabase.auth.getUser();
   const userId = user?.id;
   const isAdmin = user?.app_metadata?.isAdmin || false;
-  console.log("IS_ADMIN: ", isAdmin);
 
   // Fetch threads
   const { data: threads, error } = await supabase

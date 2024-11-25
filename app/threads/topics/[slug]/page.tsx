@@ -14,21 +14,22 @@ type Props = {
 const TopicDetail = async ({ params: { slug } }: Props) => {
   const supabase = createClient();
 
-  // Get users data
+  // Fetch user data
   const {
     data: { user },
   } = await supabase.auth.getUser();
   const userId = user?.id;
-  const isAdmin = user?.app_metadata?.isAdmin || false
+  const isAdmin = user?.app_metadata?.isAdmin || false;
 
-  const { data: topic, error } = await supabase
+  // Fetch topic data and reply count
+  const { data: topic, error: topicError } = await supabase
     .from("topics")
     .select("*")
     .eq("slug", slug)
     .single();
 
-  if (error) {
-    notFound(); // 404 for missing topic
+  if (topicError) {
+    notFound(); // Trigger a 404 if topic not found
   }
 
   if (!topic || topic.length === 0) {
@@ -38,33 +39,26 @@ const TopicDetail = async ({ params: { slug } }: Props) => {
       </div>
     );
   }
-
-  const { count: replyCount } = await supabase
-    .from("topic_reply")
-    .select("id", { count: "exact" })
-    .eq("topic_id", topic.id);
-
-  if (error) {
-    console.log("Something went wrong", error);
+console.log('Topicid: ' + topic.id);
+  // Increment view count
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_HOME || "http://localhost:3000";
+    await fetch(`${baseUrl}/api/view-count`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ topicId: topic.id }),
+    });
+  } catch (error) {
+    console.error("Failed to update view count:", error);
   }
 
-  // Increment view count (this will execute only if `topic` is successfully fetched)
-  const incrementViewCount = async () => {
-    const baseUrl = process.env.NEXT_PUBLIC_HOME || "http://localhost:3000";
-    try {
-      await fetch(`${baseUrl}/api/topic-view-count`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug }),
-      });
-    } catch (fetchError) {
-      // Log error if in development, but do not interrupt the user
-      if (process.env.NODE_ENV === "development") {
-        console.error("View count update failed:", fetchError);
-      }
-    }
-  };
-  incrementViewCount(); // Trigger view count increment asynchronously
+  // Fetch reply count
+  const { data: replies } = await supabase
+    .from("topic_reply")
+    .select("id")
+    .eq("topic_id", topic.id);
+
+  const replyCount = replies ? replies.length : 0;
 
   return (
     <div className='px-4 py-8 max-w-4xl mx-auto'>
@@ -98,7 +92,7 @@ const TopicDetail = async ({ params: { slug } }: Props) => {
             </span>
           ))}
       </p>
-      <div className="flex items-center gap-5 mt-2">
+      <div className='flex items-center gap-5 mt-2'>
         {userId === topic.user_id && (
           <Link
             href={`/threads/topics/edit-post/${topic.slug}`}

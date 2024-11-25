@@ -29,6 +29,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // voteStatus will be `null` if no matching row is found
+    if (!existingVote) {
+      console.log("No vote found for this user and post.");
+    }
+
     let updatedVote = true;
     let voteDelta = 1;
 
@@ -99,7 +104,7 @@ export async function POST(req: NextRequest) {
     const { error: topicUpdateError } = await supabaseService
       .from("topics")
       .update({ votes: updatedVotes })
-      .eq("id", postId)
+      .eq("id", postId);
 
     if (topicUpdateError) {
       console.error("Error updating topic votes:", topicUpdateError);

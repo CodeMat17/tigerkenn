@@ -1,4 +1,6 @@
 import LoginForm from "@/components/LoginForm";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
 type SearchParamsProps = {
   searchParams: {
@@ -6,7 +8,17 @@ type SearchParamsProps = {
   };
 };
 
-export default function LoginPage({ searchParams }: SearchParamsProps) {
+export default async function LoginPage({ searchParams }: SearchParamsProps) {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    redirect("/");
+  }
+
   return (
     <div className='bg-blue-50 dark:bg-gray-950'>
       <div className='px-4 py-12 w-full min-h-screen max-w-lg mx-auto '>
