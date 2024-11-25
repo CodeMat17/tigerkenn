@@ -46,7 +46,7 @@ console.log('Topicid: ' + topic.id);
     await fetch(`${baseUrl}/api/view-count`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ topicId: topic.id }),
+      body: JSON.stringify({ topicId: topic.id, slug }),
     });
   } catch (error) {
     console.error("Failed to update view count:", error);

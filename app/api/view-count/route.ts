@@ -1,9 +1,10 @@
 import { supabaseService } from "@/utils/supabase/service";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { topicId } = await req.json();
+    const { topicId, slug } = await req.json();
     console.log('Topic id from API' + topicId);
 
     if (!topicId || typeof topicId !== "number") {
@@ -24,6 +25,8 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
+
+    revalidatePath(`/threads/topics/${slug}`, 'layout')
 
     return NextResponse.json({ message: "View count updated successfully" });
   } catch (err) {
