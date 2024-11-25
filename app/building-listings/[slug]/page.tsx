@@ -1,6 +1,5 @@
 // /app/listing/[id]/page.tsx
 import ListingGallery from "@/components/ListingGallery";
-import ListingsComments from "@/components/ListingsComments";
 import ShareButton from "@/components/ShareButton";
 import { createClient } from "@/utils/supabase/server";
 import { Bath, BedDoubleIcon, MapPin, Ruler } from "lucide-react";
@@ -49,11 +48,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 
 
-function getUserNameFromEmail(email: string | undefined): string | null {
-  if (!email) return null;
-  const [username] = email.split("@");
-  return username;
-}
+// function getUserNameFromEmail(email: string | undefined): string | null {
+//   if (!email) return null;
+//   const [username] = email.split("@");
+//   return username;
+// }
 
 
 
@@ -61,11 +60,11 @@ const ListingDetails = async ({ params: { slug } }: Props) => {
   const supabase = createClient();
 
   // Check if a user's logged in
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // const {
+  //   data: { user },
+  // } = await supabase.auth.getUser();
 
-  const username = getUserNameFromEmail(user?.email);
+
 
   const { data: listing, error } = await supabase
     .from("listings")
@@ -183,8 +182,7 @@ const ListingDetails = async ({ params: { slug } }: Props) => {
         </div>
       )}
 
-      {/* Comments Section */}
-      <ListingsComments id={listing.id} user={user} username={username} />
+    
     </div>
   );
 };
