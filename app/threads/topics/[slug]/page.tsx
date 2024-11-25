@@ -4,12 +4,35 @@ import TopicReplyComponent from "@/components/TopicReplyComponent";
 import VoteButton from "@/components/VoteButton";
 import { createClient } from "@/utils/supabase/server";
 import dayjs from "dayjs";
+import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 type Props = {
   params: { slug: string };
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const supabase = createClient();
+  const { data } = await supabase
+    .from("topics")
+    .select("title, slug")
+    .eq("slug", params.slug)
+    .single();
+  
+  return {
+    title: data?.title || "Thread",
+    description:
+      data?.slug ||
+      "View detailed information about this thread",
+    openGraph: {
+      title: data?.title || "Thread",
+      description:
+        `Read more about: ${data?.slug}` ||
+        "View detailed information about this thread",
+    }
+  };
+}
 
 const TopicDetail = async ({ params: { slug } }: Props) => {
   const supabase = createClient();

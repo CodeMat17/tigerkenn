@@ -32,7 +32,7 @@ const Footer = () => {
                 Tigerkenn Homes
               </h2>
             </div>
-            <p className='text-sm'>
+            <p className='text-sm mt-1'>
               Founded on the principles of quality, integrity, and innovation,
               we are dedicated to providing comprehensive solutions for all your
               housing and construction needs.

@@ -93,7 +93,7 @@ const HeroThreads = async () => {
                   </p>
                 </div>
               </Link>
-              <div className='flex items-center justify-between px-4 py-2 bg-gray-100 dark:bg-gray-900 text-gray-500 dark:text-gray-400 text-sm'>
+              <div className='flex items-center px-4 py-2 justify-between bg-gradient-to-r from-blue-200 dark:from-blue-400 to-gray-50 text-sm'>
                 <ShareTopicButton
                   topic={thread}
                   classnames='flex items-center gap-1'

@@ -1,16 +1,13 @@
-import { MetadataRoute } from "next";
 import { createClient } from "@/utils/supabase/server";
+import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createClient();
 
-  // Fetch blog posts and listings from Supabase or your data source
-  const { data: blogPosts } = await supabase
-    .from("blogs")
-    .select("slug, published_at");
-  const { data: listings } = await supabase
-    .from("listings")
-    .select("id, created_at");
+  // Fetch threadsfrom Supabase or your data source
+  const { data: threads } = await supabase
+    .from("topics")
+    .select("slug, created_at");
 
   // Basic static routes
   const staticRoutes = [
@@ -23,15 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
     },
     {
-      url: process.env.NEXT_PUBLIC_LAND_LISTINGS!,
-      lastModified: new Date(),
-    },
-       {
-      url: process.env.NEXT_PUBLIC_BUILDING_LISTINGS!,
-      lastModified: new Date(),
-    },
-    {
-      url: process.env.NEXT_PUBLIC_BLOGS!,
+      url: process.env.NEXT_PUBLIC_THREADS!,
       lastModified: new Date(),
     },
     {
@@ -40,20 +29,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Dynamic blog pages
-  const blogRoutes =
-    blogPosts?.map((post) => ({
-      url: `${process.env.NEXT_PUBLIC_BLOGS}/${post.slug}`,
-      lastModified: new Date(post.published_at),
+  // Dynamic thread pages
+  const threadTopics =
+    threads?.map((thread) => ({
+      url: `${process.env.NEXT_PUBLIC_THREADS}/${thread.slug}`,
+      lastModified: new Date(thread.created_at),
     })) ?? [];
 
-  // Dynamic listing pages
-  const listingRoutes =
-    listings?.map((listing) => ({
-      url: `${process.env.NEXT_PUBLIC_LISTINGS}/${listing.id}`,
-      lastModified: new Date(listing.created_at),
-    })) ?? [];
+
 
   // Combine static and dynamic routes
-  return [...staticRoutes, ...blogRoutes, ...listingRoutes];
+  return [...staticRoutes, ...threadTopics];
 }
