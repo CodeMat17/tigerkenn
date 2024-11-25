@@ -117,7 +117,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    revalidatePath("/threads/topics", "layout");
     revalidatePath(`/threads/topics/${slug}`);
 
     return NextResponse.json({

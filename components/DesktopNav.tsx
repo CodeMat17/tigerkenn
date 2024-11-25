@@ -8,9 +8,6 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/about-us", label: "About Us" },
   { href: "/threads/topics", label: "Threads" },
-  { href: "/land-listings", label: "Land Listings" },
-  { href: "/building-listings", label: "Building Listings" },
-  { href: "/blogs", label: "Blog Posts" },
   { href: "/contact-us", label: "Contact Us" },
   // Add more links as needed...
 ];

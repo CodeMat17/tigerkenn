@@ -6,9 +6,7 @@ import { Button } from "./ui/button";
 const navs = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about-us" },
-  { label: "Land Listings", href: "/land-listings" },
-  { label: "House Listings", href: "/house-listings" },
-  { label: "Blog Posts", href: "/blogs" },
+  { label: "Threads", href: "/threads/topics" },
   { label: "Contact Us", href: "/contact-us" },
 ];
 

@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     // Ensure that `slug` is extracted and parsed properly
-    const { topic_id, author, reply, parent_id } = await req.json();
+    const { topic_id, author, reply, parent_id, slug } = await req.json();
 
     if (!topic_id || !author || !reply) {
       return NextResponse.json(
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     // Revalidate paths if needed
     // Revalidate the path
     try {
-      revalidatePath(`/threads/topics`, 'layout'); // Ensure this path is correct and supported
+      revalidatePath(`/threads/topics/${slug}`, 'layout'); // Ensure this path is correct and supported
     } catch (revalidateError) {
       console.warn("Revalidation failed:", revalidateError);
     }

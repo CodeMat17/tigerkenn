@@ -39,7 +39,7 @@ const TopicDetail = async ({ params: { slug } }: Props) => {
       </div>
     );
   }
-console.log('Topicid: ' + topic.id);
+
   // Increment view count
   try {
     const baseUrl = process.env.NEXT_PUBLIC_HOME || "http://localhost:3000";
@@ -110,7 +110,7 @@ console.log('Topicid: ' + topic.id);
         dangerouslySetInnerHTML={{ __html: topic.content }}></div>
 
       {/* Replies */}
-      <TopicReplyComponent topicId={topic.id} user={user} />
+      <TopicReplyComponent topicId={topic.id} slug={topic.slug} user={user} />
     </div>
   );
 };

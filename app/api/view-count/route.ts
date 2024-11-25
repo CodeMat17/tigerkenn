@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const { topicId, slug } = await req.json();
-    console.log('Topic id from API' + topicId);
 
     if (!topicId || typeof topicId !== "number") {
       return NextResponse.json(

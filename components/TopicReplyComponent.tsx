@@ -33,6 +33,7 @@ const replyEditorModules = {
 
 type Props = {
   topicId: string;
+  slug: string;
   user: User | null;
 };
 
@@ -42,10 +43,11 @@ type Reply = {
   reply: string;
   author: string;
   topic_id: number;
+
   parent_id: string | null;
 };
 
-const TopicReplyComponent: React.FC<Props> = ({ topicId, user }) => {
+const TopicReplyComponent: React.FC<Props> = ({ topicId, user, slug }) => {
   const supabase = createClient();
   const router = useRouter();
 
@@ -120,6 +122,7 @@ const TopicReplyComponent: React.FC<Props> = ({ topicId, user }) => {
           author,
           reply: sanitizedContent,
           parent_id: parentId,
+          slug
         }),
       });
 
