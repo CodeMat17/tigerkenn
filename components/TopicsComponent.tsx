@@ -230,9 +230,12 @@ const TopicsComponent = () => {
           <div className='my-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3'>
             <div>
               <p className='text-xl font-medium text-blue-600 dark:text-blue-500'>
+                Total Posts: {count}
+              </p>
+              <p
+                className='text-gray-500'>
                 Rendered posts: {sortedTopics.length}
               </p>
-              <p className='text-gray-500 font-medium'>Total posts: {count}</p>
             </div>
 
             <div className='flex items-center gap-4'>
@@ -297,7 +300,9 @@ const TopicsComponent = () => {
                       {topic.updated_on ? (
                         <p>
                           <span className='sm:mr-1'>Updated on </span>
-                          {dayjs(topic.updated_on).format("MMM DD, YYYY h:mm a")}
+                          {dayjs(topic.updated_on).format(
+                            "MMM DD, YYYY h:mm a"
+                          )}
                         </p>
                       ) : (
                         <p>
