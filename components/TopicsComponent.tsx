@@ -36,6 +36,7 @@ type Topic = {
   tags: string[];
   content: string;
   created_at: string;
+  updated_on: string;
   views: number;
   votes: number;
   replyCount?: number; // Add replyCount to store the number of replies for each topic
@@ -93,7 +94,7 @@ const TopicsComponent = () => {
       } = await supabase
         .from("topics")
         .select(
-          "id, slug, user_id, title, tags, content, created_at, views, votes",
+          "id, slug, user_id, title, tags, content, created_at, views, votes, updated_on",
           {
             count: "exact",
           }
@@ -282,18 +283,30 @@ const TopicsComponent = () => {
             sortedTopics.map((topic) => (
               <div
                 key={topic.id}
-                className='shadow-md border border-blue-500 dark:border-none rounded-xl overflow-hidden mb-4'>
+                className='shadow-lg border border-blue-500 dark:border-none rounded-xl overflow-hidden mb-4'>
                 <Link href={`/threads/topics/${topic.slug}`}>
                   <div className='p-4 border-b bg-white dark:bg-gray-800'>
-                    <div className='mb-1 flex justify-between gap-6 text-sm text-gray-500 dark:text-gray-400'>
+                    <div className='flex flex-col sm:flex-row sm:justify-between mb-1 text-sm text-gray-500 dark:text-gray-400'>
                       <div className='flex gap-2 items-center'>
-                        <p>views {topic.views}</p> |<p>votes {topic.votes}</p>|
-                        <p>replies {topic.replyCount}</p>
+                        <p className='text-center'>views {topic.views}</p> |
+                        <p className='text-center'>votes {topic.votes}</p>|
+                        <p className='text-center'>
+                          replies {topic.replyCount}
+                        </p>
                       </div>
-                      <p className='flex'>
-                        <span className='hidden sm:flex mr-1'>Published on </span>
-                        {dayjs(topic.created_at).format("MMM DD, YYYY")}
-                      </p>
+                      {topic.updated_on ? (
+                        <p>
+                          <span className='sm:mr-1'>Updated on </span>
+                          {dayjs(topic.updated_on).format("MMM DD, YYYY h:mm a")}
+                        </p>
+                      ) : (
+                        <p>
+                          <span className='sm:mr-1'>Published on </span>
+                          {dayjs(topic.created_at).format(
+                            "MMM DD, YYYY h:mm a"
+                          )}
+                        </p>
+                      )}
                     </div>
                     <h3 className='text-xl font-semibold line-clamp-2 leading-6'>
                       {topic.title}
@@ -326,7 +339,8 @@ const TopicsComponent = () => {
                       } else {
                         alert("Sharing is not supported in this browser.");
                       }
-                    }}>
+                    }}
+                    className='text-white'>
                     <ForwardIcon className='mr-1 size-5' /> Share
                   </Button>
                   <div className='flex items-center gap-x-5'>

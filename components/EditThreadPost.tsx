@@ -116,6 +116,7 @@ const EditThreadPost = ({ id, post_title, post_tags, post_content }: Props) => {
           tags,
           id,
           newSlug,
+       
         }),
       });
 

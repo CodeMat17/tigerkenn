@@ -17,7 +17,7 @@ const HeroThreads = async () => {
   const { data: threads, error } = await supabase
     .from("topics")
     .select(
-      "id, slug, title, tags, content, created_at, views, votes, user_id",
+      "id, slug, title, tags, content, created_at, views, votes, user_id, updated_on",
       {
         count: "exact",
       }
@@ -69,15 +69,25 @@ const HeroThreads = async () => {
           {threadsWithReplies.map((thread) => (
             <div
               key={thread.id}
-              className='border border-blue-500 dark:border-none rounded-xl overflow-hidden mb-3 bg-white dark:bg-gray-800 shadow'>
+              className='border border-blue-500 dark:border-none rounded-xl overflow-hidden mb-3 bg-white dark:bg-gray-800 shadow-lg'>
               <Link href={`/threads/topics/${thread.slug}`}>
                 <div className='p-4'>
-                  <div className='mb-1 flex justify-between gap-6 text-sm text-gray-500 dark:text-gray-400'>
+                  <div className='mb-1 flex flex-col sm:flex-row sm:justify-between text-sm text-gray-500 dark:text-gray-400'>
                     <div className='flex gap-2 items-center'>
                       <p>views {thread.views}</p> |<p>votes {thread.votes}</p>|
                       <p>replies {thread.replyCount}</p>
                     </div>
-                    <p className="flex"><span className="hidden sm:flex mr-1">Published on</span> {dayjs(thread.created_at).format("MMM DD, YYYY")}</p>
+                    {thread.updated_on ? (
+                      <p>
+                        <span className=' mr-1'>Updated on</span>
+                        {dayjs(thread.updated_on).format("MMM DD, YYYY h:mm a")}
+                      </p>
+                    ) : (
+                      <p>
+                        <span className=' mr-1'>Published on</span>
+                        {dayjs(thread.created_at).format("MMM DD, YYYY h:mm a")}
+                      </p>
+                    )}
                   </div>
                   <h3 className='text-xl font-semibold line-clamp-2 leading-6'>
                     {thread.title}
@@ -96,7 +106,7 @@ const HeroThreads = async () => {
               <div className='flex items-center px-4 py-2 justify-between bg-gradient-to-r from-blue-500 to-gray-800'>
                 <ShareTopicButton
                   topic={thread}
-                  classnames='flex items-center gap-1'
+                  classnames='flex items-center gap-1 text-white'
                 />
                 <div className='flex gap-x-5'>
                   {userId === thread.user_id && (

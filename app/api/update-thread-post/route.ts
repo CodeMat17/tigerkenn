@@ -24,7 +24,13 @@ export async function POST(req: NextRequest) {
     // update Supabase "topics" table
     const { data, error } = await supabaseService
       .from("topics")
-      .update({ title, content, tags, slug: newSlug })
+      .update({
+        title,
+        content,
+        tags,
+        slug: newSlug,
+        updated_on: new Date().toISOString(),
+      })
       .eq("id", id)
       .select("*");
 

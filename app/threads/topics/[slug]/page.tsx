@@ -91,9 +91,17 @@ const TopicDetail = async ({ params: { slug } }: Props) => {
             <p>views {topic.views}</p> |<p>votes {topic.votes}</p> |
             <p>replies {replyCount}</p>
           </div>
-          <p className='text-sm text-gray-500 dark:text-gray-400'>
-            Published on {dayjs(topic.created_at).format("MMM DD, YYYY")}
-          </p>
+
+          {topic.updated_on ? <p className='text-sm text-gray-500 dark:text-gray-400'>
+            Updated on {dayjs(topic.updated_on).format("MMM DD, YYYY h:mm a")}
+          </p> :
+            <p className='text-sm text-gray-500 dark:text-gray-400'>
+              Published on {dayjs(topic.created_at).format("MMM DD, YYYY h:mm a")}
+            </p>
+          }
+        
+
+
         </div>
         <div className='flex items-center gap-2'>
           <VoteButton postId={topic.id} user={user} slug={slug} />
@@ -119,7 +127,7 @@ const TopicDetail = async ({ params: { slug } }: Props) => {
         {userId === topic.user_id && (
           <Link
             href={`/threads/topics/edit-post/${topic.slug}`}
-            className='border px-2 py-0.5 rounded-lg shadow'>
+            className='border px-2 py-0.5 rounded-full shadow'>
             Edit
           </Link>
         )}
