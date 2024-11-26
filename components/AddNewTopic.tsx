@@ -27,48 +27,57 @@ const AddNewTopic = ({ user }: { user: User }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [currentTag, setCurrentTag] = useState(""); // Store the current tag input
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const slug = convertTitleToSlug(title);
 
-
-
-  const handleTagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" || e.key === ",") {
-      e.preventDefault();
-      const newTag = e.currentTarget.value.trim().toLowerCase();
+    const addTag = () => {
+      const newTag = currentTag.trim().toLowerCase();
       if (newTag && !tags.includes(newTag) && tags.length < 5) {
         setTags((prevTags) => [...prevTags, newTag]);
-        e.currentTarget.value = ""; // Clear input
+        setCurrentTag(""); // Clear the input
       }
-    }
-  };
-
-  const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove));
-  };
-
-  const sanitizeContent = (htmlContent: string) => {
-    const cleanContent = DOMPurify.sanitize(htmlContent, {
-      ADD_TAGS: ["img"],
-      ADD_ATTR: ["loading", "style"],
-      FORBID_ATTR: ["onerror", "onload"],
-    });
-
-    // Use Tailwind's responsive utility classes for styling images
-    const imgRegex = /<img [^>]*src="([^"]*)"[^>]*>/g;
-    return cleanContent.replace(imgRegex, (match, src) => {
-      return `<img src="${src}" loading="lazy" class="w-full md:w-[70%] h-auto" />`;
-    });
-  };
-
-   const isContentValid = () => {
-     const strippedContent = content.replace(/<\/?[^>]+(>|$)/g, "").trim();
-     return !!strippedContent;
   };
   
-  const isFormValid =
-    title.trim() && isContentValid() && tags.length > 0 && tags.length <= 5;
+   const removeTag = (tagToRemove: string) => {
+     setTags(tags.filter((tag) => tag !== tagToRemove));
+  };
+  
+    const sanitizeContent = (htmlContent: string) => {
+      const cleanContent = DOMPurify.sanitize(htmlContent, {
+        ADD_TAGS: ["img"],
+        ADD_ATTR: ["loading", "style"],
+        FORBID_ATTR: ["onerror", "onload"],
+      });
+
+      // Use Tailwind's responsive utility classes for styling images
+      const imgRegex = /<img [^>]*src="([^"]*)"[^>]*>/g;
+      return cleanContent.replace(imgRegex, (match, src) => {
+        return `<img src="${src}" loading="lazy" class="w-full md:w-[70%] h-auto" />`;
+      });
+  };
+  
+    const isContentValid = () => {
+      const strippedContent = content.replace(/<\/?[^>]+(>|$)/g, "").trim();
+      return !!strippedContent;
+    };
+
+    const isFormValid =
+      title.trim() && isContentValid() && tags.length > 0 && tags.length <= 5;
+
+  // const handleTagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if (e.key === "Enter" || e.key === ",") {
+  //     e.preventDefault();
+  //     const newTag = e.currentTarget.value.trim().toLowerCase();
+  //     if (newTag && !tags.includes(newTag) && tags.length < 5) {
+  //       setTags((prevTags) => [...prevTags, newTag]);
+  //       e.currentTarget.value = ""; // Clear input
+  //     }
+  //   }
+  // };
+
+
 
 
 
@@ -148,16 +157,25 @@ const AddNewTopic = ({ user }: { user: User }) => {
           <label
             htmlFor='tags'
             className='block text-sm mb-1 font-medium text-gray-500'>
-            Tags: (Enter a max. of 5 tags, separated by commas or pressing
-            Enter)
+            Tags: (Max 5 tags)
           </label>
-          <Input
-            id='tags'
-            type='text'
-            placeholder='Add a tag and press Enter or comma...'
-            onKeyDown={handleTagInput}
-            className='w-full'
-          />
+          <div className='flex gap-2'>
+            <Input
+              id='tags'
+              type='text'
+              placeholder='Add a tag and press Enter or comma...'
+              value={currentTag}
+              onChange={(e) => setCurrentTag(e.target.value)}
+              className='w-full'
+            />
+            <button
+              type='button'
+              onClick={addTag}
+              className='bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600'
+              disabled={!currentTag.trim() || tags.length >= 5}>
+              Add
+            </button>
+          </div>
           <div className='mt-2'>
             {tags.map((tag) => (
               <span

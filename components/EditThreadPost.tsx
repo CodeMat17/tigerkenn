@@ -21,10 +21,9 @@ type Props = {
 
 
 const EditThreadPost = ({ slug, post_title, post_tags, post_content }: Props) => {
-  
-  const router = useRouter()
+  const router = useRouter();
 
-  const [title, setTitle] = useState(post_title)
+  const [title, setTitle] = useState(post_title);
   const [tags, setTags] = useState<string[]>(
     Array.isArray(post_tags)
       ? post_tags
@@ -32,25 +31,27 @@ const EditThreadPost = ({ slug, post_title, post_tags, post_content }: Props) =>
       ? [post_tags]
       : []
   );
-  const [content, setContent] = useState(post_content)
-  const [loading, setLoading] = useState(false)
+  const [currentTag, setCurrentTag] = useState(""); // Input for the current tag
 
-const handleTagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
-  if (e.key === "Enter" || e.key === ",") {
-    e.preventDefault();
-    const newTag = e.currentTarget.value.trim().toLowerCase();
-    if (newTag && !tags.includes(newTag) && tags.length < 5) {
-      setTags((prevTags) => [...prevTags, newTag]);
-      e.currentTarget.value = ""; // Clear input
-    } else if (tags.length >= 5) {
-      toast.error("You can only add 5 tags.");
-    }
-  }
-};
+  const [content, setContent] = useState(post_content);
+  const [loading, setLoading] = useState(false);
 
-const removeTag = (tagToRemove: string) => {
-  setTags(tags.filter((tag) => tag !== tagToRemove));
-};
+    const addTag = () => {
+      const newTag = currentTag.trim().toLowerCase();
+      if (newTag && !tags.includes(newTag) && tags.length < 5) {
+        setTags((prevTags) => [...prevTags, newTag]);
+        setCurrentTag(""); // Clear the input field
+      } else if (tags.length >= 5) {
+        toast.error("You can only add up to 5 tags.");
+      } else if (tags.includes(newTag)) {
+        toast.error("This tag is already added.");
+      }
+  };
+  
+
+  const removeTag = (tagToRemove: string) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove));
+  };
 
   const sanitizeContent = (htmlContent: string) => {
     const cleanContent = DOMPurify.sanitize(htmlContent, {
@@ -66,66 +67,62 @@ const removeTag = (tagToRemove: string) => {
     });
   };
 
-    const isContentValid = () => {
-      const strippedContent = content.replace(/<\/?[^>]+(>|$)/g, "").trim();
-      return !!strippedContent;
-    };
-
-    const isFormValid = title.trim() && isContentValid() && tags.length <= 5;
-  
-    const modules = {
-      toolbar: [
-        [{ header: "1" }, { header: "2" }, { font: [] }],
-        [{ list: "ordered" }, { list: "bullet" }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
-        [{ align: [] }],
-        ["link", "image", "video"],
-        ["clean"],
-      ],
+  const isContentValid = () => {
+    const strippedContent = content.replace(/<\/?[^>]+(>|$)/g, "").trim();
+    return !!strippedContent;
   };
-  
-    const handleSubmit = async () => {
- 
 
-      if (!isFormValid) {
-        toast.error(
-          "Please fill all required fields: Title, Tags, and Content."
-        );
-        return;
+  const isFormValid = title.trim() && isContentValid() && tags.length <= 5;
+
+  const modules = {
+    toolbar: [
+      [{ header: "1" }, { header: "2" }, { font: [] }],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [{ align: [] }],
+      ["link", "image", "video"],
+      ["clean"],
+    ],
+  };
+
+  const handleSubmit = async () => {
+    if (!isFormValid) {
+      toast.error("Please fill all required fields: Title, Tags, and Content.");
+      return;
+    }
+    try {
+      setLoading(true);
+      const sanitizedContent = sanitizeContent(content);
+
+      const res = await fetch(`/api/update-thread-post`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          content: sanitizedContent,
+          slug,
+          tags,
+        }),
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        router.push(`/threads/topics/${slug}`);
+        toast.success("Topic edited successfully!");
+      } else {
+        toast.error(`Error updating topic: ${result.error}`);
       }
-      try {
-        setLoading(true);
-        const sanitizedContent = sanitizeContent(content);
+    } catch (error) {
+      console.error("ErrorMsg: ", error);
+      toast.error("An error occurred while updating the topic.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        const res = await fetch(`/api/update-thread-post`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title,
-            content: sanitizedContent,
-            slug,
-            tags,
-          }),
-        });
-
-        const result = await res.json();
-
-        if (res.ok) {
-          router.push(`/threads/topics/${slug}`);
-          toast.success("Topic edited successfully!");
-        } else {
-          toast.error(`Error updating topic: ${result.error}`);
-        }
-      } catch (error) {
-        console.error("ErrorMsg: ", error);
-        toast.error("An error occurred while updating the topic.");
-      } finally {
-        setLoading(false);
-      }
-    };
-  
   return (
     <div className='mt-6 space-y-4'>
       <div>
@@ -148,13 +145,23 @@ const removeTag = (tagToRemove: string) => {
           className='block text-sm mb-1 font-medium text-gray-500'>
           Tags: (Enter a max. of 5 tags, separated by commas or pressing Enter)
         </label>
-        <input
-          id='tags'
-          type='text'
-          placeholder='Add a tag and press Enter or comma...'
-          onKeyDown={handleTagInput}
-          className='w-full p-2 border rounded'
-        />
+        <div className='flex gap-2'>
+          <Input
+            id='tags'
+            type='text'
+            placeholder='Add a tag and press Enter or comma...'
+            value={currentTag}
+            onChange={(e) => setCurrentTag(e.target.value)}
+            className='w-full p-2 border rounded'
+          />
+          <Button
+            type='button'
+            onClick={addTag}
+            disabled={!currentTag.trim() || tags.length >= 5}
+            className='bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600'>
+            Add
+          </Button>
+        </div>
         <div className='mt-2'>
           {tags.map((tag) => (
             <span
@@ -194,7 +201,7 @@ const removeTag = (tagToRemove: string) => {
           isFormValid
             ? "bg-blue-500 hover:bg-blue-600"
             : "bg-gray-400 cursor-not-allowed"
-        } ${loading ? "bg-gray-300" : ""} text-white rounded`}
+        } ${loading ? "bg-gray-50" : ""} text-white rounded`}
         disabled={!isFormValid || loading}>
         {loading ? <LoadingAnimation /> : "Update"}
       </Button>

@@ -103,14 +103,10 @@ export default function ReviewCarousel() {
   return (
     <div className='relative w-full max-w-6xl mx-auto py-12'>
       <div className='mb-8 px-4'>
-        <h2 className='text-3xl sm:text-4xl font-semibold text-center'>Client Reviews</h2>
+        <h2 className='text-3xl sm:text-4xl font-semibold text-center'>
+          Client Reviews
+        </h2>
       </div>
-
-      {/* Gradient overlay on the left side */}
-      <div className='absolute inset-y-0 left-0 w-64 pointer-events-none bg-gradient-to-r from-background via-transparent to-transparent z-10' />
-
-      {/* Gradient overlay on the right side */}
-      <div className='absolute inset-y-0 right-0 w-32 pointer-events-none bg-gradient-to-l from-background via-transparent to-transparent z-10' />
 
       {/* Review Cards in a horizontally scrollable container */}
       {reviews && reviews.length < 1 ? (
@@ -135,31 +131,30 @@ export default function ReviewCarousel() {
           </div>
           {/* Scroll Indicators */}
           {isScrollable && (
-            <div className='absolute inset-y-0 left-0 flex items-center'>
+            <div className='absolute -bottom-12 left-12 flex items-center'>
               <button
-                className='p-2 bg-gray-300 rounded-full hover:bg-gray-400 transition'
+                className='p-3 bg-gray-300 rounded-full hover:bg-gray-400 transition shadow'
                 onClick={() =>
                   scrollContainerRef.current?.scrollBy({
                     left: -200,
                     behavior: "smooth",
                   })
                 }>
-             <ChevronsLeftIcon className="text-blue-600"/>
+                <ChevronsLeftIcon className='text-blue-600' />
               </button>
             </div>
           )}
           {isScrollable && (
-            <div className='absolute inset-y-0 right-0 flex items-center'>
+            <div className='absolute -bottom-12 right-12 flex items-center'>
               <button
-                className='p-2 bg-gray-300 rounded-full hover:bg-gray-400 transition'
+                className='p-3 bg-gray-300 rounded-full hover:bg-gray-400 transition shadow'
                 onClick={() =>
                   scrollContainerRef.current?.scrollBy({
                     left: 200,
                     behavior: "smooth",
                   })
                 }>
-               
-                  <ChevronsRightIcon className="text-blue-600" />
+                <ChevronsRightIcon className='text-blue-600' />
               </button>
             </div>
           )}
@@ -168,3 +163,4 @@ export default function ReviewCarousel() {
     </div>
   );
 }
+

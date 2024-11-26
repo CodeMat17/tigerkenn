@@ -186,7 +186,7 @@ const TopicReplyComponent: React.FC<Props> = ({ topicId, user, slug }) => {
                   disabled={loading}
                   className={`px-4 py-2 ${
                     loading
-                      ? "bg-blue-50 text-blue-600"
+                      ? "bg-blue-50 text-gray-50"
                       : "bg-blue-500 text-white"
                   }  rounded-lg hover:bg-blue-600 mt-4`}>
                   {loading ? <LoadingAnimation /> : "Post Reply"}
@@ -233,7 +233,7 @@ const TopicReplyComponent: React.FC<Props> = ({ topicId, user, slug }) => {
             onClick={() => postReply(mainEditorContent, null)}
             disabled={loading}
             className={`px-4 py-2 ${
-              loading ? "bg-blue-50 text-blue-600" : "bg-blue-500 text-white"
+              loading ? "bg-blue-50 text-gray-50" : "bg-blue-500 text-white"
             }  rounded-lg hover:bg-blue-600 mt-4`}>
             {loading ? <LoadingAnimation /> : "Post Reply"}
           </button>
