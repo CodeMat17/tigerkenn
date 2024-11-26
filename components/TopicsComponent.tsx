@@ -218,11 +218,14 @@ const TopicsComponent = () => {
                 placeholder='Search by title...'
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className='w-full pl-8'
+                className='w-full pl-8 border-gray-400 dark:border-gray-700'
               />
               <Search className='absolute left-2 top-2 size-5' />
             </div>
-            <Button onClick={reset} variant='outline'>
+            <Button
+              onClick={reset}
+              variant='outline'
+              className='border-gray-400 dark:border-gray-700'>
               Reset
             </Button>
           </div>
@@ -232,8 +235,7 @@ const TopicsComponent = () => {
               <p className='text-xl font-medium text-blue-600 dark:text-blue-500'>
                 Total Posts: {count}
               </p>
-              <p
-                className='text-gray-500'>
+              <p className='text-gray-500'>
                 Rendered posts: {sortedTopics.length}
               </p>
             </div>
@@ -246,7 +248,7 @@ const TopicsComponent = () => {
                   onValueChange={(value: "votes" | "views" | "created_at") =>
                     setSortOption(value)
                   }>
-                  <SelectTrigger className='w-[180px]'>
+                  <SelectTrigger className='w-[180px] border-gray-400 dark:border-gray-700'>
                     <SelectValue placeholder='Sort by: ' />
                   </SelectTrigger>
                   <SelectContent>
@@ -262,7 +264,7 @@ const TopicsComponent = () => {
                 <Select
                   value={selectedTag}
                   onValueChange={(value: string) => setSelectedTag(value)}>
-                  <SelectTrigger className='w-full md:w-auto border rounded'>
+                  <SelectTrigger className='w-full md:w-auto border rounded border-gray-400 dark:border-gray-700'>
                     <SelectValue placeholder='All Tags' />
                   </SelectTrigger>
                   <SelectContent>
