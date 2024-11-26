@@ -13,7 +13,7 @@ type Props = {
 const ShareTopicButton = ({ topic, classnames }: Props) => {
   return (
     <button
-      //   variant='ghost'
+   
       className={`${classnames}`}
       onClick={() => {
         if (navigator.share) {

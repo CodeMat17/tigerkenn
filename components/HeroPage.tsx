@@ -73,10 +73,10 @@ useEffect(() => {
         </motion.p>
         <motion.div>
           <Link
-            aria-label='listings page'
-            href='/listings'
+            aria-label='threads page'
+            href='/threads/topics'
             className='mt-8 inline-block px-6 py-3 border border-white text-white font-semibold rounded-full shadow-lg hover:bg-white hover:text-black'>
-            Explore Listings
+            Explore our threads
           </Link>
         </motion.div>
       </div>

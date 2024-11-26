@@ -69,7 +69,7 @@ const HeroThreads = async () => {
           {threadsWithReplies.map((thread) => (
             <div
               key={thread.id}
-              className='border dark:border-none rounded-xl overflow-hidden mb-3 bg-white dark:bg-gray-800 shadow'>
+              className='border border-blue-500 dark:border-none rounded-xl overflow-hidden mb-3 bg-white dark:bg-gray-800 shadow'>
               <Link href={`/threads/topics/${thread.slug}`}>
                 <div className='p-4'>
                   <div className='mb-1 flex justify-between gap-6 text-sm text-gray-500 dark:text-gray-400'>
@@ -77,7 +77,7 @@ const HeroThreads = async () => {
                       <p>views {thread.views}</p> |<p>votes {thread.votes}</p>|
                       <p>replies {thread.replyCount}</p>
                     </div>
-                    <p> {dayjs(thread.created_at).format("MMM DD, YYYY")}</p>
+                    <p className="flex"><span className="hidden sm:flex mr-1">Published on</span> {dayjs(thread.created_at).format("MMM DD, YYYY")}</p>
                   </div>
                   <h3 className='text-xl font-semibold line-clamp-2 leading-6'>
                     {thread.title}
@@ -93,14 +93,16 @@ const HeroThreads = async () => {
                   </p>
                 </div>
               </Link>
-              <div className='flex items-center px-4 py-2 justify-between bg-gradient-to-r from-blue-200 dark:from-blue-400 to-gray-50 text-sm'>
+              <div className='flex items-center px-4 py-2 justify-between bg-gradient-to-r from-blue-500 to-gray-800'>
                 <ShareTopicButton
                   topic={thread}
                   classnames='flex items-center gap-1'
                 />
-                <div className='flex gap-5'>
+                <div className='flex gap-x-5'>
                   {userId === thread.user_id && (
-                    <Link href={`/threads/topics/edit-post/${thread.slug}`}>
+                    <Link
+                      href={`/threads/topics/edit-post/${thread.slug}`}
+                      className='text-white'>
                       Edit
                     </Link>
                   )}

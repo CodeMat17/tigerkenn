@@ -60,7 +60,7 @@ const DeleteThread = ({ id, title }: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className='text-red-500 hover:text-white'>
+      <DialogTrigger className='text-white bg-red-500 px-2 py-0.5 rounded-full'>
         {/* <TrashIcon className='w-5 h-5' /> */}
         Delete
       </DialogTrigger>

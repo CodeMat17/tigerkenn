@@ -59,7 +59,7 @@ const TopicsComponent = () => {
   const [count, setCount] = useState(0);
   const [page, setPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const perPage = 9; // Number of topics per page
+  const perPage = 10; // Number of topics per page
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -282,7 +282,7 @@ const TopicsComponent = () => {
             sortedTopics.map((topic) => (
               <div
                 key={topic.id}
-                className='shadow-md border dark:border-none rounded-xl overflow-hidden mb-4'>
+                className='shadow-md border border-blue-500 dark:border-none rounded-xl overflow-hidden mb-4'>
                 <Link href={`/threads/topics/${topic.slug}`}>
                   <div className='p-4 border-b bg-white dark:bg-gray-800'>
                     <div className='mb-1 flex justify-between gap-6 text-sm text-gray-500 dark:text-gray-400'>
@@ -290,7 +290,10 @@ const TopicsComponent = () => {
                         <p>views {topic.views}</p> |<p>votes {topic.votes}</p>|
                         <p>replies {topic.replyCount}</p>
                       </div>
-                      <p> {dayjs(topic.created_at).format("MMM DD, YYYY")}</p>
+                      <p className='flex'>
+                        <span className='hidden sm:flex mr-1'>Published on </span>
+                        {dayjs(topic.created_at).format("MMM DD, YYYY")}
+                      </p>
                     </div>
                     <h3 className='text-xl font-semibold line-clamp-2 leading-6'>
                       {topic.title}
@@ -306,7 +309,7 @@ const TopicsComponent = () => {
                     </p>
                   </div>
                 </Link>
-                <div className='flex items-center pr-4 justify-between bg-gradient-to-r from-blue-200 dark:from-blue-400 to-gray-50 text-sm'>
+                <div className='flex items-center pr-4 py-1 justify-between bg-gradient-to-r from-blue-500 to-gray-800 '>
                   <Button
                     variant='ghost'
                     onClick={() => {
@@ -326,10 +329,12 @@ const TopicsComponent = () => {
                     }}>
                     <ForwardIcon className='mr-1 size-5' /> Share
                   </Button>
-                  <div className='flex items-center gap-5'>
+                  <div className='flex items-center gap-x-5'>
                     {userId === topic.user_id && (
                       <div>
-                        <Link href={`/threads/topics/edit-post/${topic.slug}`}>
+                        <Link
+                          href={`/threads/topics/edit-post/${topic.slug}`}
+                          className='text-white'>
                           Edit
                         </Link>
                       </div>

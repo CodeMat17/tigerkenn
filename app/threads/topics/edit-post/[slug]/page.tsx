@@ -23,7 +23,7 @@ const EditPost = async ({ params: { slug } }: Props) => {
 
   const { data: post, error } = await supabase
     .from("topics")
-    .select("title, tags, content, user_id")
+    .select("id, title, tags, content, user_id")
     .eq("slug", slug)
     .single();
   
@@ -49,7 +49,7 @@ const EditPost = async ({ params: { slug } }: Props) => {
       <h2 className="text-3xl sm:text-4xl font-semibold text-center">Edit your post</h2>
       
      
-      <EditThreadPost slug={slug} post_title={post.title} post_tags={post.tags} post_content={post.content} />
+      <EditThreadPost id={post.id} post_title={post.title} post_tags={post.tags} post_content={post.content} />
     </div>
   );
 };

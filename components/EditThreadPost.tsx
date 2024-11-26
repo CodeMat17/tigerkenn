@@ -12,15 +12,24 @@ import { useRouter } from 'next/navigation';
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
+function convertTitleToSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/--+/g, "-");
+}
+
 type Props = {
-  slug: string;
+  id: number
   post_title: string;
   post_tags: string
   post_content: string;
 };
 
 
-const EditThreadPost = ({ slug, post_title, post_tags, post_content }: Props) => {
+const EditThreadPost = ({ id, post_title, post_tags, post_content }: Props) => {
   const router = useRouter();
 
   const [title, setTitle] = useState(post_title);
@@ -35,6 +44,8 @@ const EditThreadPost = ({ slug, post_title, post_tags, post_content }: Props) =>
 
   const [content, setContent] = useState(post_content);
   const [loading, setLoading] = useState(false);
+
+  const newSlug = convertTitleToSlug(title)
 
     const addTag = () => {
       const newTag = currentTag.trim().toLowerCase();
@@ -102,15 +113,16 @@ const EditThreadPost = ({ slug, post_title, post_tags, post_content }: Props) =>
         body: JSON.stringify({
           title,
           content: sanitizedContent,
-          slug,
           tags,
+          id,
+          newSlug,
         }),
       });
 
       const result = await res.json();
 
       if (res.ok) {
-        router.push(`/threads/topics/${slug}`);
+        router.push(`/threads/topics/${newSlug}`);
         toast.success("Topic edited successfully!");
       } else {
         toast.error(`Error updating topic: ${result.error}`);
@@ -125,6 +137,7 @@ const EditThreadPost = ({ slug, post_title, post_tags, post_content }: Props) =>
 
   return (
     <div className='mt-6 space-y-4'>
+  
       <div>
         <label className='block text-gray-700 dark:text-gray-400 mb-1'>
           Title
@@ -143,7 +156,7 @@ const EditThreadPost = ({ slug, post_title, post_tags, post_content }: Props) =>
         <label
           htmlFor='tags'
           className='block text-sm mb-1 font-medium text-gray-500'>
-          Tags: (Enter a max. of 5 tags, separated by commas or pressing Enter)
+          Tags: (Max of 5 tags)
         </label>
         <div className='flex gap-2'>
           <Input
