@@ -9,6 +9,7 @@ import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { toast } from "sonner";
 import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 // Dynamically import ReactQuill to avoid SSR issues
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -168,14 +169,15 @@ const AddNewTopic = ({ user }: { user: User }) => {
               onChange={(e) => setCurrentTag(e.target.value)}
               className='w-full'
             />
-            <button
+            <Button
               type='button'
               onClick={addTag}
-              className='bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600'
+              className='bg-blue-500 text-white  hover:bg-blue-600'
               disabled={!currentTag.trim() || tags.length >= 5}>
               Add
-            </button>
+            </Button>
           </div>
+         
           <div className='mt-2'>
             {tags.map((tag) => (
               <span
