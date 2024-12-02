@@ -129,7 +129,7 @@ const AddNewTopic = ({ user }: { user: User }) => {
       [{ list: "ordered" }, { list: "bullet" }],
       ["bold", "italic", "underline", "strike", "blockquote"],
       [{ align: [] }],
-      ["link", "image", "video"],
+      ["link", "image"],
       ["clean"],
     ],
   };
@@ -216,7 +216,7 @@ const AddNewTopic = ({ user }: { user: User }) => {
               : "bg-gray-300 cursor-not-allowed"
           } text-white rounded`}
           disabled={!isFormValid || loading}>
-          {loading ? <MinusIcon className='animate-spin' /> : "Create Topic"}
+          {loading ? <MinusIcon className='animate-spin' /> : "Post"}
         </button>
       </form>
     </div>

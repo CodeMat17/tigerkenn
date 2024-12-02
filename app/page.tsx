@@ -1,4 +1,4 @@
-import CompletedProjects from "@/components/CompletedProjects";
+import { FeaturedProperties } from "@/components/FeaturedProperties";
 import HeroPage from "@/components/HeroPage";
 import HeroThreads from "@/components/HeroThreads";
 import NewsletterSignup from "@/components/NewsletterSignup";
@@ -15,12 +15,9 @@ const Home = async () => {
   return (
     <div className='w-full min-h-screen '>
       <HeroPage title={hero.title} desc={hero.desc} content={hero.content} />
-      <CompletedProjects projects={completed ?? []} />
+      <FeaturedProperties projects={completed ?? []} />
       <HeroThreads />
-      {/* <RecentListing /> */}
-      {/* <RecentBuildingListing /> */}
       <ReviewCarousel />
-      {/* <LastestBlog /> */}
       <NewsletterSignup />
     </div>
   );

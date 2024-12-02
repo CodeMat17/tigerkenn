@@ -1,29 +1,86 @@
-import { createClient } from "@/utils/supabase/server";
+'use client'
 
-const WhyChooseUs = async () => {
-  const supabase = createClient();
+import { motion } from "framer-motion"
+import {
+  Award,
+  Clock,
+  HeartHandshake,
+  Lightbulb,
+  Shield,
+  ThumbsUp,
+} from "lucide-react"
 
-  const { data } = await supabase.from("choose").select("*");
+const reasons = [
+  {
+    icon: Award,
+    title: "Excellence",
+    description: "Award-winning designs and construction quality.",
+  },
+  {
+    icon: Clock,
+    title: "Timely Delivery",
+    description: "We value your time and stick to project schedules.",
+  },
+  {
+    icon: Shield,
+    title: "Quality Assurance",
+    description: "Rigorous quality control at every project stage.",
+  },
+  {
+    icon: HeartHandshake,
+    title: "Customer Focus",
+    description: "Your satisfaction is our top priority.",
+  },
+  {
+    icon: Lightbulb,
+    title: "Innovation",
+    description: "Cutting-edge solutions and modern designs.",
+  },
+  {
+    icon: ThumbsUp,
+    title: "Experience",
+    description: "Decades of industry expertise.",
+  },
+]
 
-  if (data === null) {
-    return <div className='text-center py-32'>No services found yet.</div>;
-  }
-
+export function WhyChooseUs() {
   return (
-    <div className='py-12 animate-fade-in max-w-3xl mx-auto'>
-      {data &&
-        data.map((service) => (
-          <div key={service.id}>
-            <h2 className='text-2xl font-semibold mb-4'>{service.title}</h2>
-            {/* Display the content using dangerouslySetInnerHTML since ReactQuill outputs HTML */}
-            <div
-              className='text-[17px] leading-relaxed  [&_p]:-my-2'
-              dangerouslySetInnerHTML={{ __html: service.desc }}
-            />
-          </div>
-        ))}
-    </div>
-  );
-};
-
-export default WhyChooseUs;
+    <section className="py-16 md:py-24">
+      <div className="">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-12 text-center"
+        >
+          <h2 className="mb-4 text-3xl font-bold">Why Choose Us</h2>
+          <p className="mx-auto max-w-2xl text-muted-foreground">
+            Discover why clients trust Tigerkenn Homes for their real estate and
+            construction needs.
+          </p>
+        </motion.div>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {reasons.map((reason, index) => (
+            <motion.div
+              key={reason.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="flex items-start space-x-4 rounded-lg border p-6"
+            >
+              <reason.icon className="h-8 w-8 shrink-0 text-primary" />
+              <div>
+                <h3 className="mb-2 font-semibold">{reason.title}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {reason.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

@@ -1,6 +1,5 @@
 "use client";
 
-import DeleteThread from "@/components/DeleteThread";
 import MobileViewGuidelines from "@/components/MobileViewGuidelines";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,12 +20,26 @@ import dayjs from "dayjs";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
-  ForwardIcon,
+  EyeIcon,
+  FilePenLineIcon,
+  MessageSquare,
   MinusIcon,
   Search,
+  ThumbsUp,
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import DeletePost from "./DeletePost";
+import ShareLink from "./ShareLink";
+import { Badge } from "./ui/badge";
+import { Card, CardHeader, CardTitle } from "./ui/card";
+
+function formatNumber(num: number): string {
+  if (num >= 1000) {
+    return (num / 1000).toFixed(1).replace(/\.0$/, "") + "k";
+  }
+  return num.toString();
+}
 
 type Topic = {
   id: number;
@@ -288,84 +301,77 @@ const TopicsComponent = () => {
             sortedTopics.map((topic) => (
               <div
                 key={topic.id}
-                className='shadow-lg border border-blue-500 dark:border-none rounded-xl overflow-hidden mb-4'>
-                <Link href={`/threads/topics/${topic.slug}`}>
-                  <div className='p-4 border-b bg-white dark:bg-gray-800'>
-                    <div className='flex flex-col sm:flex-row sm:justify-between mb-1 text-sm text-gray-500 dark:text-gray-400'>
-                      <div className='flex gap-2 items-center'>
-                        <p className='text-center'>views {topic.views}</p> |
-                        <p className='text-center'>votes {topic.votes}</p>|
-                        <p className='text-center'>
-                          replies {topic.replyCount}
-                        </p>
-                      </div>
-                      {topic.updated_on ? (
-                        <p>
-                          <span className='sm:mr-1'>Updated on </span>
-                          {dayjs(topic.updated_on).format(
-                            "MMM DD, YYYY h:mm a"
-                          )}
-                        </p>
-                      ) : (
-                        <p>
-                          <span className='sm:mr-1'>Published on </span>
-                          {dayjs(topic.created_at).format(
-                            "MMM DD, YYYY h:mm a"
-                          )}
-                        </p>
-                      )}
-                    </div>
-                    <h3 className='text-xl font-semibold line-clamp-2 leading-6'>
-                      {topic.title}
-                    </h3>
-                    <p className='text-sm text-gray-600 dark:text-gray-300 italic mt-1'>
-                      Tags:{" "}
-                      {topic.tags &&
-                        topic.tags.map((tag: string, i: number) => (
-                          <span key={i} className='mr-2'>
-                            #{tag}
+                className='border rounded-xl overflow-hidden shadow-lg mb-4'>
+            
+                  <div className='flex bg'>
+                    <Card className='rounded-none border-none flex-1 flex-grow'>
+                      <CardHeader>
+                        <div className=' flex flex-col leading-4 mb-2 text-sm text-muted-foreground'>
+                          <span>
+                            Published on{" "}
+                            {dayjs(topic.created_at).format("MMM DD, YYYY h:mm a")}
                           </span>
-                        ))}
-                    </p>
-                  </div>
-                </Link>
-                <div className='flex items-center pr-4 py-1 justify-between bg-gradient-to-r from-blue-500 to-gray-800 '>
-                  <Button
-                    variant='ghost'
-                    onClick={() => {
-                      if (navigator.share) {
-                        navigator
-                          .share({
-                            title: topic.title,
-                            text: `Check out this post: ${topic.title}`,
-                            url: `${window.location.origin}/threads/topics/${topic.slug}`,
-                          })
-                          .catch((error) =>
-                            console.error("Error sharing:", error)
-                          );
-                      } else {
-                        alert("Sharing is not supported in this browser.");
-                      }
-                    }}
-                    className='text-white'>
-                    <ForwardIcon className='mr-1 size-5' /> Share
-                  </Button>
-                  <div className='flex items-center gap-x-5'>
-                    {userId === topic.user_id && (
-                      <div>
-                        <Link
-                          href={`/threads/topics/edit-post/${topic.slug}`}
-                          className='text-white'>
-                          Edit
+                          {topic.updated_on && (
+                            <span>
+                              Updated on{" "}
+                              {dayjs(topic.updated_on).format("MMM DD, YYYY h:mm a")}
+                            </span>
+                          )}
+                        </div>
+                          <Link href={`/threads/topics/${topic.slug}`}>
+                        <CardTitle>
+                          <h1 className='line-clamp-2 text-xl hover:underline'>
+                            {topic.title}
+                          </h1>
+                        </CardTitle>
                         </Link>
+                        <div className='text-sm pt-2 text-muted-foreground flex flex-wrap gap-1'>
+                          {topic.tags.map((tag: string, i: number) => (
+                            <Badge key={i}>#{tag}</Badge>
+                          ))}
+                        </div>
+                      </CardHeader>
+                    </Card>
+
+                    <div className='flex flex-col items-center justify-center gap-4 text-sm w-auto max-w-16 mx-auto py-6 px-4'>
+                      <div className='flex items-center justify-center gap-x-1'>
+                        <EyeIcon className='h-4 w-4' />
+                        <span>{formatNumber(topic.views)}</span>
                       </div>
+                      <div className='flex items-center justify-center gap-x-1'>
+                        <ThumbsUp className='h-4 w-4' />
+                        <span>{formatNumber(topic.votes)}</span>
+                      </div>
+                      <div className='flex items-center justify-center gap-x-1'>
+                        <MessageSquare className='h-4 w-4' />
+                        <span>{formatNumber(topic.replyCount || 0)}</span>
+                      </div>
+                    </div>
+                  </div>
+                <div className='py-3 px-6 flex items-center justify-between bg-blue-600/30 dark:bg-gray-900'>
+                  <div className='flex items-center gap-5'>
+                    <ShareLink title={topic.title} slug={topic.slug} />
+
+                    {userId === topic.user_id && (
+                      <Link
+                        href={`/threads/topics/edit-post/${topic.slug}`}
+                        className='flex items-center text-sm'>
+                        <FilePenLineIcon className='mr-1 w-4 h-4' />
+                        Edit
+                      </Link>
                     )}
+
                     {(userId === topic.user_id || isAdmin) && (
-                      <div>
-                        <DeleteThread id={topic.id} title={topic.title} />
-                      </div>
+                      <DeletePost
+                        id={topic.id}
+                        title={topic.title}
+                        classnames='transition duration-300 hover:scale-105'
+                      />
                     )}
                   </div>
+                  {isAdmin && (
+                    <p className='text-sm text-muted-foreground'>@Admin</p>
+                  )}
                 </div>
               </div>
             ))

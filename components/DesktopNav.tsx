@@ -28,7 +28,7 @@ const DesktopNav = () => {
             pathname.startsWith("/building-listings"));
 
         return (
-        <Button aria-label="desktop nav link" key={index} asChild variant='ghost' className={`transition-all transform duration-500 ease-out text-white hover:bg-gray-800/30 hover:text-white ${isActive ? 'bg-gray-800/20' : ''} `}>
+        <Button aria-label="desktop nav link" key={index} asChild variant='ghost' className={`transition-all transform duration-500 ease-out text-black dark:text-white hover:bg-gray-800/10 dark:hover:bg-amber-800/30 hover:text-blue-600 ${isActive ? 'bg-gray-800/15 dark:bg-gray-800/50' : ''} `}>
           <Link aria-label="desktop nav link" href={link.href}>{link.label}</Link>
         </Button>
       )})}

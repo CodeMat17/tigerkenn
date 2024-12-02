@@ -1,9 +1,10 @@
-import DeleteThread from "@/components/DeleteThread";
+import DeletePost from "@/components/DeletePost";
 import ShareTopicButton from "@/components/ShareTopicButton";
 import TopicReplyComponent from "@/components/TopicReplyComponent";
 import VoteButton from "@/components/VoteButton";
 import { createClient } from "@/utils/supabase/server";
 import dayjs from "dayjs";
+import { FilePenLineIcon } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -19,18 +20,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .select("title, slug")
     .eq("slug", params.slug)
     .single();
-  
+
   return {
     title: data?.title || "Thread",
-    description:
-      data?.slug ||
-      "View detailed information about this thread",
+    description: data?.slug || "View detailed information about this thread",
     openGraph: {
       title: data?.title || "Thread",
       description:
         `Read more about: ${data?.slug}` ||
         "View detailed information about this thread",
-    }
+    },
   };
 }
 
@@ -92,16 +91,16 @@ const TopicDetail = async ({ params: { slug } }: Props) => {
             <p>replies {replyCount}</p>
           </div>
 
-          {topic.updated_on ? <p className='text-sm text-gray-500 dark:text-gray-400'>
-            Updated on {dayjs(topic.updated_on).format("MMM DD, YYYY h:mm a")}
-          </p> :
+          {topic.updated_on ? (
             <p className='text-sm text-gray-500 dark:text-gray-400'>
-              Published on {dayjs(topic.created_at).format("MMM DD, YYYY h:mm a")}
+              Updated on {dayjs(topic.updated_on).format("MMM DD, YYYY h:mm a")}
             </p>
-          }
-        
-
-
+          ) : (
+            <p className='text-sm text-gray-500 dark:text-gray-400'>
+              Published on{" "}
+              {dayjs(topic.created_at).format("MMM DD, YYYY h:mm a")}
+            </p>
+          )}
         </div>
         <div className='flex items-center gap-2'>
           <VoteButton postId={topic.id} user={user} slug={slug} />
@@ -123,17 +122,22 @@ const TopicDetail = async ({ params: { slug } }: Props) => {
             </span>
           ))}
       </p>
-      <div className='flex items-center gap-5 mt-2'>
+      <div className='flex items-center gap-5 mt-4'>
         {userId === topic.user_id && (
           <Link
             href={`/threads/topics/edit-post/${topic.slug}`}
-            className='border px-2 py-0.5 rounded-full shadow'>
+            className='flex items-center border rounded-full px-3 py-1'>
+            <FilePenLineIcon className='mr-1 w-5 h-5' />
             Edit
           </Link>
         )}
 
         {(userId === topic.user_id || isAdmin) && (
-          <DeleteThread id={topic.id} title={topic.title} />
+          <DeletePost
+            id={topic.id}
+            title={topic.title}
+            classnames='border border-red-500 rounded-full px-3 py-1'
+          />
         )}
       </div>
       <div

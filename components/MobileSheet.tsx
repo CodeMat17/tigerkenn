@@ -35,8 +35,8 @@ const MobileSheet = () => {
             size='icon'
             variant='ghost'
             onClick={() => setOpen(true)}
-            className='hover:bg-gray-800'>
-            {isClient && <AlignRightIcon className='text-white ' />}
+            className='dark:hover:bg-gray-800'>
+            {isClient && <AlignRightIcon className=' ' />}
           </Button>
         </SheetTrigger>
         <SheetContent>

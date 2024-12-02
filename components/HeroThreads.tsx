@@ -1,8 +1,23 @@
 import { createClient } from "@/utils/supabase/server";
-import dayjs from "dayjs";
+import {
+  EyeIcon,
+  FilePenLineIcon,
+  MessageSquare,
+  ThumbsUp,
+} from "lucide-react";
 import Link from "next/link";
-import DeleteThread from "./DeleteThread";
-import ShareTopicButton from "./ShareTopicButton";
+import DeletePost from "./DeletePost";
+import ShareLink from "./ShareLink";
+import { Badge } from "./ui/badge";
+import { Card, CardHeader, CardTitle } from "./ui/card";
+import dayjs from "dayjs";
+
+function formatNumber(num: number): string {
+  if (num >= 1000) {
+    return (num / 1000).toFixed(1).replace(/\.0$/, "") + "k";
+  }
+  return num.toString();
+}
 
 const HeroThreads = async () => {
   const supabase = createClient();
@@ -69,41 +84,78 @@ const HeroThreads = async () => {
           {threadsWithReplies.map((thread) => (
             <div
               key={thread.id}
-              className='border border-blue-500 dark:border-none rounded-xl overflow-hidden mb-3 bg-white dark:bg-gray-800 shadow-lg'>
-              <Link href={`/threads/topics/${thread.slug}`}>
-                <div className='p-4'>
-                  <div className='mb-1 flex flex-col sm:flex-row sm:justify-between text-sm text-gray-500 dark:text-gray-400'>
-                    <div className='flex gap-2 items-center'>
-                      <p>views {thread.views}</p> |<p>votes {thread.votes}</p>|
-                      <p>replies {thread.replyCount}</p>
-                    </div>
-                    {thread.updated_on ? (
-                      <p>
-                        <span className=' mr-1'>Updated on</span>
-                        {dayjs(thread.updated_on).format("MMM DD, YYYY h:mm a")}
-                      </p>
-                    ) : (
-                      <p>
-                        <span className=' mr-1'>Published on</span>
-                        {dayjs(thread.created_at).format("MMM DD, YYYY h:mm a")}
-                      </p>
-                    )}
-                  </div>
-                  <h3 className='text-xl font-semibold line-clamp-2 leading-6'>
-                    {thread.title}
-                  </h3>
-                  <p className='text-sm text-gray-600 dark:text-gray-300 italic mt-1'>
-                    Tags:{" "}
-                    {thread.tags &&
-                      thread.tags.map((tag: string, i: number) => (
-                        <span key={i} className='mr-2'>
-                          #{tag}
+              className='border rounded-xl overflow-hidden shadow-lg mb-4'>
+                <div className='flex bg'>
+                  <Card className='rounded-none border-none flex-1 flex-grow'>
+                    <CardHeader>
+                      <div className=' flex flex-col leading-4 mb-2 text-sm text-muted-foreground'>
+                        <span>
+                          Published on{" "}
+                          {dayjs(thread.created_at).format('MMM DD, YYYY h:mm a')}
                         </span>
-                      ))}
-                  </p>
+                        {thread.updated_on && (
+                          <span>
+                            Updated on{" "}
+                            {dayjs(thread.updated_on).format('MMM DD, YYYY h:mm a')}
+                          </span>
+                        )}
+                      </div>
+                     <Link href={`/threads/topics/${thread.slug}`}>
+                      <CardTitle>
+                        <h1 className='line-clamp-2 text-xl hover:underline'>{thread.title}</h1>
+                      </CardTitle>
+                    </Link>
+                      <div className='text-sm pt-2 text-muted-foreground flex flex-wrap gap-1'>
+                        {thread.tags.map((tag: string, i: number) => (
+                          <Badge key={i}>#{tag}</Badge>
+                        ))}
+                      </div>
+                    </CardHeader>
+                  </Card>
+
+                  <div className='flex flex-col items-center justify-center gap-4 text-sm w-auto max-w-16 mx-auto py-6 px-4'>
+                    <div className='flex items-center justify-center gap-x-1'>
+                      <EyeIcon className='h-4 w-4' />
+                      <span>{formatNumber(thread.views)}</span>
+                    </div>
+                    <div className='flex items-center justify-center gap-x-1'>
+                      <ThumbsUp className='h-4 w-4' />
+                      <span>{formatNumber(thread.votes)}</span>
+                    </div>
+                    <div className='flex items-center justify-center gap-x-1'>
+                      <MessageSquare className='h-4 w-4' />
+                      <span>{formatNumber(thread.replyCount || 0)}</span>
+                    </div>
+                  </div>
                 </div>
-              </Link>
-              <div className='flex items-center px-4 py-2 justify-between bg-gradient-to-r from-blue-500 to-gray-800'>
+          
+              <div className='py-3 px-6 flex items-center justify-between bg-blue-600/30 dark:bg-gray-900'>
+                <div className='flex items-center gap-4'>
+                  <ShareLink title={thread.title} slug={thread.slug} />
+
+                  {userId === thread.user_id && (
+                    <Link
+                      href={`/threads/topics/edit-post/${thread.slug}`}
+                      className='flex items-center'>
+                      <FilePenLineIcon className='mr-1 w-5 h-5' />
+                      Edit
+                    </Link>
+                  )}
+
+                  {(userId === thread.user_id || isAdmin) && (
+                    <DeletePost
+                      id={thread.id}
+                      title={thread.title}
+                      classnames='transition duration-300 hover:scale-105'
+                    />
+                  )}
+                </div>
+                {isAdmin && (
+                  <p className='text-sm text-muted-foreground italic'>@Admin</p>
+                )}
+              </div>
+
+              {/* <div className='flex items-center px-4 py-2 justify-between bg-gradient-to-r from-blue-500 to-gray-800'>
                 <ShareTopicButton
                   topic={thread}
                   classnames='flex items-center gap-1 text-white'
@@ -120,7 +172,7 @@ const HeroThreads = async () => {
                     <DeleteThread id={thread.id} title={thread.title} />
                   )}
                 </div>
-              </div>
+              </div> */}
             </div>
           ))}
         </div>

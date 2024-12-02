@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { data, error } = await supabaseService
+    const { error } = await supabaseService
       .from("topic_reply")
       .insert([{ topic_id, author, reply, parent_id }])
       .select();
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log("Reply inserted successfully:", data);
+    console.log("Reply inserted successfully:");
 
     // Revalidate paths if needed
     // Revalidate the path

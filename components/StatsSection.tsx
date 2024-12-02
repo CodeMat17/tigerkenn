@@ -41,7 +41,7 @@ const StatsSection = () => {
 
   const [startCount1, setStartCount1] = useState(false);
   const [startCount2, setStartCount2] = useState(false);
-  const [startCount3, setStartCount3] = useState(false);
+  // const [startCount3, setStartCount3] = useState(false);
 
   const [counts, setCounts] = useState<number[]>([0, 0, 0]);
   const [tags, setTags] = useState<string[]>([
@@ -79,7 +79,7 @@ const StatsSection = () => {
   // Custom count-up hooks for each number
   const count1 = useCountUp(counts[0], 3, startCount1);
   const count2 = useCountUp(counts[1], 3, startCount2);
-  const count3 = useCountUp(counts[2], 3, startCount3);
+  // const count3 = useCountUp(counts[2], 3, startCount3);
 
   useEffect(() => {
     if (inView) {
@@ -93,21 +93,23 @@ const StatsSection = () => {
         setStartCount2(true);
       }, 3000);
 
-      setTimeout(() => {
-        controls3.start({ opacity: 1, y: 0 });
-        setStartCount3(true);
-      }, 6000);
+      // setTimeout(() => {
+      //   controls3.start({ opacity: 1, y: 0 });
+      //   setStartCount3(true);
+      // }, 6000);
     }
   }, [inView, controls1, controls2, controls3]);
 
   return (
-    <div ref={ref} className='flex items-center justify-around gap-8 mt-6'>
+    <div ref={ref} className='flex justify-center gap-8 text-white'>
       {/* First Statistic */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={controls1}
         transition={{ type: "spring", stiffness: 100 }}>
-        <p className='text-4xl font-bold text-center'>{count1}+</p>
+        <p className='text-3xl md:text-4xl font-semibold md:font-bold text-center'>
+          {count1}+
+        </p>
         <p className='text-center'>{tags[0]}</p>
       </motion.div>
 
@@ -116,18 +118,22 @@ const StatsSection = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={controls2}
         transition={{ type: "spring", stiffness: 100 }}>
-        <p className='text-4xl font-bold text-center'>{count2}+</p>
+        <p className='text-3xl md:text-4xl font-semibold md:font-bold text-center'>
+          {count2}+
+        </p>
         <p className='text-center'>{tags[1]}</p>
       </motion.div>
 
       {/* Third Statistic */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={controls3}
         transition={{ type: "spring", stiffness: 100 }}>
-        <p className='text-4xl font-bold text-center'>{count3}+</p>
+        <p className='text-3xl md:text-4xl font-medium md:font-bold  text-center'>
+          {count3}+
+        </p>
         <p className='text-center'>{tags[2]}</p>
-      </motion.div>
+      </motion.div> */}
     </div>
   );
 };

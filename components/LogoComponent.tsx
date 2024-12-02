@@ -10,7 +10,7 @@ const LogoComponemt = () => {
       width={65}
       height={65}
       src='/logo.webp'
-      className='invert'
+      className='dark:invert'
     />
     </Link>
    

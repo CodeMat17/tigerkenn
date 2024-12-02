@@ -4,7 +4,6 @@ import { createClient } from "@/utils/supabase/clients";
 import { User } from "@supabase/supabase-js";
 import DOMPurify from "dompurify";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { toast } from "sonner";
@@ -17,18 +16,13 @@ const mainEditorModules = {
     [{ header: "1" }, { header: "2" }, { font: [] }],
     [{ list: "ordered" }, { list: "bullet" }],
     ["bold", "italic", "underline", "strike", "blockquote"],
-    [{ align: [] }],
-    ["link", "image", "video"],
+    ["link", "image"],
     ["clean"],
   ],
 };
 
 const replyEditorModules = {
-  toolbar: [
-    ["bold", "italic", "underline"],
-    [{ list: "ordered" }, { list: "bullet" }],
-    ["link"],
-  ],
+  toolbar: [["bold", "italic", "underline"], ["link"]],
 };
 
 type Props = {
@@ -43,18 +37,16 @@ type Reply = {
   reply: string;
   author: string;
   topic_id: number;
-
   parent_id: string | null;
 };
 
 const TopicReplyComponent: React.FC<Props> = ({ topicId, user, slug }) => {
   const supabase = createClient();
-  const router = useRouter();
-
   const author = user?.email ? user.email.split("@")[0] : "Anonymous";
 
   const [replies, setReplies] = useState<Reply[]>([]);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(false);
   const [mainEditorContent, setMainEditorContent] = useState("");
   const [replyEditorMap, setReplyEditorMap] = useState<{
     [key: string]: string;
@@ -62,20 +54,11 @@ const TopicReplyComponent: React.FC<Props> = ({ topicId, user, slug }) => {
   const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
 
   const sanitizeContent = (htmlContent: string) => {
-    const cleanContent = DOMPurify.sanitize(htmlContent, {
-      ADD_TAGS: ["img"],
-      ADD_ATTR: ["loading", "style"],
-      FORBID_ATTR: ["onerror", "onload"],
-    });
-
-    const imgRegex = /<img [^>]*src="([^"]*)"[^>]*>/g;
-    return cleanContent.replace(imgRegex, (match, src) => {
-      return `<img src="${src}" loading="lazy" class="w-full md:w-[70%] h-auto" />`;
-    });
+    return DOMPurify.sanitize(htmlContent);
   };
 
   const fetchReplies = async () => {
-    setLoading(true);
+    setFetching(true);
     try {
       const { data, error } = await supabase
         .from("topic_reply")
@@ -89,17 +72,16 @@ const TopicReplyComponent: React.FC<Props> = ({ topicId, user, slug }) => {
       }
       setReplies(data || []);
     } catch (error) {
-      console.log("Failed to post reply.", error);
+      console.error("Failed to fetch replies.", error);
       toast.error("An unexpected error occurred.");
     } finally {
-      setLoading(false);
+      setFetching(false);
     }
   };
 
   const postReply = async (content: string, parentId: string | null) => {
     if (!user) {
-      alert("You must be logged in to add a reply.");
-      router.push("/login");
+      toast.error("You must be logged in to add a reply.");
       return;
     }
 
@@ -114,15 +96,13 @@ const TopicReplyComponent: React.FC<Props> = ({ topicId, user, slug }) => {
       setLoading(true);
       const res = await fetch(`/api/topic-reply`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           topic_id: topicId,
           author,
           reply: sanitizedContent,
           parent_id: parentId,
-          slug
+          slug,
         }),
       });
 
@@ -136,74 +116,104 @@ const TopicReplyComponent: React.FC<Props> = ({ topicId, user, slug }) => {
         toast.error("Failed to post reply.");
       }
     } catch (error) {
-      console.log("Failed to post reply.", error);
+      console.error("Failed to post reply.", error);
       toast.error("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
   };
 
-  const renderReplies = (parentId: string | null) => {
+  const renderReplies = (parentId: string | null, depth = 0) => {
     return replies
       .filter((reply) => reply.parent_id === parentId)
       .map((reply) => (
-        <div key={reply.id} className='mt-4 rounded-lg overflow-hidden border'>
-          <div className='p-3 border bg-white dark:bg-gray-800'>
-            <div className='flex justify-between items-center'>
-              <div className='text-sm text-gray-500 dark:text-gray-400'>
-                @{reply.author} •{" "}
-                <span>
-                  {new Date(reply.created_at).toLocaleString("en-US", {
-                    dateStyle: "medium",
-                    timeStyle: "short",
-                  })}
-                </span>{" "}
-                |{" "}
-                <button
-                  onClick={() => setActiveReplyId(reply.id)}
-                  className='text-blue-500 hover:text-blue-600 text-sm'>
-                  Reply
-                </button>
-              </div>
-            </div>
-
-            {activeReplyId === reply.id && (
-              <div className='mt-4'>
-                <ReactQuill
-                  theme='snow'
-                  value={replyEditorMap[reply.id] || ""}
-                  onChange={(content) =>
-                    setReplyEditorMap((prev) => ({
-                      ...prev,
-                      [reply.id]: content,
-                    }))
-                  }
-                  modules={replyEditorModules}
-                  className='w-full dark:bg-gray-100 dark:text-gray-800 rounded-lg'
-                />
-                <button
-                  onClick={() => postReply(replyEditorMap[reply.id], reply.id)}
-                  disabled={loading}
-                  className={`px-4 py-2 ${
-                    loading
-                      ? "bg-blue-50 text-gray-50"
-                      : "bg-blue-500 text-white"
-                  }  rounded-lg hover:bg-blue-600 mt-4`}>
-                  {loading ? <LoadingAnimation /> : "Post Reply"}
-                </button>
-                <button
-                  onClick={() => setActiveReplyId(null)}
-                  className='text-gray-500 hover:text-gray-700 text-sm ml-4'>
-                  Cancel
-                </button>
-              </div>
-            )}
-
+        <div key={reply.id} className='relative mt-8'>
+          {depth > 0 && (
             <div
-              className='quill-content mt-4'
-              dangerouslySetInnerHTML={{ __html: reply.reply || "" }}
-            />
-            {renderReplies(reply.id)}
+              className='absolute'
+              style={{
+                left: `${Math.min(depth * 24, 64)}px`,
+                top: "1.25rem",
+              }}>
+              <svg
+                width={Math.min(80, depth * 30)}
+                height='50'
+                xmlns='http://www.w3.org/2000/svg'
+                className='overflow-visible'>
+                <path
+                  d={`M10 0 C10 20, ${Math.min(70, depth * 28)} 20, ${Math.min(
+                    70,
+                    depth * 28
+                  )} 40`}
+                  stroke='#007BFF'
+                  strokeWidth='3'
+                  fill='none'
+                />
+              </svg>
+            </div>
+          )}
+
+          <div
+            className='relative flex gap-4'
+            style={{
+              marginLeft: `${Math.min(depth * 24, 64)}px`,
+            }}>
+            <div className='flex-1 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-sm'>
+              <div className='flex justify-between items-center'>
+                <p className='text-sm text-gray-600 dark:text-gray-300'>
+                  <strong>@{reply.author}</strong> •{" "}
+                  <span>
+                    {new Date(reply.created_at).toLocaleString("en-US", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </span>
+                </p>
+                {user && (
+                  <button
+                    onClick={() => setActiveReplyId(reply.id)}
+                    className='text-blue-500 hover:underline text-xs'>
+                    Reply
+                  </button>
+                )}
+              </div>
+              <div
+                className='mt-2 text-gray-700 dark:text-gray-200'
+                dangerouslySetInnerHTML={{ __html: reply.reply }}></div>
+
+              {activeReplyId === reply.id && (
+                <div className='mt-4'>
+                  <ReactQuill
+                    theme='snow'
+                    value={replyEditorMap[reply.id] || ""}
+                    onChange={(content) =>
+                      setReplyEditorMap((prev) => ({
+                        ...prev,
+                        [reply.id]: content,
+                      }))
+                    }
+                    modules={replyEditorModules}
+                    className='w-full bg-white rounded-md shadow-sm'
+                  />
+                  <div className='flex gap-2 mt-4'>
+                    <button
+                      onClick={() =>
+                        postReply(replyEditorMap[reply.id], reply.id)
+                      }
+                      className='px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600'>
+                      {loading ? <LoadingAnimation /> : "Reply"}
+                    </button>
+                    <button
+                      onClick={() => setActiveReplyId(null)}
+                      className='text-gray-500 hover:underline'>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {renderReplies(reply.id, depth + 1)}
+            </div>
           </div>
         </div>
       ));
@@ -214,35 +224,45 @@ const TopicReplyComponent: React.FC<Props> = ({ topicId, user, slug }) => {
   }, [topicId]);
 
   return (
-    <div className='mt-6 pt-6 border-t max-w-2xl'>
-      <h3 className='text-lg font-semibold mb-6'>Replies</h3>
-
-      {user ? (
-        <div className='mt-6 bg-gray-100 dark:bg-gray-900 rounded-lg p-4 shadow-md'>
-          <h4 className='text-md font-medium mb-4'>
-            Share your thoughts on this topic
-          </h4>
-          <ReactQuill
-            theme='snow'
-            value={mainEditorContent}
-            onChange={setMainEditorContent}
-            modules={mainEditorModules}
-            className='w-full dark:bg-gray-100 dark:text-gray-800 rounded-lg'
-          />
-          <button
-            onClick={() => postReply(mainEditorContent, null)}
-            disabled={loading}
-            className={`px-4 py-2 ${
-              loading ? "bg-blue-50 text-gray-50" : "bg-blue-500 text-white"
-            }  rounded-lg hover:bg-blue-600 mt-4`}>
-            {loading ? <LoadingAnimation /> : "Post Reply"}
-          </button>
+    <div className='mt-6 pt-6 border-t'>
+      <h3 className='text-lg font-bold mb-6'>Discussion</h3>
+      {fetching ? (
+        <div className='space-y-6'>
+          {[...Array(3)].map((_, index) => (
+            <div
+              key={index}
+              className='border rounded-xl p-6 space-y-3 animate-pulse'>
+              <div className='w-full p-3 bg-gray-100 dark:bg-gray-800 rounded-full' />
+              <div className='w-[70%] p-3 bg-gray-100 dark:bg-gray-800 rounded-full' />
+              <div className='w-[40%] p-3 bg-gray-100 dark:bg-gray-800 rounded-full' />
+            </div>
+          ))}
         </div>
       ) : (
-        <p className='text-gray-500 mt-4'>Login to leave a reply.</p>
-      )}
+        <>
+          {user ? (
+            <div className='mb-6 bg-white dark:bg-gray-900 p-4 rounded-lg shadow'>
+              <h4 className='text-md font-medium mb-4'>Join the discussion</h4>
+              <ReactQuill
+                theme='snow'
+                value={mainEditorContent}
+                onChange={setMainEditorContent}
+                modules={mainEditorModules}
+                className='w-full bg-white rounded-md shadow-sm'
+              />
+              <button
+                onClick={() => postReply(mainEditorContent, null)}
+                className='px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-4'>
+                {loading ? <LoadingAnimation /> : "Comment"}
+              </button>
+            </div>
+          ) : (
+            <p className='text-gray-500 text-center'>Log in to participate.</p>
+          )}
 
-      <div className='mt-6'>{renderReplies(null)}</div>
+          <div className='mt-6'>{renderReplies(null)}</div>
+        </>
+      )}
     </div>
   );
 };
