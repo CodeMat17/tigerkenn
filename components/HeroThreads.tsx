@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
+import dayjs from "dayjs";
 import {
   EyeIcon,
   FilePenLineIcon,
@@ -10,7 +11,6 @@ import DeletePost from "./DeletePost";
 import ShareLink from "./ShareLink";
 import { Badge } from "./ui/badge";
 import { Card, CardHeader, CardTitle } from "./ui/card";
-import dayjs from "dayjs";
 
 function formatNumber(num: number): string {
   if (num >= 1000) {
@@ -84,59 +84,71 @@ const HeroThreads = async () => {
           {threadsWithReplies.map((thread) => (
             <div
               key={thread.id}
-              className='border rounded-xl overflow-hidden shadow-lg mb-4'>
-                <div className='flex bg'>
-                  <Card className='rounded-none border-none flex-1 flex-grow'>
-                    <CardHeader>
-                      <div className=' flex flex-col leading-4 mb-2 text-sm text-muted-foreground'>
+              className='border rounded-xl overflow-hidden shadow-md mb-4 bg-white dark:bg-gray-800'>
+              <div className='flex bg-gray-50 dark:bg-gray-900'>
+                <Card className='rounded-none border-none flex-1 flex-grow'>
+                  <CardHeader>
+                    <div className='flex flex-col leading-4 mb-2 text-sm text-gray-600 dark:text-gray-400'>
+                      <span>
+                        Published on{" "}
+                        {dayjs(thread.created_at).format("MMM DD, YYYY h:mm a")}
+                      </span>
+                      {thread.updated_on && (
                         <span>
-                          Published on{" "}
-                          {dayjs(thread.created_at).format('MMM DD, YYYY h:mm a')}
+                          Updated on{" "}
+                          {dayjs(thread.updated_on).format(
+                            "MMM DD, YYYY h:mm a"
+                          )}
                         </span>
-                        {thread.updated_on && (
-                          <span>
-                            Updated on{" "}
-                            {dayjs(thread.updated_on).format('MMM DD, YYYY h:mm a')}
-                          </span>
-                        )}
-                      </div>
-                     <Link href={`/threads/topics/${thread.slug}`}>
+                      )}
+                    </div>
+                    <Link href={`/threads/topics/${thread.slug}`}>
                       <CardTitle>
-                        <h1 className='line-clamp-2 text-xl hover:underline'>{thread.title}</h1>
+                        <h1 className='line-clamp-2 text-xl text-gray-900 dark:text-gray-100 hover:text-blue-500 hover:underline'>
+                          {thread.title}
+                        </h1>
                       </CardTitle>
                     </Link>
-                      <div className='text-sm pt-2 text-muted-foreground flex flex-wrap gap-1'>
-                        {thread.tags.map((tag: string, i: number) => (
-                          <Badge key={i}>#{tag}</Badge>
-                        ))}
-                      </div>
-                    </CardHeader>
-                  </Card>
+                    <div className='text-sm pt-2 text-gray-600 dark:text-gray-400 flex flex-wrap gap-1'>
+                      {thread.tags.map((tag: string, i: number) => (
+                        <Badge
+                          key={i}
+                          className='bg-blue-100 text-blue-700 dark:bg-blue-500 dark:text-white'>
+                          #{tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardHeader>
+                </Card>
 
-                  <div className='flex flex-col items-center justify-center gap-4 text-sm w-auto max-w-16 mx-auto py-6 px-4'>
-                    <div className='flex items-center justify-center gap-x-1'>
-                      <EyeIcon className='h-4 w-4' />
-                      <span>{formatNumber(thread.views)}</span>
-                    </div>
-                    <div className='flex items-center justify-center gap-x-1'>
-                      <ThumbsUp className='h-4 w-4' />
-                      <span>{formatNumber(thread.votes)}</span>
-                    </div>
-                    <div className='flex items-center justify-center gap-x-1'>
-                      <MessageSquare className='h-4 w-4' />
-                      <span>{formatNumber(thread.replyCount || 0)}</span>
-                    </div>
+                <div className='flex flex-col items-center justify-center gap-4 text-sm w-auto max-w-16 mx-auto py-6 px-4'>
+                  <div className='flex items-center justify-center gap-x-1 text-gray-700 dark:text-gray-300'>
+                    <EyeIcon className='h-4 w-4 text-gray-600 dark:text-gray-400' />
+                    <span>{formatNumber(thread.views)}</span>
+                  </div>
+                  <div className='flex items-center justify-center gap-x-1 text-gray-700 dark:text-gray-300'>
+                    <ThumbsUp className='h-4 w-4 text-gray-600 dark:text-gray-400' />
+                    <span>{formatNumber(thread.votes)}</span>
+                  </div>
+                  <div className='flex items-center justify-center gap-x-1 text-gray-700 dark:text-gray-300'>
+                    <MessageSquare className='h-4 w-4 text-gray-600 dark:text-gray-400' />
+                    <span>{formatNumber(thread.replyCount || 0)}</span>
                   </div>
                 </div>
-          
-              <div className='py-3 px-6 flex items-center justify-between bg-blue-600/30 dark:bg-gray-900'>
+              </div>
+
+              <div className='py-3 px-6 flex items-center justify-between bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-700 dark:via-purple-700 dark:to-pink-700'>
                 <div className='flex items-center gap-4'>
-                  <ShareLink title={thread.title} slug={thread.slug} />
+                  <ShareLink
+                    title={thread.title}
+                    slug={thread.slug}
+                    classnames='transition duration-300 hover:scale-105 text-white'
+                  />
 
                   {userId === thread.user_id && (
                     <Link
                       href={`/threads/topics/edit-post/${thread.slug}`}
-                      className='flex items-center'>
+                      className='flex items-center  transition duration-300 hover:scale-105 text-white hover:text-gray-200'>
                       <FilePenLineIcon className='mr-1 w-5 h-5' />
                       Edit
                     </Link>
@@ -146,33 +158,12 @@ const HeroThreads = async () => {
                     <DeletePost
                       id={thread.id}
                       title={thread.title}
-                      classnames='transition duration-300 hover:scale-105'
+                      classnames='transition duration-300 hover:scale-105 text-white hover:text-gray-200'
                     />
                   )}
                 </div>
-                {isAdmin && (
-                  <p className='text-sm text-muted-foreground italic'>@Admin</p>
-                )}
+                {isAdmin && <p className='text-sm text-white italic'>@Admin</p>}
               </div>
-
-              {/* <div className='flex items-center px-4 py-2 justify-between bg-gradient-to-r from-blue-500 to-gray-800'>
-                <ShareTopicButton
-                  topic={thread}
-                  classnames='flex items-center gap-1 text-white'
-                />
-                <div className='flex gap-x-5'>
-                  {userId === thread.user_id && (
-                    <Link
-                      href={`/threads/topics/edit-post/${thread.slug}`}
-                      className='text-white'>
-                      Edit
-                    </Link>
-                  )}
-                  {(userId === thread.user_id || isAdmin) && (
-                    <DeleteThread id={thread.id} title={thread.title} />
-                  )}
-                </div>
-              </div> */}
             </div>
           ))}
         </div>

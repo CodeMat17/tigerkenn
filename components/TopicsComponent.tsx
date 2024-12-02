@@ -301,62 +301,74 @@ const TopicsComponent = () => {
             sortedTopics.map((topic) => (
               <div
                 key={topic.id}
-                className='border rounded-xl overflow-hidden shadow-lg mb-4'>
-            
-                  <div className='flex bg'>
-                    <Card className='rounded-none border-none flex-1 flex-grow'>
-                      <CardHeader>
-                        <div className=' flex flex-col leading-4 mb-2 text-sm text-muted-foreground'>
-                          <span>
-                            Published on{" "}
-                            {dayjs(topic.created_at).format("MMM DD, YYYY h:mm a")}
-                          </span>
-                          {topic.updated_on && (
-                            <span>
-                              Updated on{" "}
-                              {dayjs(topic.updated_on).format("MMM DD, YYYY h:mm a")}
-                            </span>
+                className='border rounded-xl overflow-hidden shadow-md mb-4 bg-white dark:bg-gray-800'>
+                <div className='flex bg-gray-50 dark:bg-gray-900'>
+                  <Card className='rounded-none border-none flex-1 flex-grow'>
+                    <CardHeader>
+                      <div className='flex flex-col leading-4 mb-2 text-sm text-gray-600 dark:text-gray-400'>
+                        <span>
+                          Published on{" "}
+                          {dayjs(topic.created_at).format(
+                            "MMM DD, YYYY h:mm a"
                           )}
-                        </div>
-                          <Link href={`/threads/topics/${topic.slug}`}>
+                        </span>
+                        {topic.updated_on && (
+                          <span>
+                            Updated on{" "}
+                            {dayjs(topic.updated_on).format(
+                              "MMM DD, YYYY h:mm a"
+                            )}
+                          </span>
+                        )}
+                      </div>
+                      <Link href={`/threads/topics/${topic.slug}`}>
                         <CardTitle>
-                          <h1 className='line-clamp-2 text-xl hover:underline'>
+                          <h1 className='line-clamp-2 text-xl text-gray-900 dark:text-gray-100 hover:text-blue-500 hover:underline'>
                             {topic.title}
                           </h1>
                         </CardTitle>
-                        </Link>
-                        <div className='text-sm pt-2 text-muted-foreground flex flex-wrap gap-1'>
-                          {topic.tags.map((tag: string, i: number) => (
-                            <Badge key={i}>#{tag}</Badge>
-                          ))}
-                        </div>
-                      </CardHeader>
-                    </Card>
+                      </Link>
+                      <div className='text-sm pt-2 text-gray-600 dark:text-gray-400 flex flex-wrap gap-1'>
+                        {topic.tags.map((tag: string, i: number) => (
+                          <Badge
+                            key={i}
+                            className='bg-blue-100 text-blue-700 dark:bg-blue-500 dark:text-white'>
+                            #{tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardHeader>
+                  </Card>
 
-                    <div className='flex flex-col items-center justify-center gap-4 text-sm w-auto max-w-16 mx-auto py-6 px-4'>
-                      <div className='flex items-center justify-center gap-x-1'>
-                        <EyeIcon className='h-4 w-4' />
-                        <span>{formatNumber(topic.views)}</span>
-                      </div>
-                      <div className='flex items-center justify-center gap-x-1'>
-                        <ThumbsUp className='h-4 w-4' />
-                        <span>{formatNumber(topic.votes)}</span>
-                      </div>
-                      <div className='flex items-center justify-center gap-x-1'>
-                        <MessageSquare className='h-4 w-4' />
-                        <span>{formatNumber(topic.replyCount || 0)}</span>
-                      </div>
+                  <div className='flex flex-col items-center justify-center gap-4 text-sm w-auto max-w-16 mx-auto py-6 px-4'>
+                    <div className='flex items-center justify-center gap-x-1 text-gray-700 dark:text-gray-300'>
+                      <EyeIcon className='h-4 w-4 text-gray-600 dark:text-gray-400' />
+                      <span>{formatNumber(topic.views)}</span>
+                    </div>
+                    <div className='flex items-center justify-center gap-x-1 text-gray-700 dark:text-gray-300'>
+                      <ThumbsUp className='h-4 w-4 text-gray-600 dark:text-gray-400' />
+                      <span>{formatNumber(topic.votes)}</span>
+                    </div>
+                    <div className='flex items-center justify-center gap-x-1 text-gray-700 dark:text-gray-300'>
+                      <MessageSquare className='h-4 w-4 text-gray-600 dark:text-gray-400' />
+                      <span>{formatNumber(topic.replyCount || 0)}</span>
                     </div>
                   </div>
-                <div className='py-3 px-6 flex items-center justify-between bg-blue-600/30 dark:bg-gray-900'>
-                  <div className='flex items-center gap-5'>
-                    <ShareLink title={topic.title} slug={topic.slug} />
+                </div>
+
+                <div className='py-3 px-6 flex items-center justify-between bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-700 dark:via-purple-700 dark:to-pink-700'>
+                  <div className='flex items-center gap-4'>
+                    <ShareLink
+                      title={topic.title}
+                      slug={topic.slug}
+                      classnames='transition duration-300 hover:scale-105 text-white'
+                    />
 
                     {userId === topic.user_id && (
                       <Link
                         href={`/threads/topics/edit-post/${topic.slug}`}
-                        className='flex items-center text-sm'>
-                        <FilePenLineIcon className='mr-1 w-4 h-4' />
+                        className='flex items-center  transition duration-300 hover:scale-105 text-white hover:text-gray-200'>
+                        <FilePenLineIcon className='mr-1 w-5 h-5' />
                         Edit
                       </Link>
                     )}
@@ -365,12 +377,12 @@ const TopicsComponent = () => {
                       <DeletePost
                         id={topic.id}
                         title={topic.title}
-                        classnames='transition duration-300 hover:scale-105'
+                        classnames='transition duration-300 hover:scale-105 text-white hover:text-gray-200'
                       />
                     )}
                   </div>
                   {isAdmin && (
-                    <p className='text-sm text-muted-foreground'>@Admin</p>
+                    <p className='text-sm text-white italic'>@Admin</p>
                   )}
                 </div>
               </div>
