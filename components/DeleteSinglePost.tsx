@@ -19,10 +19,9 @@ type Props = {
   id: number;
   title: string;
   classnames?: string;
-  reload: () => void; // Function to refresh the threads list page after deletion
 };
 
-const DeletePost = ({ id, title, reload, classnames }: Props) => {
+const DeleteSinglePost = ({ id, title, classnames }: Props) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,7 +39,7 @@ const DeletePost = ({ id, title, reload, classnames }: Props) => {
       if (res.ok) {
         toast("DONE!!", { description: "Thread deleted successfully" });
         setOpen(false);
-        reload();
+        router.refresh();
         router.push("/threads/topics");
       } else {
         console.error("Error deleting thread:", result.error);
@@ -60,7 +59,7 @@ const DeletePost = ({ id, title, reload, classnames }: Props) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button className={`${classnames} flex items-center text-red-500`}>
-          <Trash2Icon className='mr-1 w-4 h-4' /> Delete
+          <Trash2Icon className='mr-1 w-5 h-5' /> Delete
         </button>
       </DialogTrigger>
       <DialogContent>
@@ -91,4 +90,4 @@ const DeletePost = ({ id, title, reload, classnames }: Props) => {
   );
 };
 
-export default DeletePost;
+export default DeleteSinglePost;

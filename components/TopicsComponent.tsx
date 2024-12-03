@@ -73,27 +73,8 @@ const TopicsComponent = () => {
   const [count, setCount] = useState(0);
   const [page, setPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const perPage = 10; // Number of topics per page
-
-  useEffect(() => {
-    const fetchUserId = async () => {
-      const response = await fetch("/api/get-user");
-      const data = await response.json();
-      setUserId(data.userId);
-    };
-    fetchUserId();
-  }, []);
-
-  useEffect(() => {
-    const fetchIsAdmin = async () => {
-      const response = await fetch("/api/isAdmin");
-      const data = await response.json();
-      setIsAdmin(data.isAdmin);
-    };
-    fetchIsAdmin();
-  }, []);
-
-  useEffect(() => {
+  const perPage = 10;
+  
     const fetchTopicsWithReplies = async () => {
       setLoading(true);
 
@@ -151,7 +132,28 @@ const TopicsComponent = () => {
       setSortedTopics(topicsWithReplies);
       setTags(uniqueTags);
       setLoading(false);
+    };// Number of topics per page
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      const response = await fetch("/api/get-user");
+      const data = await response.json();
+      setUserId(data.userId);
     };
+    fetchUserId();
+  }, []);
+
+  useEffect(() => {
+    const fetchIsAdmin = async () => {
+      const response = await fetch("/api/isAdmin");
+      const data = await response.json();
+      setIsAdmin(data.isAdmin);
+    };
+    fetchIsAdmin();
+  }, []);
+
+  useEffect(() => {
+  
 
     fetchTopicsWithReplies();
   }, [page, supabase]); // Re-fetch topics when page changes
@@ -356,19 +358,19 @@ const TopicsComponent = () => {
                   </div>
                 </div>
 
-                <div className='py-3 px-6 flex items-center justify-between bg-gradient-to-t from-black/70 dark:from-black'>
+                <div className='py-3 px-6 flex items-center justify-between bg-gradient-to-t from-blue-950 dark:from-black'>
                   <div className='flex items-center gap-4'>
                     <ShareLink
                       title={topic.title}
                       slug={topic.slug}
-                      classnames='transition duration-300 hover:scale-105 text-white'
+                      classnames='transition duration-300 hover:scale-105 text-white text-sm'
                     />
 
                     {userId === topic.user_id && (
                       <Link
                         href={`/threads/topics/edit-post/${topic.slug}`}
-                        className='flex items-center  transition duration-300 hover:scale-105 text-white hover:text-gray-200'>
-                        <FilePenLineIcon className='mr-1 w-5 h-5' />
+                        className='flex items-center  transition duration-300 hover:scale-105 text-white hover:text-gray-200 text-sm'>
+                        <FilePenLineIcon className='mr-1 w-4 h-4' />
                         Edit
                       </Link>
                     )}
@@ -377,7 +379,8 @@ const TopicsComponent = () => {
                       <DeletePost
                         id={topic.id}
                         title={topic.title}
-                        classnames='text-white rounded-full hover:text-red-500 transition duration-300 hover:scale-105'
+                        reload={fetchTopicsWithReplies}
+                        classnames='text-white rounded-full hover:text-red-500 transition duration-300 hover:scale-105 text-sm'
                       />
                     )}
                   </div>

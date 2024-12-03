@@ -1,4 +1,6 @@
-import { createClient } from "@/utils/supabase/server";
+"use client";
+
+import { createClient } from "@/utils/supabase/clients";
 import dayjs from "dayjs";
 import {
   EyeIcon,
@@ -11,6 +13,28 @@ import DeletePost from "./DeletePost";
 import ShareLink from "./ShareLink";
 import { Badge } from "./ui/badge";
 import { Card, CardHeader, CardTitle } from "./ui/card";
+import { useEffect, useState } from "react";
+
+type Topic = {
+  id: number;
+  slug: string;
+  title: string;
+  tags: string[];
+  content: string;
+  created_at: string;
+  views: number;
+  votes: number;
+  user_id: string;
+  updated_on: string;
+  replyCount?: number;
+}
+
+
+
+type Props = {
+  userId: string | null;
+  isAdmin: boolean;
+};
 
 function formatNumber(num: number): string {
   if (num >= 1000) {
@@ -19,59 +43,84 @@ function formatNumber(num: number): string {
   return num.toString();
 }
 
-const HeroThreads = async () => {
+const HeroThreads = ({ userId, isAdmin }: Props) => {
   const supabase = createClient();
+  const [threadsWithReplies, setThreadsWithReplies] = useState<Topic[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const userId = user?.id;
-  const isAdmin = user?.app_metadata?.isAdmin || false;
+  const fetchTopicsWithReplies = async () => {
+    setLoading(true);
+    setError(null);
 
-  // Fetch threads
-  const { data: threads, error } = await supabase
-    .from("topics")
-    .select(
-      "id, slug, title, tags, content, created_at, views, votes, user_id, updated_on",
-      {
-        count: "exact",
+    try {
+      const { data: threads, error: fetchError } = await supabase
+        .from("topics")
+        .select(
+          "id, slug, title, tags, content, created_at, views, votes, user_id, updated_on",
+          {
+            count: "exact",
+          }
+        )
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      if (fetchError) {
+        throw fetchError;
       }
-    )
-    .order("created_at", { ascending: false })
-    .limit(5);
+
+      if (!threads || threads.length === 0) {
+        setThreadsWithReplies([]);
+        return;
+      }
+
+      const threadsWithReplies = await Promise.all(
+        threads.map(async (thread) => {
+          const { count: replyCount, error: replyError } = await supabase
+            .from("topic_reply")
+            .select("id", { count: "exact" })
+            .eq("topic_id", thread.id);
+
+          if (replyError) {
+            console.error(
+              `Error fetching replies for thread ${thread.id}:`,
+              replyError
+            );
+          }
+
+          return {
+            ...thread,
+            replyCount: replyCount || 0,
+          };
+        })
+      );
+
+      setThreadsWithReplies(threadsWithReplies);
+    } catch (err) {
+      console.error("Error fetching threads:", err);
+      setError("Failed to load threads.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTopicsWithReplies();
+  }, []);
+
+  if (loading) {
+    return <div className='text-center px-4 py-12'>
+      <div  />
+    </div>;
+  }
 
   if (error) {
-    console.error("Error fetching threads:", error);
-    return (
-      <div className='text-center px-4 py-12'>Failed to load threads.</div>
-    );
+    return <div className='text-center px-4 py-12'>{error}</div>;
   }
 
-  if (!threads || threads.length === 0) {
+  if (!threadsWithReplies || threadsWithReplies.length === 0) {
     return <div className='text-center px-4 py-12'>No threads found.</div>;
   }
-
-  // Fetch reply counts for all threads
-  const threadsWithReplies = await Promise.all(
-    threads.map(async (thread) => {
-      const { count: replyCount, error: replyError } = await supabase
-        .from("topic_reply")
-        .select("id", { count: "exact" })
-        .eq("topic_id", thread.id);
-
-      if (replyError) {
-        console.error(
-          `Error fetching replies for thread ${thread.id}:`,
-          replyError
-        );
-      }
-
-      return {
-        ...thread,
-        replyCount: replyCount || 0,
-      };
-    })
-  );
 
   return (
     <section className='w-full bg-gray-50 dark:bg-gray-950'>
@@ -85,7 +134,7 @@ const HeroThreads = async () => {
             <div
               key={thread.id}
               className='border rounded-xl overflow-hidden shadow-md mb-4 bg-white dark:bg-gray-800'>
-              <div className='flex '>
+              <div className='flex'>
                 <Card className='rounded-none border-none flex-1 flex-grow shadow-none dark:bg-gray-800'>
                   <CardHeader>
                     <div className='flex flex-col leading-4 mb-2 text-sm text-gray-600 dark:text-gray-400'>
@@ -137,19 +186,19 @@ const HeroThreads = async () => {
                 </div>
               </div>
 
-              <div className='py-3 px-6 flex items-center justify-between bg-gradient-to-t from-black/70 dark:from-black'>
+              <div className='py-3 px-6 flex items-center justify-between bg-gradient-to-t from-blue-950 dark:from-black'>
                 <div className='flex items-center gap-4'>
                   <ShareLink
                     title={thread.title}
                     slug={thread.slug}
-                    classnames='transition duration-300 hover:scale-105 text-white'
+                    classnames='text-sm transition duration-300 hover:scale-105 text-white'
                   />
 
                   {userId === thread.user_id && (
                     <Link
                       href={`/threads/topics/edit-post/${thread.slug}`}
-                      className='flex items-center  transition duration-300 hover:scale-105 text-white hover:text-gray-200'>
-                      <FilePenLineIcon className='mr-1 w-5 h-5' />
+                      className='flex items-center  transition duration-300 hover:scale-105 text-white hover:text-gray-200 text-sm'>
+                      <FilePenLineIcon className='mr-1 w-4 h-4' />
                       Edit
                     </Link>
                   )}
@@ -158,7 +207,8 @@ const HeroThreads = async () => {
                     <DeletePost
                       id={thread.id}
                       title={thread.title}
-                      classnames='text-white rounded-full hover:text-red-500 transition duration-300 hover:scale-105'
+                      reload={fetchTopicsWithReplies}
+                      classnames='text-white rounded-full hover:text-red-500 transition duration-300 hover:scale-105 text-sm'
                     />
                   )}
                 </div>

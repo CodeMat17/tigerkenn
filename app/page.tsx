@@ -8,6 +8,12 @@ import { createClient } from "@/utils/supabase/server";
 const Home = async () => {
   const supabase = createClient();
 
+   const {
+     data: { user },
+   } = await supabase.auth.getUser();
+   const userId = user?.id;
+   const isAdmin = user?.app_metadata?.isAdmin || false;
+
   const { data: hero } = await supabase.from("hero").select("*").single();
 
   const { data: completed } = await supabase.from("completed").select("*");
@@ -16,7 +22,7 @@ const Home = async () => {
     <div className='w-full min-h-screen '>
       <HeroPage title={hero.title} desc={hero.desc} content={hero.content} />
       <FeaturedProperties projects={completed ?? []} />
-      <HeroThreads />
+      <HeroThreads userId={userId ?? null} isAdmin={isAdmin} />
       <ReviewCarousel />
       <NewsletterSignup />
     </div>

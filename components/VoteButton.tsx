@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import LoadingAnimation from "./LoadingAnimation";
 
 type VoteButtonProps = {
-  postId: string;
+  postId: number;
   user: { id: string } | null;
   slug: string;
 };

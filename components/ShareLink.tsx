@@ -25,7 +25,7 @@ const ShareLink = ({ title, slug, classnames }: Props) => {
           alert("Sharing is not supported in this browser.");
         }
       }}>
-      <ForwardIcon className={`mr-1 w-5 h-5`} /> Share
+      <ForwardIcon className={`mr-1 w-4 h-4`} /> Share
     </button>
   );
 };

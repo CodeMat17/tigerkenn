@@ -26,7 +26,7 @@ const replyEditorModules = {
 };
 
 type Props = {
-  topicId: string;
+  topicId: number;
   slug: string;
   user: User | null;
 };
