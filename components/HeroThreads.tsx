@@ -84,9 +84,9 @@ const HeroThreads = async () => {
           {threadsWithReplies.map((thread) => (
             <div
               key={thread.id}
-              className='border rounded-xl overflow-hidden shadow-md mb-4  dark:bg-gray-800'>
+              className='border rounded-xl overflow-hidden shadow-md mb-4 bg-white dark:bg-gray-800'>
               <div className='flex '>
-                <Card className='rounded-none border-none flex-1 flex-grow bg-white dark:bg-gray-800'>
+                <Card className='rounded-none border-none flex-1 flex-grow shadow-none dark:bg-gray-800'>
                   <CardHeader>
                     <div className='flex flex-col leading-4 mb-2 text-sm text-gray-600 dark:text-gray-400'>
                       <span>
@@ -137,7 +137,7 @@ const HeroThreads = async () => {
                 </div>
               </div>
 
-              <div className='py-3 px-6 flex items-center justify-between bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-700 dark:via-purple-700 dark:to-pink-700'>
+              <div className='py-3 px-6 flex items-center justify-between bg-gradient-to-t from-black/70 dark:from-black'>
                 <div className='flex items-center gap-4'>
                   <ShareLink
                     title={thread.title}
@@ -158,7 +158,7 @@ const HeroThreads = async () => {
                     <DeletePost
                       id={thread.id}
                       title={thread.title}
-                      classnames='transition duration-300 hover:scale-105 text-white hover:text-gray-200'
+                      classnames='text-white rounded-full hover:text-red-500 transition duration-300 hover:scale-105'
                     />
                   )}
                 </div>
