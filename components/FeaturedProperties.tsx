@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Badge } from "./ui/badge";
 
 type Props = {
   projects: { id: number; desc: string; imgUrl: string; }[];
@@ -38,7 +37,7 @@ export function FeaturedProperties({projects}: Props) {
       <div className=''>
         <div className='mb-8 flex flex-col items-center justify-center'>
           <h2 className='text-center text-3xl font-bold'>Completed Projects</h2>
-          <Badge>Selected</Badge>
+          <p className="text-center text-muted-foreground mt-1">Selected</p>
         </div>
 
         <div className='relative flex justify-center items-center h-[400px] md:h-[500px] w-full '>
