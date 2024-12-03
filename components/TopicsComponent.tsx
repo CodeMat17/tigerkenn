@@ -302,8 +302,8 @@ const TopicsComponent = () => {
               <div
                 key={topic.id}
                 className='border rounded-xl overflow-hidden shadow-md mb-4 bg-white dark:bg-gray-800'>
-                <div className='flex bg-gray-50 dark:bg-gray-900'>
-                  <Card className='rounded-none border-none flex-1 flex-grow'>
+                <div className='flex '>
+                  <Card className='rounded-none border-none flex-1 flex-grow bgwhite dark:bg-gray-800'>
                     <CardHeader>
                       <div className='flex flex-col leading-4 mb-2 text-sm text-gray-600 dark:text-gray-400'>
                         <span>
@@ -340,7 +340,7 @@ const TopicsComponent = () => {
                     </CardHeader>
                   </Card>
 
-                  <div className='flex flex-col items-center justify-center gap-4 text-sm w-auto max-w-16 mx-auto py-6 px-4'>
+                  <div className='flex flex-col items-center justify-center gap-4 text-sm w-auto max-w-16 mx-auto py-6 px-4 bg-white dark:bg-gray-800'>
                     <div className='flex items-center justify-center gap-x-1 text-gray-700 dark:text-gray-300'>
                       <EyeIcon className='h-4 w-4 text-gray-600 dark:text-gray-400' />
                       <span>{formatNumber(topic.views)}</span>
