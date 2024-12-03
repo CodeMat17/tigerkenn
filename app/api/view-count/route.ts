@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Increment the view count via Supabase RPC
     const { error } = await supabaseService.rpc("increment_views", {
       topic_id_input: topicId,
     });
@@ -25,7 +26,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    revalidatePath(`/threads/topics/${slug}`, 'layout')
+    revalidatePath(`/threads/topics/${slug}`, "layout");
 
     return NextResponse.json({ message: "View count updated successfully" });
   } catch (err) {

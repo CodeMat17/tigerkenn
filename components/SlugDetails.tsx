@@ -36,6 +36,23 @@ const SlugDetail = ({ slug, user }: { slug: string; user: User | null }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const incrementViewCount = async (topicId: number, slug: string) => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_HOME || "http://localhost:3000";
+      const response = await fetch(`${baseUrl}/api/view-count`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topicId, slug }),
+      });
+
+      if (!response.ok) {
+        console.error("Failed to increment view count:", await response.json());
+      }
+    } catch (error) {
+      console.error("Error while incrementing view count:", error);
+    }
+  };
+
   // Fetch topic and reply count
   const fetchTopic = async () => {
     setLoading(true);
@@ -67,12 +84,7 @@ const SlugDetail = ({ slug, user }: { slug: string; user: User | null }) => {
       setReplyCount(replyCount || 0);
 
       // Increment view count
-      const baseUrl = process.env.NEXT_PUBLIC_HOME || "http://localhost:3000";
-      await fetch(`${baseUrl}/api/view-count`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topicId: topicData.id, slug }),
-      });
+      await incrementViewCount(topicData.id, slug);
     } catch (err) {
       setError("Failed to load the topic.");
       console.error(err);

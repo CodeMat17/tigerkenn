@@ -1,36 +1,34 @@
 "use client";
 
 import { PowerOffIcon } from "lucide-react";
+import { useRouter } from "next/navigation"; // Import the useRouter hook
 import React, { useState } from "react";
 import { Button } from "./ui/button";
-import { useRouter } from "next/navigation"; // Import the useRouter hook
-
 
 const SignoutComponent = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter(); // Initialize the router
-  
+
   const handleSignout = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-        const response = await fetch(`/auth/signout`, {
-          method: "POST",
-        });
-      
-       if (response.ok) {
-         router.push("/"); // Redirect to the home page on success
-       } else {
-         console.error("Failed to sign out:", response.statusText);
-       }
+      const response = await fetch(`/auth/signout`, {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        router.refresh();
+        router.push("/"); // Redirect to the home page on success
+      } else {
+        console.error("Failed to sign out:", response.statusText);
+      }
     } catch (error) {
-        console.error("Error during signout:", error);
+      console.error("Error during signout:", error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-   
-  
   };
 
   return (
