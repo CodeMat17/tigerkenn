@@ -23,7 +23,6 @@ import {
   EyeIcon,
   FilePenLineIcon,
   MessageSquare,
-  MinusIcon,
   Search,
   ThumbsUp,
 } from "lucide-react";
@@ -197,13 +196,7 @@ const TopicsComponent = () => {
     setSortOption("created_at");
   };
 
-  if (loading) {
-    return (
-      <div className='flex justify-center items-center h-72'>
-        <MinusIcon className='animate-spin mr-3' /> loading...
-      </div>
-    );
-  }
+
 
   return (
     <div className='bg-gray-50 dark:bg-gray-950'>
@@ -295,7 +288,9 @@ const TopicsComponent = () => {
             </div>
           </div>
 
-          {sortedTopics && sortedTopics.length < 1 ? (
+          {loading ? (
+            <SlugDetailSkeleton />
+          ) : sortedTopics && sortedTopics.length < 1 ? (
             <div className='text-center py-8 px-4 text-red-500'>
               No post rendered at the moment.
             </div>
@@ -342,17 +337,24 @@ const TopicsComponent = () => {
                     </CardHeader>
                   </Card>
 
-                  <div className='flex flex-col items-center justify-center gap-4 text-sm w-auto max-w-16 mx-auto py-6 px-4 bg-white dark:bg-gray-800'>
-                    <div className='flex items-center justify-center gap-x-1 text-gray-700 dark:text-gray-300'>
-                      <EyeIcon className='h-4 w-4 text-gray-600 dark:text-gray-400' />
+                  <div className='flex flex-col items-start justify-start gap-2 text-sm w-16 py-6 mr-1 bg-white dark:bg-gray-800'>
+                    <div className='flex items-center justify-center gap-x-1 text-green-600 dark:text-gray-300'>
+                      <div className=' bg-gray-100 p-2 rounded-full'>
+                        <EyeIcon className='h-4 w-4 text-green-600 dark:text-gray-400' />
+                      </div>
                       <span>{formatNumber(topic.views)}</span>
                     </div>
-                    <div className='flex items-center justify-center gap-x-1 text-gray-700 dark:text-gray-300'>
-                      <ThumbsUp className='h-4 w-4 text-gray-600 dark:text-gray-400' />
+                    <div className='flex items-center justify-center gap-x-1 text-green-600 dark:text-gray-300'>
+                      <div className=' bg-gray-100 p-2 rounded-full'>
+                        <ThumbsUp className='h-4 w-4 text-green-600 dark:text-gray-400' />
+                      </div>
+
                       <span>{formatNumber(topic.votes)}</span>
                     </div>
-                    <div className='flex items-center justify-center gap-x-1 text-gray-700 dark:text-gray-300'>
-                      <MessageSquare className='h-4 w-4 text-gray-600 dark:text-gray-400' />
+                    <div className='flex items-center justify-center gap-x-1 text-green-600 dark:text-gray-300'>
+                      <div className=' bg-gray-100 p-2 rounded-full'>
+                        <MessageSquare className='h-4 w-4 text-green-600 dark:text-gray-400' />
+                      </div>
                       <span>{formatNumber(topic.replyCount || 0)}</span>
                     </div>
                   </div>
@@ -483,5 +485,56 @@ const TopicsComponent = () => {
     </div>
   );
 };
+
+const SlugDetailSkeleton = () => {
+  return (
+    <div className='px-4 py-8 max-w-4xl mx-auto'>
+      {Array.from({ length: 3 }).map((_, index) => (
+        <div key={index} className='animate-pulse mb-8'>
+          {/* Header Skeleton */}
+          <div className='flex items-center justify-between mb-4'>
+            <div>
+              <div className='flex gap-2 text-sm text-gray-300'>
+                <div className='h-4 w-16 bg-gray-300 rounded'></div>{" "}
+                {/* Views */}
+                <div className='h-4 w-16 bg-gray-300 rounded'></div>{" "}
+                {/* Votes */}
+                <div className='h-4 w-16 bg-gray-300 rounded'></div>{" "}
+                {/* Replies */}
+              </div>
+              <div className='mt-2 h-4 w-32 bg-gray-300 rounded'></div>{" "}
+              {/* Date */}
+            </div>
+            <div className='flex items-center gap-2'>
+              <div className='h-8 w-8 bg-gray-300 rounded-full'></div>{" "}
+              {/* Vote Button */}
+              <div className='h-8 w-8 bg-gray-300 rounded-full'></div>{" "}
+              {/* Share Button */}
+            </div>
+          </div>
+
+          {/* Title Skeleton */}
+          <div className='h-6 w-3/4 bg-gray-300 rounded mb-2'></div>
+
+          {/* Tags Skeleton */}
+          <div className='flex gap-2 mb-4'>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className='h-4 w-16 bg-gray-300 rounded'></div>
+            ))}
+          </div>
+
+          {/* Content Skeleton */}
+          <div className='space-y-2'>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className='h-4 w-full bg-gray-300 rounded'></div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+
 
 export default TopicsComponent;
