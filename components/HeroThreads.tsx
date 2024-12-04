@@ -169,20 +169,20 @@ const HeroThreads = ({ userId, isAdmin }: Props) => {
 
                   <div className='flex flex-col items-start justify-start gap-2 text-sm w-16 py-6 mr-1 bg-white dark:bg-gray-800'>
                     <div className='flex items-center justify-center gap-x-1 text-green-600 dark:text-gray-300'>
-                      <div className=' bg-gray-100 p-2 rounded-full'>
+                      <div className=' bg-gray-100 dark:bg-gray-700 p-2 rounded-full'>
                         <EyeIcon className='h-4 w-4 text-green-600 dark:text-gray-400' />
                       </div>
                       <span>{formatNumber(thread.views)}</span>
                     </div>
                     <div className='flex items-center justify-center gap-x-1 text-green-600 dark:text-gray-300'>
-                      <div className=' bg-gray-100 p-2 rounded-full'>
+                      <div className=' bg-gray-100 dark:bg-gray-700 p-2 rounded-full'>
                         <ThumbsUp className='h-4 w-4 text-green-600 dark:text-gray-400' />
                       </div>
 
                       <span>{formatNumber(thread.votes)}</span>
                     </div>
                     <div className='flex items-center justify-center gap-x-1 text-green-600 dark:text-gray-300'>
-                      <div className=' bg-gray-100 p-2 rounded-full'>
+                      <div className=' bg-gray-100 dark:bg-gray-700 p-2 rounded-full'>
                         <MessageSquare className='h-4 w-4 text-green-600 dark:text-gray-400' />
                       </div>
                       <span>{formatNumber(thread.replyCount || 0)}</span>
