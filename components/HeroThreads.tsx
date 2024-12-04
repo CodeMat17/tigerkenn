@@ -190,7 +190,7 @@ const HeroThreads = ({ userId, isAdmin }: Props) => {
                   </div>
                 </div>
 
-                <div className='py-3 px-6 flex items-center justify-between bg-gradient-to-t from-blue-950 dark:from-black'>
+                <div className='py-3 px-6 flex items-center justify-between bg-gradient-to-t from-blue-950 via-blue-900 dark:from-black'>
                   <div className='flex items-center gap-4'>
                     <ShareLink
                       title={thread.title}
