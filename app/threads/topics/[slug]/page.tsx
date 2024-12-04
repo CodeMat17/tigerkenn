@@ -8,6 +8,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import DeleteSinglePost from "@/components/DeleteSinglePost";
 import { Metadata } from "next";
+import { Badge } from "@/components/ui/badge";
 
 type Props = {
   params: { slug: string };
@@ -126,15 +127,14 @@ const SlugDetail = async ({ params: { slug } }: Props) => {
       </div>
 
       <h2 className='text-2xl font-semibold'>{topic.title}</h2>
-      <p className='text-sm text-gray-600 dark:text-gray-300 italic mt-1'>
-        Tags:{" "}
+      <div className='text-sm text-gray-600 dark:text-gray-300  mt-2'>
         {topic.tags &&
           topic.tags.map((tag: string, i: number) => (
-            <span key={i} className='mr-2'>
+            <Badge key={i} className='mr-2 italic rounded-full'>
               #{tag}
-            </span>
+            </Badge>
           ))}
-      </p>
+      </div>
 
       <div className='flex items-center gap-5 mt-4'>
         {userId === topic.user_id && (
