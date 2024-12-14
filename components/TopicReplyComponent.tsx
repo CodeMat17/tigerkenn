@@ -1,29 +1,13 @@
-"use client";
+'use client'
 
+import React from "react";
 import { createClient } from "@/utils/supabase/clients";
 import { User } from "@supabase/supabase-js";
 import DOMPurify from "dompurify";
-import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import "react-quill/dist/quill.snow.css";
 import { toast } from "sonner";
 import LoadingAnimation from "./LoadingAnimation";
-
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-
-const mainEditorModules = {
-  toolbar: [
-    [{ header: "1" }, { header: "2" }, { font: [] }],
-    [{ list: "ordered" }, { list: "bullet" }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    ["link", "image"],
-    ["clean"],
-  ],
-};
-
-const replyEditorModules = {
-  toolbar: [["bold", "italic", "underline"], ["link"]],
-};
+import TiptapEditor from "./TiptapEditor";
 
 type Props = {
   topicId: number;
@@ -53,9 +37,8 @@ const TopicReplyComponent: React.FC<Props> = ({ topicId, user, slug }) => {
   }>({});
   const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
 
-  const sanitizeContent = (htmlContent: string) => {
-    return DOMPurify.sanitize(htmlContent);
-  };
+  const sanitizeContent = (htmlContent: string) =>
+    DOMPurify.sanitize(htmlContent);
 
   const fetchReplies = async () => {
     setFetching(true);
@@ -123,144 +106,121 @@ const TopicReplyComponent: React.FC<Props> = ({ topicId, user, slug }) => {
     }
   };
 
-  const renderReplies = (parentId: string | null, depth = 0) => {
-    return replies
-      .filter((reply) => reply.parent_id === parentId)
-      .map((reply) => (
-        <div key={reply.id} className='relative mt-8'>
-          {depth > 0 && (
-            <div
-              className='absolute'
-              style={{
-                left: `${Math.min(depth * 24, 64)}px`,
-                top: "1.25rem",
-              }}>
-              <svg
-                width={Math.min(80, depth * 30)}
-                height='50'
-                xmlns='http://www.w3.org/2000/svg'
-                className='overflow-visible'>
-                <path
-                  d={`M10 0 C10 20, ${Math.min(70, depth * 28)} 20, ${Math.min(
-                    70,
-                    depth * 28
-                  )} 40`}
-                  stroke='#007BFF'
-                  strokeWidth='3'
-                  fill='none'
-                />
-              </svg>
-            </div>
-          )}
+ const renderReplies = (parentId: string | null, depth = 0) => {
+   return replies
+     .filter((reply) => reply.parent_id === parentId)
+     .map((reply) => (
+       <div
+         key={reply.id}
+         className={`relative mt-6 ${
+           depth > 0 ? `ml-${Math.min(depth * 4, 12)}` : ""
+         }`}>
+         {/* Connecting Line */}
+         {depth > 0 && (
+           <div
+             className='absolute top-0 left-0 h-full border-l border-gray-300 dark:border-gray-600'
+             style={{ marginLeft: "-1rem" }}
+           />
+         )}
 
-          <div
-            className='relative flex gap-4'
-            style={{
-              marginLeft: `${Math.min(depth * 24, 64)}px`,
-            }}>
-            <div className='flex-1 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-sm'>
-              <div className='flex justify-between items-center'>
-                <p className='text-sm text-gray-600 dark:text-gray-300'>
-                  <strong>@{reply.author}</strong> •{" "}
-                  <span>
-                    {new Date(reply.created_at).toLocaleString("en-US", {
-                      dateStyle: "medium",
-                      timeStyle: "short",
-                    })}
-                  </span>
-                </p>
-                {user && (
-                  <button
-                    onClick={() => setActiveReplyId(reply.id)}
-                    className='text-blue-500 hover:underline text-xs'>
-                    Reply
-                  </button>
-                )}
-              </div>
-              <div
-                className='mt-2 text-gray-700 dark:text-gray-200'
-                dangerouslySetInnerHTML={{ __html: reply.reply }}></div>
+         {/* Reply Container */}
+         <div className='bg-white dark:bg-gray-800 shadow-sm p-4 rounded-lg'>
+           {/* Author and Time */}
+           <div className='flex justify-between items-center'>
+             <p className='text-sm text-gray-600 dark:text-gray-300'>
+               <strong>@{reply.author}</strong> •{" "}
+               <span>
+                 {new Date(reply.created_at).toLocaleString("en-US", {
+                   dateStyle: "medium",
+                   timeStyle: "short",
+                 })}
+               </span>
+             </p>
+             {user && (
+               <button
+                 onClick={() => setActiveReplyId(reply.id)}
+                 className='text-blue-500 hover:underline text-xs'>
+                 Reply
+               </button>
+             )}
+           </div>
 
-              {activeReplyId === reply.id && (
-                <div className='mt-4'>
-                  <ReactQuill
-                    theme='snow'
-                    value={replyEditorMap[reply.id] || ""}
-                    onChange={(content) =>
-                      setReplyEditorMap((prev) => ({
-                        ...prev,
-                        [reply.id]: content,
-                      }))
-                    }
-                    modules={replyEditorModules}
-                    className='w-full bg-white rounded-md shadow-sm'
-                  />
-                  <div className='flex gap-2 mt-4'>
-                    <button
-                      onClick={() =>
-                        postReply(replyEditorMap[reply.id], reply.id)
-                      }
-                      className='px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600'>
-                      {loading ? <LoadingAnimation /> : "Reply"}
-                    </button>
-                    <button
-                      onClick={() => setActiveReplyId(null)}
-                      className='text-gray-500 hover:underline'>
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              )}
+           {/* Reply Content */}
+           <div
+             className='mt-2 text-gray-700 dark:text-gray-200'
+             dangerouslySetInnerHTML={{ __html: reply.reply }}></div>
 
-              {renderReplies(reply.id, depth + 1)}
-            </div>
-          </div>
-        </div>
-      ));
-  };
+           {/* Reply Input */}
+           {activeReplyId === reply.id && (
+             <div className='mt-4'>
+               <TiptapEditor
+                 onUpdate={(content) =>
+                   setReplyEditorMap((prev) => ({
+                     ...prev,
+                     [reply.id]: content as string,
+                   }))
+                 }
+               />
+               <div className='flex gap-2 mt-4'>
+                 <button
+                   onClick={() => postReply(replyEditorMap[reply.id], reply.id)}
+                   className='px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600'>
+                   {loading ? <LoadingAnimation /> : "Reply"}
+                 </button>
+                 <button
+                   onClick={() => setActiveReplyId(null)}
+                   className='text-gray-500 hover:underline'>
+                   Cancel
+                 </button>
+               </div>
+             </div>
+           )}
+
+           {/* Nested Replies */}
+           {renderReplies(reply.id, depth + 1)}
+         </div>
+       </div>
+     ));
+ };
+
 
   useEffect(() => {
     fetchReplies();
   }, [topicId]);
 
   return (
-    <div className='mt-6 pt-6 border-t'>
-      <h3 className='text-lg font-bold mb-6'>Discussion</h3>
+    <div className='my-6'>
+      <h2 className='text-xl font-bold mb-4 text-gray-900 dark:text-gray-200'>
+        Discussion
+      </h2>
       {fetching ? (
-        <div className='space-y-6'>
-          {[...Array(3)].map((_, index) => (
+        <div className='space-y-4'>
+          {[...Array(3)].map((_, i) => (
             <div
-              key={index}
-              className='border rounded-xl p-6 space-y-3 animate-pulse'>
-              <div className='w-full p-3 bg-gray-100 dark:bg-gray-800 rounded-full' />
-              <div className='w-[70%] p-3 bg-gray-100 dark:bg-gray-800 rounded-full' />
-              <div className='w-[40%] p-3 bg-gray-100 dark:bg-gray-800 rounded-full' />
-            </div>
+              key={i}
+              className='bg-gray-100 dark:bg-gray-800 h-6 rounded animate-pulse'
+            />
           ))}
         </div>
       ) : (
         <>
           {user ? (
-            <div className='mb-6 bg-white dark:bg-gray-900 p-4 rounded-lg shadow'>
-              <h4 className='text-md font-medium mb-4'>Join the discussion</h4>
-              <ReactQuill
-                theme='snow'
-                value={mainEditorContent}
-                onChange={setMainEditorContent}
-                modules={mainEditorModules}
-                className='w-full bg-white rounded-md shadow-sm'
+            <div className='mb-4'>
+              <TiptapEditor
+                onUpdate={(content) => setMainEditorContent(content)}
               />
               <button
                 onClick={() => postReply(mainEditorContent, null)}
-                className='px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-4'>
+                className='mt-3 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600'>
                 {loading ? <LoadingAnimation /> : "Comment"}
               </button>
             </div>
           ) : (
-            <p className='text-gray-500 text-center'>Log in to participate.</p>
+            <p className='text-gray-500 text-center'>
+              Please log in to join the discussion.
+            </p>
           )}
-
-          <div className='mt-6'>{renderReplies(null)}</div>
+          <div>{renderReplies(null)}</div>
         </>
       )}
     </div>

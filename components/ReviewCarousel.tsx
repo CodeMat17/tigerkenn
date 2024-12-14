@@ -16,7 +16,7 @@ const getInitials = (name: string) => {
 };
 
 interface ReviewCardProps {
-  img: string;
+
   name: string;
   position: string;
   body: string;
@@ -67,7 +67,7 @@ export default function ReviewCarousel() {
       try {
         const { data: reviews, error } = await supabase
           .from("reviews")
-          .select("*");
+          .select("name, position, body");
 
         if (error) {
           console.error("Error fetching reviews:", error);
@@ -122,7 +122,7 @@ export default function ReviewCarousel() {
               reviews.map((review, index) => (
                 <ReviewCard
                   key={index}
-                  img='/logo.webp'
+                  // img='/logo.webp'
                   name={review.name}
                   position={review.position}
                   body={review.body}

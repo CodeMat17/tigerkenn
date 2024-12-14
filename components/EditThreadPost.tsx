@@ -1,16 +1,22 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Input } from './ui/input';
+import { useState } from "react";
+import { Input } from "./ui/input";
 import DOMPurify from "dompurify";
+import { Button } from "./ui/button";
+import LoadingAnimation from "./LoadingAnimation";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+// import TiptapEditor from "./TiptapEditor";
 import dynamic from "next/dynamic";
-import "react-quill/dist/quill.snow.css";
-import { Button } from './ui/button';
-import LoadingAnimation from './LoadingAnimation';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import "react-quill/dist/quill.snow.css"; // Import styles
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+
+
+const TiptapEditor = dynamic(() => import("@/components/TiptapEditor"), {
+  ssr: false,
+});
 
 function convertTitleToSlug(title: string): string {
   return title
@@ -22,12 +28,11 @@ function convertTitleToSlug(title: string): string {
 }
 
 type Props = {
-  id: number
+  id: number;
   post_title: string;
-  post_tags: string
+  post_tags: string;
   post_content: string;
 };
-
 
 const EditThreadPost = ({ id, post_title, post_tags, post_content }: Props) => {
   const router = useRouter();
@@ -45,20 +50,19 @@ const EditThreadPost = ({ id, post_title, post_tags, post_content }: Props) => {
   const [content, setContent] = useState(post_content);
   const [loading, setLoading] = useState(false);
 
-  const newSlug = convertTitleToSlug(title)
+  const newSlug = convertTitleToSlug(title);
 
-    const addTag = () => {
-      const newTag = currentTag.trim().toLowerCase();
-      if (newTag && !tags.includes(newTag) && tags.length < 5) {
-        setTags((prevTags) => [...prevTags, newTag]);
-        setCurrentTag(""); // Clear the input field
-      } else if (tags.length >= 5) {
-        toast.error("You can only add up to 5 tags.");
-      } else if (tags.includes(newTag)) {
-        toast.error("This tag is already added.");
-      }
+  const addTag = () => {
+    const newTag = currentTag.trim().toLowerCase();
+    if (newTag && !tags.includes(newTag) && tags.length < 5) {
+      setTags((prevTags) => [...prevTags, newTag]);
+      setCurrentTag(""); // Clear the input field
+    } else if (tags.length >= 5) {
+      toast.error("You can only add up to 5 tags.");
+    } else if (tags.includes(newTag)) {
+      toast.error("This tag is already added.");
+    }
   };
-  
 
   const removeTag = (tagToRemove: string) => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
@@ -71,7 +75,6 @@ const EditThreadPost = ({ id, post_title, post_tags, post_content }: Props) => {
       FORBID_ATTR: ["onerror", "onload"],
     });
 
-    // Use Tailwind's responsive utility classes for styling images
     const imgRegex = /<img [^>]*src="([^"]*)"[^>]*>/g;
     return cleanContent.replace(imgRegex, (match, src) => {
       return `<img src="${src}" loading="lazy" class="w-full md:w-[70%] h-auto" />`;
@@ -84,17 +87,6 @@ const EditThreadPost = ({ id, post_title, post_tags, post_content }: Props) => {
   };
 
   const isFormValid = title.trim() && isContentValid() && tags.length <= 5;
-
-  const modules = {
-    toolbar: [
-      [{ header: "1" }, { header: "2" }, { font: [] }],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ align: [] }],
-      ["link", "image", "video"],
-      ["clean"],
-    ],
-  };
 
   const handleSubmit = async () => {
     if (!isFormValid) {
@@ -116,7 +108,6 @@ const EditThreadPost = ({ id, post_title, post_tags, post_content }: Props) => {
           tags,
           id,
           newSlug,
-       
         }),
       });
 
@@ -136,15 +127,16 @@ const EditThreadPost = ({ id, post_title, post_tags, post_content }: Props) => {
     }
   };
 
+ 
+
   return (
-    <div className='mt-6 space-y-4'>
-  
+    <div className='mt-6 space-y-4 w-full max-w-3xl mx-auto'>
       <div>
         <label className='block text-gray-700 dark:text-gray-400 mb-1'>
           Title
         </label>
         <Input
-          className=' w-full'
+          className='w-full'
           type='text'
           id='title'
           name='title'
@@ -153,7 +145,7 @@ const EditThreadPost = ({ id, post_title, post_tags, post_content }: Props) => {
         />
       </div>
 
-      <div className=''>
+      <div>
         <label
           htmlFor='tags'
           className='block text-sm mb-1 font-medium text-gray-500'>
@@ -194,7 +186,19 @@ const EditThreadPost = ({ id, post_title, post_tags, post_content }: Props) => {
         </div>
       </div>
 
-      <div className=''>
+      <div>
+        <label
+          htmlFor='content'
+          className='block mb-1 text-sm font-medium text-gray-500'>
+          Content
+        </label>
+        <TiptapEditor
+          initialContent={content}
+          onUpdate={(updatedContent) => setContent(updatedContent)}
+        />
+      </div>
+
+      <div>
         <label
           htmlFor='content'
           className='block mb-1 text-sm font-medium text-gray-500'>
@@ -202,16 +206,32 @@ const EditThreadPost = ({ id, post_title, post_tags, post_content }: Props) => {
         </label>
         <ReactQuill
           value={content}
-          onChange={setContent}
-          modules={modules}
-          placeholder='Write your content here...'
-          className='rounded-lg dark:text-black dark:bg-gray-100 border-gray-300 dark:border-gray-700'
+          onChange={(value) => setContent(value)}
+          modules={{
+            toolbar: [
+              ["bold", "italic", "underline", "strike"],
+              [{ header: [1, 2, 3, 4, 5, 6, false] }],
+              ["link", "image", "code-block"],
+              ["blockquote", "code"],
+              [{ list: "ordered" }, { list: "bullet" }],
+              ["clean"],
+            ],
+          }}
+          formats={[
+            "bold",
+            "italic",
+            "underline",
+            "link",
+            "image",
+            "list",
+            "bullet",
+          ]}
         />
       </div>
 
       <Button
         onClick={handleSubmit}
-        className={` ${
+        className={`${
           isFormValid
             ? "bg-blue-500 hover:bg-blue-600"
             : "bg-gray-400 cursor-not-allowed"
@@ -221,6 +241,6 @@ const EditThreadPost = ({ id, post_title, post_tags, post_content }: Props) => {
       </Button>
     </div>
   );
-}
+};
 
-export default EditThreadPost
+export default EditThreadPost;

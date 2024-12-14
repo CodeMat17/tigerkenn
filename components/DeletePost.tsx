@@ -11,19 +11,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { MinusIcon, Trash2Icon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 type Props = {
-  id: number;
-  title: string;
+  thread: {id: number, title: string}
+  reload: () => void; // Function to update the selected thread in the parent component
   classnames?: string;
-  reload: () => void; // Function to refresh the threads list page after deletion
 };
 
-const DeletePost = ({ id, title, reload, classnames }: Props) => {
-  const router = useRouter();
+const DeletePost = ({ thread, reload, classnames }: Props) => {
+
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -33,15 +31,15 @@ const DeletePost = ({ id, title, reload, classnames }: Props) => {
     try {
       const res = await fetch("/api/delete-thread", {
         method: "DELETE",
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id: thread.id }),
       });
       const result = await res.json();
 
       if (res.ok) {
-        toast("DONE!!", { description: "Thread deleted successfully" });
+        toast.success("DONE!!", { description: "Thread deleted successfully" });
         setOpen(false);
         reload();
-        router.push("/threads/topics");
+        // router.push("/threads/topics");
       } else {
         console.error("Error deleting thread:", result.error);
         toast.error("ERROR!", { description: `${result.error}` });
@@ -68,7 +66,7 @@ const DeletePost = ({ id, title, reload, classnames }: Props) => {
           <DialogTitle>
             Are you sure you want to delete this thread?
           </DialogTitle>
-          <DialogDescription>{title}</DialogDescription>
+          <DialogDescription>{thread.title}</DialogDescription>
         </DialogHeader>
 
         <DialogFooter className='gap-2'>

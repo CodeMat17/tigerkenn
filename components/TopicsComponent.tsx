@@ -15,7 +15,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createClient } from "@/utils/supabase/clients";
 import dayjs from "dayjs";
 import {
   ChevronLeftIcon,
@@ -27,7 +26,7 @@ import {
   ThumbsUp,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DeletePost from "./DeletePost";
 import ShareLink from "./ShareLink";
 import { Badge } from "./ui/badge";
@@ -40,7 +39,7 @@ function formatNumber(num: number): string {
   return num.toString();
 }
 
-type Topic = {
+type Thread = {
   id: number;
   slug: string;
   title: string;
@@ -54,149 +53,84 @@ type Topic = {
   replyCount?: number; // Add replyCount to store the number of replies for each topic
 };
 
-const TopicsComponent = () => {
-  const supabase = createClient();
-  const [userId, setUserId] = useState<string | null>(null);
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+type TopicsComponentProps = {
+  threads: Thread[];
+  // page: number;
+  // totalThreads: number;
+  currentPage: number;
+  pageSize: number;
+  userId: string;
+  isAdmin: boolean;
+  // searchQuery: string;
+  // selectedTag: string;
+  // sortOption: string;
+  renderedCount: number;
+  tags: string[];
+  totalCount: number;
+};
 
-  const [topics, setTopics] = useState<Topic[]>([]);
-  const [sortedTopics, setSortedTopics] = useState<Topic[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [searchQuery, setSearchQuery] = useState<string>("");
+const TopicsComponent = ({
+  threads: initialThreads,
+  totalCount,
+  // renderedCount,
+  currentPage,
+  pageSize,
+  tags,
+  userId,
+  isAdmin,
+}: TopicsComponentProps) => {
+  // const [threads, setThreads] = useState(initialThreads);
+  const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState<
-    "votes" | "views" | "created_at"
+    "created_at" | "votes" | "views"
   >("created_at");
-  const [tags, setTags] = useState<string[]>([]);
-  const [selectedTag, setSelectedTag] = useState<string>("");
+  const [selectedTag, setSelectedTag] = useState("all");
+  const [filteredThreads, setFilteredThreads] = useState<Thread[]>(initialThreads);
 
-  const [count, setCount] = useState(0);
-  const [page, setPage] = useState<number>(0);
-  const [totalPages, setTotalPages] = useState<number>(0);
-  const perPage = 10;
-  
-    const fetchTopicsWithReplies = async () => {
-      setLoading(true);
-
-      const from = page * perPage;
-      const to = from + perPage - 1;
-
-      const {
-        data: topicsData,
-        count,
-        error: topicsError,
-      } = await supabase
-        .from("topics")
-        .select(
-          "id, slug, user_id, title, tags, content, created_at, views, votes, updated_on",
-          {
-            count: "exact",
-          }
-        )
-        .order("created_at", { ascending: false })
-        .range(from, to);
-
-      if (topicsError) {
-        console.error("Error fetching topics:", topicsError);
-        setLoading(false);
-        return;
-      }
-
-      // Fetch reply counts for each topic
-      const topicsWithReplies = await Promise.all(
-        (topicsData || []).map(async (topic: Topic) => {
-          const { count: replyCount, error: replyCountError } = await supabase
-            .from("topic_reply")
-            .select("id", { count: "exact" })
-            .eq("topic_id", topic.id);
-
-          if (replyCountError) {
-            console.error(
-              `Error fetching replies for topic ${topic.id}:`,
-              replyCountError
-            );
-            return { ...topic, replyCount: 0 };
-          }
-
-          return { ...topic, replyCount: replyCount || 0 };
-        })
-      );
-
-      const uniqueTags = Array.from(
-        new Set(topicsData.flatMap((topic: Topic) => topic.tags || []))
-      );
-
-      setCount(count || 0);
-      setTotalPages(Math.ceil((count || 0) / perPage));
-      setTopics(topicsWithReplies);
-      setSortedTopics(topicsWithReplies);
-      setTags(uniqueTags);
-      setLoading(false);
-    };// Number of topics per page
-
-  useEffect(() => {
-    const fetchUserId = async () => {
-      const response = await fetch("/api/get-user");
-      const data = await response.json();
-      setUserId(data.userId);
-    };
-    fetchUserId();
-  }, []);
-
-  useEffect(() => {
-    const fetchIsAdmin = async () => {
-      const response = await fetch("/api/isAdmin");
-      const data = await response.json();
-      setIsAdmin(data.isAdmin);
-    };
-    fetchIsAdmin();
-  }, []);
-
-  useEffect(() => {
-  
-
-    fetchTopicsWithReplies();
-  }, [page, supabase]); // Re-fetch topics when page changes
-
-  useEffect(() => {
-    let filteredTopics = [...topics];
-
-    if (searchQuery) {
-      filteredTopics = filteredTopics.filter((topic) =>
-        topic.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    if (selectedTag && selectedTag !== "all") {
-      filteredTopics = filteredTopics.filter((topic) =>
-        topic.tags?.includes(selectedTag)
-      );
-    }
-
-    switch (sortOption) {
-      case "votes":
-        filteredTopics.sort((a, b) => b.votes - a.votes);
-        break;
-      case "views":
-        filteredTopics.sort((a, b) => b.views - a.views);
-        break;
-      case "created_at":
-        filteredTopics.sort(
-          (a, b) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
-        break;
-    }
-
-    setSortedTopics(filteredTopics);
-  }, [searchQuery, sortOption, selectedTag, topics]);
-
-  const reset = () => {
-    setSearchQuery("");
-    setSelectedTag("");
-    setSortOption("created_at");
+  // Function to reset filters
+  const resetFilters = () => {
+    setFilteredThreads(initialThreads); // Reset threads
+    setSearchQuery(""); // Clear search query
+    setSelectedTag("all"); // Reset selected tag
+    setSortOption("created_at"); // Reset sorting option
   };
 
+  // Apply filtering and sorting logic
+  // Filtering and sorting logic
+  useEffect(() => {
+    let filteredThreads = initialThreads;
 
+    // Filter by tag
+    if (selectedTag !== "all") {
+      filteredThreads = filteredThreads.filter((thread) =>
+        thread.tags.includes(selectedTag)
+      );
+    }
+
+    // Sort by selected option
+    if (sortOption) {
+      filteredThreads = filteredThreads.sort((a, b) => {
+        return (b[sortOption] as number) - (a[sortOption] as number);
+      });
+    }
+
+    // Filter by search query
+    if (searchQuery.trim() !== "") {
+      const lowerCaseQuery = searchQuery.toLowerCase();
+      filteredThreads = filteredThreads.filter((thread) =>
+        thread.title.toLowerCase().includes(lowerCaseQuery)
+      );
+    }
+
+   
+  setFilteredThreads(filteredThreads);
+  }, [selectedTag, searchQuery, sortOption, initialThreads]);
+
+  // Memoized total pages calculation
+  const totalPages = useMemo(
+    () => Math.ceil(totalCount / pageSize),
+    [totalCount, pageSize]
+  );
 
   return (
     <div className='bg-gray-50 dark:bg-gray-950'>
@@ -213,7 +147,7 @@ const TopicsComponent = () => {
             <Button
               asChild
               className='bg-blue-600 text-white hover:bg-blue-800 mt-1'>
-              <Link href={`/threads/new-topic`}>Send post</Link>
+              <Link href={`/threads/new-topic`}>New Post</Link>
             </Button>
           </div>
 
@@ -223,15 +157,17 @@ const TopicsComponent = () => {
             <div className='relative w-full flex items-center justify-center'>
               <Input
                 type='text'
-                placeholder='Search by title...'
+                placeholder='Search threads by title...'
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className='w-full pl-8 border-gray-400 dark:border-gray-700'
               />
               <Search className='absolute left-2 top-2 size-5' />
             </div>
+
             <Button
-              onClick={reset}
+              onClick={resetFilters}
+              // onClick={() => setSearchQuery("")}
               variant='outline'
               className='border-gray-400 dark:border-gray-700'>
               Reset
@@ -241,43 +177,45 @@ const TopicsComponent = () => {
           <div className='my-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3'>
             <div>
               <p className='text-xl font-medium text-blue-600 dark:text-blue-500'>
-                Total Posts: {count}
+                Total Posts: {totalCount}
               </p>
               <p className='text-gray-500'>
-                Rendered posts: {sortedTopics.length}
+                Rendered posts: {filteredThreads.length}
               </p>
             </div>
 
-            <div className='flex items-center gap-4'>
-              <div className='flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2'>
+            {/* Sorting Options */}
+            <div className='flex items-center gap-4 sm:w-[60%]'>
+              <div className='flex flex-col gap-0.5 w-full'>
                 Sorted by:
                 <Select
                   value={sortOption}
-                  onValueChange={(value: "votes" | "views" | "created_at") =>
+                  onValueChange={(value: "created_at" | "votes" | "views") =>
                     setSortOption(value)
                   }>
-                  <SelectTrigger className='w-[180px] border-gray-400 dark:border-gray-700'>
+                  <SelectTrigger className='w-full border-gray-400 dark:border-gray-700'>
                     <SelectValue placeholder='Sort by: ' />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='created_at'>Latest posts</SelectItem>
+                    <SelectItem value='created_at'>Latest Post</SelectItem>
                     <SelectItem value='votes'>Highest votes</SelectItem>
                     <SelectItem value='views'>Highest views</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className='flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2'>
+              <div className='flex flex-col w-full gap-0.5'>
                 Tags:
                 <Select
                   value={selectedTag}
-                  onValueChange={(value: string) => setSelectedTag(value)}>
+                  onValueChange={(value) => setSelectedTag(value)}>
                   <SelectTrigger className='w-full md:w-auto border rounded border-gray-400 dark:border-gray-700'>
-                    <SelectValue placeholder='All Tags' />
+                    <SelectValue placeholder='Filter by tag' />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value='all'>All Tags</SelectItem>
-                    {tags.map((tag) => (
+
+                    {tags.map((tag: string) => (
                       <SelectItem key={tag} value={tag}>
                         {tag}
                       </SelectItem>
@@ -288,16 +226,14 @@ const TopicsComponent = () => {
             </div>
           </div>
 
-          {loading ? (
-            <SlugDetailSkeleton />
-          ) : sortedTopics && sortedTopics.length < 1 ? (
+          {filteredThreads && filteredThreads.length === 0 ? (
             <div className='text-center py-8 px-4 text-red-500'>
               No post rendered at the moment.
             </div>
           ) : (
-            sortedTopics.map((topic) => (
+            filteredThreads.map((thread) => (
               <div
-                key={topic.id}
+                key={thread.id}
                 className='border rounded-xl overflow-hidden shadow-md mb-4 bg-white dark:bg-gray-800'>
                 <div className='flex '>
                   <Card className='rounded-none border-none flex-1 flex-grow shadow-none dark:bg-gray-800'>
@@ -305,28 +241,28 @@ const TopicsComponent = () => {
                       <div className='flex flex-col leading-4 mb-2 text-sm text-gray-600 dark:text-gray-400'>
                         <span>
                           Published on{" "}
-                          {dayjs(topic.created_at).format(
+                          {dayjs(thread.created_at).format(
                             "MMM DD, YYYY h:mm a"
                           )}
                         </span>
-                        {topic.updated_on && (
+                        {thread.updated_on && (
                           <span>
                             Updated on{" "}
-                            {dayjs(topic.updated_on).format(
+                            {dayjs(thread.updated_on).format(
                               "MMM DD, YYYY h:mm a"
                             )}
                           </span>
                         )}
                       </div>
-                      <Link href={`/threads/topics/${topic.slug}`}>
+                      <Link href={`/threads/topics/${thread.slug}`}>
                         <CardTitle>
                           <h1 className='line-clamp-2 text-xl text-gray-900 dark:text-gray-100 hover:text-blue-500 hover:underline'>
-                            {topic.title}
+                            {thread.title}
                           </h1>
                         </CardTitle>
                       </Link>
                       <div className='text-sm pt-2 text-gray-600 dark:text-gray-400 flex flex-wrap gap-1'>
-                        {topic.tags.map((tag: string, i: number) => (
+                        {thread.tags.map((tag: string, i: number) => (
                           <Badge
                             key={i}
                             className='bg-blue-100 text-blue-700 dark:bg-blue-500 dark:text-white'>
@@ -342,20 +278,20 @@ const TopicsComponent = () => {
                       <div className=' bg-gray-100 dark:bg-gray-700 p-2 rounded-full'>
                         <EyeIcon className='h-4 w-4 text-green-600 dark:text-gray-400' />
                       </div>
-                      <span>{formatNumber(topic.views)}</span>
+                      <span>{formatNumber(thread.views)}</span>
                     </div>
                     <div className='flex items-center justify-center gap-x-1 text-green-600 dark:text-gray-300'>
                       <div className=' bg-gray-100 dark:bg-gray-700 p-2 rounded-full'>
                         <ThumbsUp className='h-4 w-4 text-green-600 dark:text-gray-400' />
                       </div>
 
-                      <span>{formatNumber(topic.votes)}</span>
+                      <span>{formatNumber(thread.votes)}</span>
                     </div>
                     <div className='flex items-center justify-center gap-x-1 text-green-600 dark:text-gray-300'>
                       <div className=' bg-gray-100 dark:bg-gray-700 p-2 rounded-full'>
                         <MessageSquare className='h-4 w-4 text-green-600 dark:text-gray-400' />
                       </div>
-                      <span>{formatNumber(topic.replyCount || 0)}</span>
+                      <span>{formatNumber(thread.replyCount || 0)}</span>
                     </div>
                   </div>
                 </div>
@@ -363,25 +299,24 @@ const TopicsComponent = () => {
                 <div className='py-3 px-6 flex items-center justify-between bg-gradient-to-t from-blue-950 dark:from-black'>
                   <div className='flex items-center gap-4'>
                     <ShareLink
-                      title={topic.title}
-                      slug={topic.slug}
+                      title={thread.title}
+                      slug={thread.slug}
                       classnames='transition duration-300 hover:scale-105 text-white text-sm'
                     />
 
-                    {userId === topic.user_id && (
+                    {userId === thread.user_id && (
                       <Link
-                        href={`/threads/topics/edit-post/${topic.slug}`}
+                        href={`/threads/topics/edit-post/${thread.slug}`}
                         className='flex items-center  transition duration-300 hover:scale-105 text-white hover:text-gray-200 text-sm'>
                         <FilePenLineIcon className='mr-1 w-4 h-4' />
                         Edit
                       </Link>
                     )}
 
-                    {(userId === topic.user_id || isAdmin) && (
+                    {(userId === thread.user_id || isAdmin) && (
                       <DeletePost
-                        id={topic.id}
-                        title={topic.title}
-                        reload={fetchTopicsWithReplies}
+                        thread={thread}
+                        reload={() => setFilteredThreads((prevThreads) => prevThreads.filter((t) => t.id !== thread.id))}
                         classnames='text-white rounded-full hover:text-red-500 transition duration-300 hover:scale-105 text-sm'
                       />
                     )}
@@ -401,14 +336,21 @@ const TopicsComponent = () => {
                   <Button
                     aria-label='prev button'
                     variant='ghost'
-                    onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
-                    disabled={page === 0}>
+                    disabled={currentPage === 0}
+                    onClick={() => {
+                      const url = new URL(window.location.href);
+                      url.searchParams.set(
+                        "page",
+                        (currentPage - 1).toString()
+                      );
+                      window.location.href = url.toString();
+                    }}>
                     <ChevronLeftIcon className='mr-2' /> Previous
                   </Button>
                 </PaginationItem>
                 <PaginationItem>
                   <span className='text-sm'>
-                    Page {page + 1} of {totalPages}
+                    Page {currentPage + 1} of {totalPages}
                   </span>
                 </PaginationItem>
 
@@ -416,10 +358,15 @@ const TopicsComponent = () => {
                   <Button
                     aria-label='next button'
                     variant='ghost'
-                    onClick={() =>
-                      setPage((prev) => Math.min(prev + 1, totalPages - 1))
-                    }
-                    disabled={page >= totalPages - 1}>
+                    disabled={currentPage >= totalPages - 1}
+                    onClick={() => {
+                      const url = new URL(window.location.href);
+                      url.searchParams.set(
+                        "page",
+                        (currentPage + 1).toString()
+                      );
+                      window.location.href = url.toString();
+                    }}>
                     Next <ChevronRightIcon className='ml-2' />
                   </Button>
                 </PaginationItem>
@@ -485,56 +432,5 @@ const TopicsComponent = () => {
     </div>
   );
 };
-
-const SlugDetailSkeleton = () => {
-  return (
-    <div className='px-4 py-8 max-w-4xl mx-auto'>
-      {Array.from({ length: 3 }).map((_, index) => (
-        <div key={index} className='animate-pulse mb-8'>
-          {/* Header Skeleton */}
-          <div className='flex items-center justify-between mb-4'>
-            <div>
-              <div className='flex gap-2 text-sm text-gray-300'>
-                <div className='h-4 w-16 bg-gray-300 rounded'></div>{" "}
-                {/* Views */}
-                <div className='h-4 w-16 bg-gray-300 rounded'></div>{" "}
-                {/* Votes */}
-                <div className='h-4 w-16 bg-gray-300 rounded'></div>{" "}
-                {/* Replies */}
-              </div>
-              <div className='mt-2 h-4 w-32 bg-gray-300 rounded'></div>{" "}
-              {/* Date */}
-            </div>
-            <div className='flex items-center gap-2'>
-              <div className='h-8 w-8 bg-gray-300 rounded-full'></div>{" "}
-              {/* Vote Button */}
-              <div className='h-8 w-8 bg-gray-300 rounded-full'></div>{" "}
-              {/* Share Button */}
-            </div>
-          </div>
-
-          {/* Title Skeleton */}
-          <div className='h-6 w-3/4 bg-gray-300 rounded mb-2'></div>
-
-          {/* Tags Skeleton */}
-          <div className='flex gap-2 mb-4'>
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className='h-4 w-16 bg-gray-300 rounded'></div>
-            ))}
-          </div>
-
-          {/* Content Skeleton */}
-          <div className='space-y-2'>
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className='h-4 w-full bg-gray-300 rounded'></div>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-
 
 export default TopicsComponent;
