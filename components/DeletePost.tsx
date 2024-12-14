@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { MinusIcon, Trash2Icon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -21,7 +22,7 @@ type Props = {
 };
 
 const DeletePost = ({ thread, reload, classnames }: Props) => {
-
+const router = useRouter()
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -39,7 +40,7 @@ const DeletePost = ({ thread, reload, classnames }: Props) => {
         toast.success("DONE!!", { description: "Thread deleted successfully" });
         setOpen(false);
         reload();
-        // router.push("/threads/topics");
+        router.push("/threads/topics");
       } else {
         console.error("Error deleting thread:", result.error);
         toast.error("ERROR!", { description: `${result.error}` });
