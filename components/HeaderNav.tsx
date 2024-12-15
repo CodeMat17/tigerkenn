@@ -30,7 +30,7 @@ const HeaderNav = ({ user }: { user: User | null }) => {
           <ModeToggle />
           <div className='flex items-center'>
             {user ? (
-              <SignoutComponent user={user} />
+              <SignoutComponent />
             ) : (
               <Button
                 asChild
