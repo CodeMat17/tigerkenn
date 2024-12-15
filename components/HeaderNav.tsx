@@ -15,6 +15,8 @@ const HeaderNav = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // await supabase.auth.onAuthStateChange()
+
   return (
     <div className='w-full sticky top-0 z-50 px-2 sm:px-4 py-2 bg-background/30 backdrop-blur supports-[backdrop-filter]:bg-background/30'>
       <div className='flex items-center justify-between max-w-6xl mx-auto'>
