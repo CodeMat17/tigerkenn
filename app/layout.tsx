@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import RegisterServiceWorker from "@/components/RegisterServiceWorker";
+import { createClient } from "@/utils/supabase/server";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -90,11 +91,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const supabase = createClient()
+  const {data: {user}} = await supabase.auth.getUser()
+
   return (
     <html lang='en' suppressHydrationWarning>
       <body
@@ -105,7 +110,7 @@ export default function RootLayout({
           defaultTheme='system'
           enableSystem
           disableTransitionOnChange>
-          <HeaderNav />
+          <HeaderNav user={user ?? null} />
           <main>{children}</main>
           <Toaster />
           <Footer />
