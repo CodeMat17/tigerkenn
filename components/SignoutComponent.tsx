@@ -1,15 +1,24 @@
 "use client";
 
+import { User } from "@supabase/supabase-js";
 import { PowerOffIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // Import the useRouter hook
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 
-const SignoutComponent = () => {
+const SignoutComponent = ({ user }: { user: User }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter(); // Initialize the router
   const [showLogin, setShowLogin] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setShowLogin(false);
+    } else {
+      setShowLogin(true);
+    }
+  }, [user]);
 
   const handleSignout = async (e: React.FormEvent) => {
     e.preventDefault();
